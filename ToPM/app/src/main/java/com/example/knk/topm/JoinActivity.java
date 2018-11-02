@@ -1,5 +1,6 @@
 package com.example.knk.topm;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,5 +23,9 @@ public class JoinActivity extends AppCompatActivity {
         dr.setValue("hello");
 
 
+    }
+
+    public void btntest(View view) {
+        startActivity(new Intent(this,AdminMainActivity.class));
     }
 }
