@@ -3,39 +3,53 @@ package com.example.knk.topm;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MovieManageActivity extends AppCompatActivity {
+
+    ListView l;
+    List<String> moviedata;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_manage);
 
-        String moviedata[]={"aaa","bbb"};
-        ListView l=(ListView)findViewById(R.id.movieList);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,moviedata);
-        l.setAdapter(adapter);
+        moviedata = new ArrayList<>();
+        l=(ListView)findViewById(R.id.movieList1);
 
-        View v;
+        moviedata.add("aaa");
+        moviedata.add("bbb");
+
+
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,moviedata);
+        MyAdapter aa =  new MyAdapter(moviedata);
+        l.setAdapter(aa);
+
+        l.setOnItemClickListener(new ListView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MovieManageActivity.this,"this is a item" + l,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
+
 
 
     }
-
-    boolean deleteCheck(){
-        //detail method
-        return false;
-    }
-
-
-
-
-
 
     public void completebtn(View view) {
         EditText d=(EditText)findViewById(R.id.edittxtdir);
@@ -58,4 +72,14 @@ public class MovieManageActivity extends AppCompatActivity {
 
         }
     }
+
+    public boolean deleteCheck(){
+        //detail method
+
+        return false;
+    }
+
+
 }
+
+
