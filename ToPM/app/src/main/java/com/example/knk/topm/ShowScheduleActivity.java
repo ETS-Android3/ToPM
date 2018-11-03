@@ -39,6 +39,7 @@ public class ShowScheduleActivity extends AppCompatActivity {
 
         // 데이터베이스에서 영화 정보 받아오기
 
+
         // 영화 정보 출력하기
 
     }
