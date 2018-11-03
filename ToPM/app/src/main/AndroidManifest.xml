@@ -17,8 +17,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".JoinActivity" />
+<<<<<<< HEAD
         <activity android:name=".MyButtonTestActivity" />
         <activity android:name=".ShowScheduleActivity"></activity>
+=======
+        <activity android:name=".AdminMainActivity" />
+        <activity android:name=".MovieManageActivity"></activity>
+>>>>>>> XZL
     </application>
 
 </manifest>

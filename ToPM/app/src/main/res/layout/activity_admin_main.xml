@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AdminMainActivity"
+    android:orientation="vertical">
+
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+
+
+        />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:text="movieEditBtn"
+        android:id="@+id/movieEditBtn"
+        android:onClick="movieEditBtn"
+        />
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:text="screenEditBtn"
+        android:id="@+id/screenEditBtn"
+        android:onClick="screenEditBtn"
+        />
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:text="scheduleEditBtn"
+        android:id="@+id/scheduleEditBtn"
+        android:onClick="scheduleEditBtn"
+        />
+
+
+
+</LinearLayout>

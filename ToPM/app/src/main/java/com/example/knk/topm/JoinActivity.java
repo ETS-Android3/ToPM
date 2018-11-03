@@ -1,10 +1,14 @@
 package com.example.knk.topm;
 
+<<<<<<< HEAD
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.support.annotation.NonNull;
+=======
+import android.content.Intent;
+>>>>>>> XZL
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,6 +100,7 @@ public class JoinActivity extends AppCompatActivity {
 
     }
 
+<<<<<<< HEAD
     //회원 가입 완료 버튼 클릭이벤트 함수
     public void completeClick(View view) {
         //ID 중복검사 버튼을 반드시 누르고 그 검사에 통과한 후에 활성화돼야 함.
@@ -110,4 +115,9 @@ public class JoinActivity extends AppCompatActivity {
         this.finish();
     }
 
+=======
+    public void btntest(View view) {
+        startActivity(new Intent(this,AdminMainActivity.class));
+    }
+>>>>>>> XZL
 }
