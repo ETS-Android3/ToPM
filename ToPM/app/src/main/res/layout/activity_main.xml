@@ -107,16 +107,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:onClick="joinClick"
         android:layout_width="250dp"
         android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="360dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginBottom="70dp"
+        android:onClick="joinClick"
         android:text="회원가입"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.472"
-        tools:layout_editor_absoluteX="67dp" />
+        app:layout_constraintVertical_bias="0.472" />
 
     <Button
         android:id="@+id/button2"
