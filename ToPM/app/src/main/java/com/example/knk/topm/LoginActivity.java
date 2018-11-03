@@ -16,4 +16,9 @@ public class LoginActivity extends AppCompatActivity {
     public void joinClick(View view) {
         startActivity(new Intent(this, JoinActivity.class));
     }
+
+    public void goTest(View view) {
+        Intent intent = new Intent(this, MyButtonTestActivity.class);
+        startActivity(intent);
+    }
 }
