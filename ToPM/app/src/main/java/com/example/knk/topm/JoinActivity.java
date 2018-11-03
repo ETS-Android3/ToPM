@@ -1,22 +1,16 @@
 package com.example.knk.topm;
 
-<<<<<<< HEAD
+
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.support.annotation.NonNull;
-=======
 import android.content.Intent;
->>>>>>> XZL
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.knk.topm.Object.User;
 import com.google.firebase.database.DataSnapshot;
@@ -81,7 +75,7 @@ public class JoinActivity extends AppCompatActivity {
                     joinBtn.setEnabled(false);
                     alertBuilder.setTitle("아이디 중복!");
                     alertBuilder.setMessage(input_id+"(은)는 이미 존재하는 아이디입니다. 다시 시도해주세요.");
-                    alertBuilder.setNeutralButton("close", new DialogInterface.OnClickListener() {
+                    alertBuilder.setPositiveButton("close", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                         }
@@ -100,7 +94,7 @@ public class JoinActivity extends AppCompatActivity {
 
     }
 
-<<<<<<< HEAD
+
     //회원 가입 완료 버튼 클릭이벤트 함수
     public void completeClick(View view) {
         //ID 중복검사 버튼을 반드시 누르고 그 검사에 통과한 후에 활성화돼야 함.
@@ -115,9 +109,9 @@ public class JoinActivity extends AppCompatActivity {
         this.finish();
     }
 
-=======
+
     public void btntest(View view) {
         startActivity(new Intent(this,AdminMainActivity.class));
     }
->>>>>>> XZL
+
 }
