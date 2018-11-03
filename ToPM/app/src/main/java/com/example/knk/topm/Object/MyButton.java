@@ -56,7 +56,7 @@ public class MyButton extends android.support.v7.widget.AppCompatButton {
         this.accessMode = USER_MODE;
         // 일단은 테스트를 위해 임의로 초기화하겠지만, 로그인 한 사람에 따라서 달라지게 하는 부분 추후 구현
 
-        showSeatsState();
+        showSeatsState(); // 보여주기
     }
 
     @Override
