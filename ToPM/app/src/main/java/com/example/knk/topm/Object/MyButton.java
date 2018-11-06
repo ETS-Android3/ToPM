@@ -27,7 +27,6 @@ public class MyButton extends android.support.v7.widget.AppCompatButton {
 //    final static int ADMIN_MODE = 0;
 //    final static int USER_MODE = 1;
 
-
     public MyButton(Context context) {
         // 자바 코드로 생성 시 호출되는 생성자
         super(context);

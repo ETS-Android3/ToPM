@@ -15,6 +15,7 @@ public class Movie {
     }
 
     public Movie() {
+
     }
 
     public int getRunningTime() {

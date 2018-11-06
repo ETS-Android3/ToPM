@@ -11,6 +11,10 @@ public class MovieSchedule {
     int bookedSeats; // 예약된 좌석 숫자
     int restSeats; // 남은 좌석 숫자
 
+    public MovieSchedule() {
+
+    }
+
     public MovieSchedule(Movie movie, Screen screen, Date screeningDate) {
         this.movie = movie;
         this.screen = screen;

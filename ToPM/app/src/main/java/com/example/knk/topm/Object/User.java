@@ -15,6 +15,10 @@ public class User {
         this.birth=birth;
     }
 
+    public User() {
+        
+    }
+
     public String getName() {
         return name;
     }
