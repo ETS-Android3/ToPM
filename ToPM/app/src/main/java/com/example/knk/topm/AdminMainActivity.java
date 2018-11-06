@@ -21,5 +21,6 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     public void scheduleEditBtn(View view) {
+        startActivity(new Intent(this, ScheduleManageActivity.class));
     }
 }

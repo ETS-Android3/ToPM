@@ -17,13 +17,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".JoinActivity" />
-
         <activity android:name=".MyButtonTestActivity" />
-        <activity android:name=".ShowScheduleActivity"></activity>
-
+        <activity android:name=".ShowScheduleActivity" />
         <activity android:name=".AdminMainActivity" />
-        <activity android:name=".MovieManageActivity"></activity>
-
+        <activity android:name=".MovieManageActivity" />
+        <activity android:name=".ScheduleManageActivity"></activity>
     </application>
 
 </manifest>
