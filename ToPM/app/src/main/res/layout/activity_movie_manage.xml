@@ -1,96 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MovieManageActivity"
-    android:orientation="vertical"
-    android:gravity="center">
-
-
-    <ListView
-        android:id="@+id/movieList"
+    android:orientation="vertical">
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_margin="5dp"
-        >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent"
-            android:text="제목: "
-            android:gravity="center"
-            android:id="@+id/txtviewtitle"/>
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="9"
-            android:hint="title"
-            android:id="@+id/edittxttitle"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_margin="5dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent"
-            android:text="감독: "
-            android:gravity="center"
-            android:id="@+id/txtviewdir"/>
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="9"
-            android:hint="director"
-            android:id="@+id/edittxtdir"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:layout_margin="5dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent"
-            android:text="러닝타임:  "
-            android:gravity="center"
-            android:id="@+id/txtviewruntime"/>
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="9"
-            android:hint="running time "
-            android:id="@+id/edittxtruntime"
-            android:inputType="numberDecimal"/>
-
-    </LinearLayout>
-
-    <Button
-        android:layout_width="150dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:text="등록된 영화"
+        android:padding="15dp"
+        android:textSize="20sp"
         android:gravity="center"
-        android:text="completeBtn"
+        android:textStyle="bold"/>
+    <ListView
+        android:id="@+id/movie_manage_List"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:padding="10dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:text="제목: "
+                android:gravity="center"
+                android:id="@+id/txtviewtitle"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:hint="title"
+                android:id="@+id/edittxttitle"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:text="감독: "
+                android:gravity="center"
+                android:id="@+id/txtviewdir"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:hint="director"
+                android:id="@+id/edittxtdir"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:text="러닝타임:  "
+                android:gravity="center"
+                android:id="@+id/txtviewruntime"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:hint="running time "
+                android:id="@+id/edittxtruntime"
+                android:inputType="numberDecimal"/>
+        </LinearLayout>
+    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="완료"
         android:id="@+id/btncomplete"
         android:onClick="completebtn"/>
 

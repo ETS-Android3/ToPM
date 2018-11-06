@@ -6,19 +6,18 @@
     android:gravity="center">
 
     <TextView
+        android:id="@+id/movielistTextview"
         android:layout_width="0dp"
         android:layout_weight="7"
         android:layout_height="50dp"
         android:text="Title"
-        android:gravity="center"
-        android:id="@+id/movielisttextview"/>
+        android:gravity="center"/>
 
     <Button
+        android:id="@+id/deleteBtn"
         android:layout_width="0dp"
         android:layout_weight="3"
         android:layout_height="50dp"
-        android:text="삭제"
-        android:id="@+id/deleteBtn"
-        />
+        android:text="삭제"/>
 
 </LinearLayout>

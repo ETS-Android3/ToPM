@@ -21,8 +21,8 @@ import java.util.List;
 
 public class MovieManageActivity extends AppCompatActivity {
 
-    List<Movie> movieData;
-    ListView movieList;
+    ArrayList<Movie> movieData;
+    ListView movieManageList;
 
     EditText editTitle;
     EditText editDir;
@@ -35,8 +35,7 @@ public class MovieManageActivity extends AppCompatActivity {
     // 데이터베이스
     private FirebaseDatabase firebaseDatabase;      //firebaseDatabase
     private DatabaseReference rootReference;        //rootReference
-    private static String movie_ref = "movie";        //레퍼런스할 이름 - 여기서는 회원가입이므로 user를 root로 참조해 그 아래에 데이터 추가.
-
+    private static String movie_ref = "movie";      //레퍼런스할 이름 - 여기서는 영화 등록이므로 movie를 root로 참조해 그 아래에 데이터 추가.
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,19 +45,7 @@ public class MovieManageActivity extends AppCompatActivity {
         init();
     }
 
-    public void init() {
-
-        // ListView 초기화 및 어댑터 연결
-        movieList = (ListView) findViewById(R.id.movieList);
-        final MyAdapter adapter =  new MyAdapter(movieData);
-        movieList.setAdapter(adapter);
-
-        movieData = new ArrayList<Movie>();
-
-        // 입력 위젯 초기화
-        editTitle = (EditText) findViewById(R.id.edittxttitle);
-        editDir = (EditText) findViewById(R.id.edittxtdir);
-        editRun = (EditText)findViewById(R.id.edittxtruntime);
+    public void getDataFromFB(){
 
         // 데이터베이스
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -76,10 +63,9 @@ public class MovieManageActivity extends AppCompatActivity {
                         Toast.makeText(MovieManageActivity.this, "nullllll", Toast.LENGTH_SHORT).show();
                     else {
                         movieData.add(movie); // movieData에 삽입
-                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
                     }
                 }
-                adapter.notifyDataSetChanged(); // 데이터 갱신 통지
             }
 
             @Override
@@ -87,6 +73,26 @@ public class MovieManageActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void init() {
+
+        //ListView 초기화 및 어댑터 연결
+        movieManageList = findViewById(R.id.movie_manage_List);
+        movieData = new ArrayList<>();
+
+        //파이어베이스로부터 데이터 가져오기
+        getDataFromFB();
+
+        MovieListAdapter adapter =  new MovieListAdapter(this,R.layout.movie_list_adapter_row, movieData);
+        movieManageList.setAdapter(adapter);
+
+        adapter.notifyDataSetChanged(); // 데이터 갱신 통지
+
+
+        // 입력 위젯 초기화
+        editTitle = findViewById(R.id.edittxttitle);
+        editDir = findViewById(R.id.edittxtdir);
+        editRun = findViewById(R.id.edittxtruntime);
     }
 
     public void completebtn(View view) {
