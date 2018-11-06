@@ -1,4 +1,4 @@
-package com.example.knk.topm;
+package com.example.knk.topm.AdminActivities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,8 +8,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.knk.topm.CustomAdapters.MovieListAdapter;
 import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.Object.Movie;
+import com.example.knk.topm.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,7 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MovieManageActivity extends AppCompatActivity {
 

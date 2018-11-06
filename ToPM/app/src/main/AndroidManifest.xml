@@ -18,11 +18,11 @@
         </activity>
         <activity android:name=".JoinActivity" />
 
-        <activity android:name=".MyButtonTestActivity" />
-        <activity android:name=".ShowScheduleActivity"></activity>
+        <activity android:name=".AdminActivities.MyButtonTestActivity" />
+        <activity android:name=".UserActivities.ShowScheduleActivity"></activity>
 
-        <activity android:name=".AdminMainActivity" />
-        <activity android:name=".MovieManageActivity"></activity>
+        <activity android:name=".AdminActivities.AdminMainActivity" />
+        <activity android:name=".AdminActivities.MovieManageActivity"></activity>
 
 
     </application>

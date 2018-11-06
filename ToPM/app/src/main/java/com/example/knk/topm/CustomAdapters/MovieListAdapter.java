@@ -1,4 +1,4 @@
-package com.example.knk.topm;
+package com.example.knk.topm.CustomAdapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.knk.topm.Object.Movie;
+import com.example.knk.topm.R;
 
 import java.util.ArrayList;
 
