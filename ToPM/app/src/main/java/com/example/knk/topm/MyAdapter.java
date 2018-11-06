@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MyAdapter extends BaseAdapter implements View.OnClickListener {
 
-    static class ViewHolder{
+    static class ViewHolder {
         TextView textView;
         Button button;
     }
@@ -53,7 +53,7 @@ public class MyAdapter extends BaseAdapter implements View.OnClickListener {
 
         if(view == null){
             view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.movielistxml,null);
-            viewholder=new ViewHolder();
+            viewholder = new ViewHolder();
             viewholder.textView = (TextView)view.findViewById(R.id.movielisttextview);
             viewholder.button = (Button)view.findViewById(R.id.deleteBtn);
             view.setTag(viewholder);

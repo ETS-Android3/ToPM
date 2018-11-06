@@ -43,15 +43,16 @@ public class MovieManageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_manage);
 
         init();
-
     }
 
     public void init() {
 
         // ListView 초기화 및 어댑터 연결
         movieList = (ListView) findViewById(R.id.movieList);
-        MyAdapter adapter =  new MyAdapter(movieData);
+        final MyAdapter adapter =  new MyAdapter(movieData);
         movieList.setAdapter(adapter);
+
+        movieData = new ArrayList<Movie>();
 
         // 입력 위젯 초기화
         editTitle = (EditText) findViewById(R.id.edittxttitle);
@@ -62,21 +63,22 @@ public class MovieManageActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         rootReference = firebaseDatabase.getReference(movie_ref);
 
-        // 데이터 베이스에서 정보 받아와서 List에 출력하기
+        // 데이터 베이스에서 정보 받아와서 movieData에 저장
         rootReference.addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // 모든 데이터 가지고 오기
                 for(DataSnapshot data : dataSnapshot.getChildren()) {
                     Movie movie = data.getValue(Movie.class);
-                    // null 아니면서 null object reference 뜸 ㅅ ㅣ ㅂ ㅏ ㄹ ㅏ
+
                     if(movie == null)
                         Toast.makeText(MovieManageActivity.this, "nullllll", Toast.LENGTH_SHORT).show();
                     else {
-                        movieData.add(movie);
-                        Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+                        movieData.add(movie); // movieData에 삽입
+                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
                     }
                 }
+                adapter.notifyDataSetChanged(); // 데이터 갱신 통지
             }
 
             @Override
@@ -84,7 +86,6 @@ public class MovieManageActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     public void completebtn(View view) {
