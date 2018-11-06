@@ -10,9 +10,9 @@
 
 
     <ListView
+        android:id="@+id/movieList"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:id="@+id/movieList1"
         />
 
     <LinearLayout
@@ -26,16 +26,16 @@
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
-            android:text="이름: "
+            android:text="제목: "
             android:gravity="center"
-            android:id="@+id/txtviewname"/>
+            android:id="@+id/txtviewtitle"/>
 
         <EditText
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="9"
-            android:hint="name"
-            android:id="@+id/edittxtname"/>
+            android:hint="title"
+            android:id="@+id/edittxttitle"/>
 
     </LinearLayout>
 
@@ -57,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="9"
-            android:hint="Dir"
+            android:hint="director"
             android:id="@+id/edittxtdir"/>
 
     </LinearLayout>
@@ -81,7 +81,8 @@
             android:layout_height="match_parent"
             android:layout_weight="9"
             android:hint="running time "
-            android:id="@+id/edittxtruntime"/>
+            android:id="@+id/edittxtruntime"
+            android:inputType="numberDecimal"/>
 
     </LinearLayout>
 

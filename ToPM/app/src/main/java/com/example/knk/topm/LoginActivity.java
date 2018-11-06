@@ -18,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goTest(View view) {
-        Intent intent = new Intent(this, MyButtonTestActivity.class);
+        Intent intent = new Intent(this, MovieManageActivity.class);
         startActivity(intent);
     }
 }

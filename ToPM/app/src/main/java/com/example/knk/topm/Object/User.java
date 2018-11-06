@@ -6,6 +6,7 @@ public class User {
     public String pw;
     public String id;
     public String birth;
+    // public boolean isStaff; // 이거 넣고 가입하는 코드 등등 손봐야 합니다아 ^^
 
     public User(String id, String pw, String name, String birth){
         this.id=id;

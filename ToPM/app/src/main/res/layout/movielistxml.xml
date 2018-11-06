@@ -9,7 +9,7 @@
         android:layout_width="0dp"
         android:layout_weight="7"
         android:layout_height="50dp"
-        android:text="txt"
+        android:text="Title"
         android:gravity="center"
         android:id="@+id/movielisttextview"/>
 
@@ -17,8 +17,8 @@
         android:layout_width="0dp"
         android:layout_weight="3"
         android:layout_height="50dp"
-        android:text="btn"
-        android:id="@+id/movielistbtn"
+        android:text="삭제"
+        android:id="@+id/deleteBtn"
         />
 
 </LinearLayout>

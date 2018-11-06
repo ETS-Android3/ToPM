@@ -14,7 +14,6 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     public void movieEditBtn(View view) {
-
         startActivity(new Intent(this, MovieManageActivity.class));
     }
 
