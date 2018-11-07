@@ -100,11 +100,25 @@
                 android:layout_height="wrap_content"
                 android:text="생일"
                 android:textSize="10sp"/>
-            <EditText
-                android:id="@+id/input_birth"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="BIRTH"/>
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/input_birth"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    android:hint="BIRTH"
+                    android:enabled="false"/>
+                <Button
+                    android:onClick="birthPickClick"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="입력하기"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
     <Button

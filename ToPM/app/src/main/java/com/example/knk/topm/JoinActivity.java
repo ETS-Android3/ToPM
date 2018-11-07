@@ -2,6 +2,7 @@ package com.example.knk.topm;
 
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -21,6 +23,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class JoinActivity extends AppCompatActivity {
 
@@ -39,6 +45,8 @@ public class JoinActivity extends AppCompatActivity {
     private EditText inputIdEditText;               //아이디를 입력하는 editText : 아이디체크가 완료돼면 비활성화됨(입력 불가), 재입력 버튼을 누르면 다시 활성화됨(입력 가능).
     private RadioGroup staffOrNormal;               //일반사용자 혹은 관리자 둘중 하나의 선택을 받는 라디오버튼 그룹
     private boolean staff;                          //일반사용자 혹은 관리자 둘중 하나의 선택을 저장하는 변수
+    private EditText birthEditText;                 //생일을 입력받는 에딧텍스트 : DatePickerDialog로부터 입력 받은 값 보여주는 곳
+    private String birthOutput;                     //User객체에 넣을 생일정보 포맷(yymmdd)에 맞게 저장하느 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +86,8 @@ public class JoinActivity extends AppCompatActivity {
                     Toast.makeText(JoinActivity.this,"가입 유형이 제대로 저장되지 않음",Toast.LENGTH_SHORT);
             }
         });
+        //생일 보여주는 에딧텍스트 초기화
+        birthEditText = findViewById(R.id.input_birth);
     }
 
     //아이디가 중복체크됐는지 여부에 따라 각종 버튼, 에딧텍스트 상태 바꾸는 함수
@@ -170,11 +180,10 @@ public class JoinActivity extends AppCompatActivity {
         if(idCheckBtnState){
             input_id = ((EditText)findViewById(R.id.input_id)).getText().toString();
             input_pw = ((EditText)findViewById(R.id.input_pw)).getText().toString();
-            input_birth = ((EditText)findViewById(R.id.input_birth)).getText().toString();
             input_name = ((EditText)findViewById(R.id.input_name)).getText().toString();
 
             //뉴비 생성
-            newbie = new User(input_id,input_pw,input_name,input_birth,staff);
+            newbie = new User(input_id,input_pw,input_name,birthOutput,staff);
             rootReference.child(newbie.id).setValue(newbie);
             Toast.makeText(this,"가입을 축하드립니다.",Toast.LENGTH_SHORT).show();
             this.finish();
@@ -184,5 +193,34 @@ public class JoinActivity extends AppCompatActivity {
             Toast.makeText(this,"ID 중복확인을 먼저 해주세요.",Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    //생일 선택시 DatePickerDialog 생성하는 버튼
+    public void birthPickClick(View view) {
+        //현재 시간 받아오는 Calendear 객체
+        final Calendar calendar = Calendar.getInstance();
+        //데이트픽커 다이얼로그
+        DatePickerDialog datePickerDialog = new DatePickerDialog(JoinActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                //입력 받은 데이터를 Date 객체에 저장
+                Date birthData = new Date(year,month,dayOfMonth);
+                //파이어베이스에 저장하는 포맷은 yyMMdd
+                SimpleDateFormat birthFormat = new SimpleDateFormat("yyMMdd");
+                //포맷대로 생일데이터를 저장
+                birthOutput = birthFormat.format(birthData);
+                //Toast.makeText(JoinActivity.this,birthOutput,Toast.LENGTH_SHORT).show();
+
+                //month는 출력 상으로 -1돼서 나오므로 +1 처리
+                month = month+1;
+                //생일 에딧텍스트에 입력 받은 값 표시해줌.
+                birthEditText.setText(year+"년 "+ month+"월 "+dayOfMonth+"일");
+            }
+            //Dialog가 띄워졌을 때, 현재 시간으로 기본 설정
+        },calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH)+1,calendar.get(Calendar.DATE));
+        //현재 날짜 이후에는 선택할 수 없게 맥스를 오늘로 설정
+        datePickerDialog.getDatePicker().setMaxDate(new Date().getTime());
+        //쇼.
+        datePickerDialog.show();
     }
 }
