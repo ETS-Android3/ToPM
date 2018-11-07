@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference rootReference;
     private String user_ref = "user";
+    private String user_putExtra_tag = "user";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +49,27 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data : dataSnapshot.getChildren()){
+                    //아이디가 같은지 판단
                     if(data.getKey().equals(login_id.getText().toString())) {
                         Log.d("DataSnapshot", "onValueAdded:" + data);
+                        //아이디가 같다면 유저 인스턴스를 하나 생성해서 데이터를 받아온 다음
                         User user = data.getValue(User.class);
+                        //유저 인스턴스의 비밀번호가 입력한 비밀번호와 일치한다면 -> 로그인 성공
                         if(user.getPw().equals(login_pw.getText().toString())){
-                                if(user.isStaff())
-                                    startActivity(new Intent(getApplicationContext(),AdminMainActivity.class));
-                                else
-                                    startActivity(new Intent(getApplicationContext(),ShowScheduleActivity.class));
+                            Intent intent;
+                            //유저 인스턴스가 관리자라면
+                            if(user.isStaff())  //관리자 액티비티로
+                                intent = new Intent(getApplicationContext(),AdminMainActivity.class);
+                            //유저 인스턴스가 일반 사용자라면
+                            else                //일반 사용자 액티비티로
+                                intent = new Intent(getApplicationContext(),ShowScheduleActivity.class);
+                            //유저 인스턴스의 객체정보를 다음 액티비티로 전달한다.
+                            intent.putExtra(user_putExtra_tag, user);
+                            //로그인 정보 입력창을 다시 빈칸으로 초기화한 다음 (뒤로가기 눌렀을 때 정보가 남아있는 것을 방지)
+                            login_pw.setText("");
+                            login_id.setText("");
+                            //해당 액티비티로 이동
+                            startActivity(intent);
                             break;
                         }
                     }
@@ -69,11 +83,4 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-
-    public void goTest(View view) {
-        Intent intent = new Intent(this, MovieManageActivity.class);
-        startActivity(intent);
-    }
-
-
 }

@@ -47,7 +47,7 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="15dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
         android:layout_marginLeft="80dp"
         android:layout_marginTop="100dp"
@@ -114,15 +114,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.282" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="좌석 테스트"
-        android:onClick="goTest"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="481dp" />
 
 
 </android.support.constraint.ConstraintLayout>
