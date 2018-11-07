@@ -16,6 +16,8 @@ public class User {
         this.staff = staff;
     }
 
+    public User(){}
+
     public String getName() {
         return name;
     }

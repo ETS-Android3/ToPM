@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.example.knk.topm.AdminActivities.AdminMainActivity;
 import com.example.knk.topm.AdminActivities.MovieManageActivity;
+import com.example.knk.topm.Object.User;
+import com.example.knk.topm.UserActivities.ShowScheduleActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,17 +44,20 @@ public class LoginActivity extends AppCompatActivity {
 
     //로그인 판단 후 다음 메인 액티비티로
     public void loginClick(View view) {
-
-
         rootReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data : dataSnapshot.getChildren()){
-
-                    if(data.getKey().equals(login_id.getText())) {
+                    if(data.getKey().equals(login_id.getText().toString())) {
                         Log.d("DataSnapshot", "onValueAdded:" + data);
-
-                        break;
+                        User user = data.getValue(User.class);
+                        if(user.getPw().equals(login_pw.getText().toString())){
+                                if(user.isStaff())
+                                    startActivity(new Intent(getApplicationContext(),AdminMainActivity.class));
+                                else
+                                    startActivity(new Intent(getApplicationContext(),ShowScheduleActivity.class));
+                            break;
+                        }
                     }
                 }
             }
