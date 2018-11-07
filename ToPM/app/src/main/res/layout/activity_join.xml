@@ -28,11 +28,12 @@
                     android:layout_height="wrap_content"
                     android:hint="ID"/>
                 <Button
+                    android:id="@+id/idCheckBtn"
                     android:onClick="idCheckClick"
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="match_parent"
-                    android:text="중복 검사"
+                    android:text="중복 확인"
                     android:layout_gravity="right"/>
             </LinearLayout>
 
