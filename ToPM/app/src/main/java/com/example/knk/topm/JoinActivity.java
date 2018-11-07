@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.knk.topm.AdminActivities.AdminMainActivity;
@@ -36,6 +37,8 @@ public class JoinActivity extends AppCompatActivity {
     private Button idCheckBtn;                      //아이디 중복체크 버튼이자 아이디 재입력 버튼 : 아이디체크가 통과되면 재입력용 버튼으로 바뀜
     private boolean idCheckBtnState;                //아이디 중복체크를 했는지 기억하는 변수. false - 체크안됨, true - 체크통과
     private EditText inputIdEditText;               //아이디를 입력하는 editText : 아이디체크가 완료돼면 비활성화됨(입력 불가), 재입력 버튼을 누르면 다시 활성화됨(입력 가능).
+    private RadioGroup staffOrNormal;               //일반사용자 혹은 관리자 둘중 하나의 선택을 받는 라디오버튼 그룹
+    private boolean staff;                          //일반사용자 혹은 관리자 둘중 하나의 선택을 저장하는 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,23 @@ public class JoinActivity extends AppCompatActivity {
         idCheckBtnState = false;
         //체크상태에 따라 각종 버튼, 에딧텍스트 상태 바꾸는 함수
         setIdInput(idCheckBtnState);
+
+        //라디어그룹 초기화 및 체크드체인지리스너 달아주기
+        staffOrNormal = findViewById(R.id.staffOrNormal);
+        staffOrNormal.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                //체크된 라디오가 일반사용자라면 staff는 false
+                if(checkedId == R.id.normalRB)
+                    staff = false;
+                //체크된 라디오가 관리자라면 staff는 true
+                else if(checkedId == R.id.staffRB)
+                    staff = true;
+                //그 외는 오류
+                else
+                    Toast.makeText(JoinActivity.this,"가입 유형이 제대로 저장되지 않음",Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     //아이디가 중복체크됐는지 여부에 따라 각종 버튼, 에딧텍스트 상태 바꾸는 함수
@@ -154,19 +174,15 @@ public class JoinActivity extends AppCompatActivity {
             input_name = ((EditText)findViewById(R.id.input_name)).getText().toString();
 
             //뉴비 생성
-            newbie = new User(input_id,input_pw,input_name,input_birth);
+            newbie = new User(input_id,input_pw,input_name,input_birth,staff);
             rootReference.child(newbie.id).setValue(newbie);
-            Toast.makeText(this,"가입을 축하드립니다.",Toast.LENGTH_SHORT);
+            Toast.makeText(this,"가입을 축하드립니다.",Toast.LENGTH_SHORT).show();
             this.finish();
-        }else{
-            Toast.makeText(this,"ID 중복확인을 먼저 해주세요.",Toast.LENGTH_SHORT);
+        }
+        //중복검사 안하고는 어짜피 가입버튼 활성화되지 않아서 누를수 없지만 일단 분기
+        else{
+            Toast.makeText(this,"ID 중복확인을 먼저 해주세요.",Toast.LENGTH_SHORT).show();
         }
 
     }
-
-
-    public void btntest(View view) {
-        startActivity(new Intent(this,AdminMainActivity.class));
-    }
-
 }
