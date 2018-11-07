@@ -1,23 +1,24 @@
 package com.example.knk.topm.Object;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     public String name;
     public String pw;
     public String id;
     public String birth;
-    // public boolean isStaff; // 이거 넣고 가입하는 코드 등등 손봐야 합니다아 ^^
+    public boolean staff;
 
-    public User(String id, String pw, String name, String birth){
+    public User(String id, String pw, String name, String birth, boolean staff){
         this.id=id;
         this.pw=pw;
         this.name = name;
         this.birth=birth;
+        this.staff = staff;
     }
 
-    public User() {
-        
-    }
+    public User(){}
 
     public String getName() {
         return name;
@@ -49,5 +50,13 @@ public class User {
 
     public void setBirth(String birth) {
         this.birth = birth;
+    }
+
+    public boolean isStaff() {
+        return staff;
+    }
+
+    public void setStaff(boolean staff) {
+        this.staff = staff;
     }
 }

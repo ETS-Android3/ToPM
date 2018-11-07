@@ -7,6 +7,14 @@
     android:layout_width="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="회원 가입"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="15dp"
+        android:gravity="center"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +25,36 @@
             android:layout_weight="2"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="가입 유형"
+                android:textSize="10sp"/>
+            <RadioGroup
+                android:id="@+id/staffOrNormal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+                <RadioButton
+                    android:id="@+id/normalRB"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="일반 사용자"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/staffRB"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="관리자"/>
+            </RadioGroup>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="아이디"
+                android:textSize="10sp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,30 +66,59 @@
                     android:layout_height="wrap_content"
                     android:hint="ID"/>
                 <Button
+                    android:id="@+id/idCheckBtn"
                     android:onClick="idCheckClick"
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="match_parent"
-                    android:text="중복 검사"
+                    android:text="중복 확인"
                     android:layout_gravity="right"/>
             </LinearLayout>
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="비밀번호"
+                android:textSize="10sp"/>
             <EditText
                 android:id="@+id/input_pw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="PW"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="이름"
+                android:textSize="10sp"/>
             <EditText
                 android:id="@+id/input_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="NAME"/>
-            <EditText
-                android:id="@+id/input_birth"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="BIRTH"/>
+                android:text="생일"
+                android:textSize="10sp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/input_birth"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    android:hint="BIRTH"
+                    android:enabled="false"/>
+                <Button
+                    android:onClick="birthPickClick"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:text="입력하기"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
     <Button
@@ -61,13 +128,4 @@
         android:layout_height="wrap_content"
         android:text="완료"
         android:layout_gravity="center"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="test"
-        android:onClick="btntest"
-        />
-
-
 </LinearLayout>
