@@ -24,11 +24,12 @@
             android:id="@+id/prevBtn"
             android:text="◀"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:onClick="prevBtnClicked"/>
+
         <TextView
             android:text=" 날짜 "
             android:id="@+id/dateTextView"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -36,7 +37,8 @@
             android:id="@+id/nextBtn"
             android:text="▶"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:onClick="nextBtnClicked"/>
 
     </LinearLayout>
 
