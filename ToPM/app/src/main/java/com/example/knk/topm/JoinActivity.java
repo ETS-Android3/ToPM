@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.Object.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +35,6 @@ public class JoinActivity extends AppCompatActivity {
 
     private String input_id;                        //사용자 ID 저장 변수
     private String input_pw;                        //사용자 PW 저장 변수
-    private String input_birth;                     //사용자 Birth 저장 변수
     private String input_name;                      //사용자 Name 저장 변수
     private User newbie;                            //사용자 객체 인스턴스
     private Button joinBtn;                         //회원가입 완료 버튼 : 아이디체크가 완료돼야만 활성화 됨. 완료안되면 비활성화 상태.
@@ -44,7 +44,7 @@ public class JoinActivity extends AppCompatActivity {
     private RadioGroup staffOrNormal;               //일반사용자 혹은 관리자 둘중 하나의 선택을 받는 라디오버튼 그룹
     private boolean staff;                          //일반사용자 혹은 관리자 둘중 하나의 선택을 저장하는 변수
     private EditText birthEditText;                 //생일을 입력받는 에딧텍스트 : DatePickerDialog로부터 입력 받은 값 보여주는 곳
-    private String birthOutput;                     //User객체에 넣을 생일정보 포맷(yymmdd)에 맞게 저장하느 변수
+    private String birthOutput;                     //User객체에 넣을 생일정보 포맷(yyMMdd)에 맞게 저장하느 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +86,8 @@ public class JoinActivity extends AppCompatActivity {
         });
         //생일 보여주는 에딧텍스트 초기화
         birthEditText = findViewById(R.id.input_birth);
+        //초기화
+        birthOutput = "";
     }
 
     //아이디가 중복체크됐는지 여부에 따라 각종 버튼, 에딧텍스트 상태 바꾸는 함수
@@ -180,11 +182,23 @@ public class JoinActivity extends AppCompatActivity {
             input_pw = ((EditText)findViewById(R.id.input_pw)).getText().toString();
             input_name = ((EditText)findViewById(R.id.input_name)).getText().toString();
 
-            //뉴비 생성
-            newbie = new User(input_id,input_pw,input_name,birthOutput,staff);
-            rootReference.child(newbie.id).setValue(newbie);
-            Toast.makeText(this,"가입을 축하드립니다.",Toast.LENGTH_SHORT).show();
-            this.finish();
+            // 입력이 누락된 경우
+            if(input_pw.length() <= 0 || input_name.length() <= 0 || birthOutput.length() <= 0) {
+                try {
+                    throw new InputException();
+                } catch (InputException e) {
+                    Toast.makeText(this, "모두 입력하세요.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+            else{
+                //뉴비 생성
+                newbie = new User(input_id,input_pw,input_name,birthOutput,staff);
+                rootReference.child(newbie.id).setValue(newbie);
+                Toast.makeText(this,"가입을 축하드립니다.",Toast.LENGTH_SHORT).show();
+                this.finish();
+            }
+
         }
         //중복검사 안하고는 어짜피 가입버튼 활성화되지 않아서 누를수 없지만 일단 분기
         else{
