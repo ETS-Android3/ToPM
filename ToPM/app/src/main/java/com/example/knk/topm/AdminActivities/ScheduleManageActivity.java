@@ -71,7 +71,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
 
     // 데이터베이스
     private FirebaseDatabase firebaseDatabase;      //firebaseDatabase
-    private DatabaseReference rootReference;        //rootReference
+    private DatabaseReference movieReference;        //rootReference
     private DatabaseReference scheduleReference;        //rootReference
     private static String movie_ref = "movie";
     private static String schedule_ref = "schedule";
@@ -101,6 +101,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
         //데이터베이스
         firebaseDatabase = FirebaseDatabase.getInstance();
         scheduleReference = firebaseDatabase.getReference(schedule_ref);
+        movieReference = firebaseDatabase.getReference(movie_ref);
 
 
         /*2. 해당 날짜 스케줄*/
@@ -191,9 +192,10 @@ public class ScheduleManageActivity extends AppCompatActivity {
         // 스피너
         movieSpinner = (Spinner) findViewById(R.id.movieSpinner);
         movieData = new ArrayList<Movie>();
+        adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, movieData);
+        movieSpinner.setAdapter(adapter);
         // 데이터 베이스에서 정보 받아와서 movieData에 저장
-        rootReference = firebaseDatabase.getReference(movie_ref);
-        rootReference.addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
+        movieReference.addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // 모든 데이터 가지고 오기
@@ -204,6 +206,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
                         Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
                     else
                         movieData.add(movie); // movieData에 삽입
+                    adapter.notifyDataSetChanged();
                 }
             }
             @Override
@@ -211,8 +214,6 @@ public class ScheduleManageActivity extends AppCompatActivity {
 
             }
         });
-        adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, movieData);
-        movieSpinner.setAdapter(adapter);
 
         //스피너에 셀렉티드 리스너 달기
         selectedMovie = null;
