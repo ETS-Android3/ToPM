@@ -11,15 +11,14 @@
     <ListView
         android:id="@+id/dayScheduleList"
         android:layout_width="match_parent"
-        android:layout_weight="6"
-        android:layout_height="0dp">
-    </ListView>
+        android:layout_height="0dp"
+        android:layout_weight="6"></ListView>
 
     <Button
         android:id="@+id/showMyBookingBtn"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
-        android:text="나의 예매 목록"
+        android:text="나의 예매목록"
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
