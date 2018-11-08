@@ -1,6 +1,8 @@
 package com.example.knk.topm.Object;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     public String name;
     public String pw;
@@ -15,6 +17,8 @@ public class User {
         this.birth=birth;
         this.staff = staff;
     }
+
+    public User(){}
 
     public String getName() {
         return name;
