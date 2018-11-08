@@ -9,8 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".LoginActivity"
+        <activity android:name=".LoginActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,16 +17,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".JoinActivity"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".JoinActivity"
+            android:windowSoftInputMode="adjustPan"/>
+
         <activity android:name=".AdminActivities.MyButtonTestActivity" />
-        <activity android:name=".UserActivities.ShowScheduleActivity" />
+        <activity android:name=".UserActivities.ShowScheduleActivity"></activity>
+
         <activity android:name=".AdminActivities.AdminMainActivity" />
-        <activity
-            android:name=".AdminActivities.MovieManageActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".UserActivities.myBookingList"></activity>
+        <activity android:name=".AdminActivities.MovieManageActivity"
+            android:windowSoftInputMode="adjustPan"/>
+
+
     </application>
 
 </manifest>

@@ -1,9 +1,7 @@
 package com.example.knk.topm.UserActivities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -41,29 +39,9 @@ public class ShowScheduleActivity extends AppCompatActivity {
         rootReference = firebaseDatabase.getReference(movies_ref);
 
         // 데이터베이스에서 영화 정보 받아오기
-        String title;
-        String runningTime;
-        int restSeats;
-        int bookedSeats;
-        int screenNum;
 
-//        ArrayList<Movie> movieData;
-//        ListView movieManageList;
-//
-//        EditText editTitle;
-//        EditText editDir;
-//        EditText editRun;
-//
-//        String title;
-//        String director;
-//        String runningTime;
 
         // 영화 정보 출력하기
 
-    }
-
-    // 나의 예매내역 버튼
-    public void showMyBookingBtn(View view) {
-        startActivity(new Intent(this, myBookingList.class));
     }
 }
