@@ -294,7 +294,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
 
             MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/); // 객체 생성후
             String key = selectedMovie.getTitle();
-            scheduleReference.child(strDate).child(key).setValue(movieSchedule); // "오늘 날짜" 아래 "영화 제목"에 저장
+            scheduleReference.child(strDate).child(key).push().setValue(movieSchedule); // "오늘 날짜" 아래 "영화 제목"에 저장
             Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
         }
         else {
