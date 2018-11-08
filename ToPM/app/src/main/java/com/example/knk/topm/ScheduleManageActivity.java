@@ -14,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -39,6 +41,13 @@ public class ScheduleManageActivity extends AppCompatActivity {
     Button screenBtn;
     Button dateBtn;
     Button timeBtn;
+
+    TextView dateTextView;
+    Button prevBtn;
+    Button nextBtn;
+
+    Date currentDate; // 오늘 날짜
+    String strDate; // 오늘 날짜 문자열
 
     Movie selectedMovie; // 선택한 영화
     int screenNum; // 선택한 상영관
@@ -77,6 +86,9 @@ public class ScheduleManageActivity extends AppCompatActivity {
         movieData = new ArrayList<Movie>();
         adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, movieData);
         movieSpinner.setAdapter(adapter);
+        dateTextView = (TextView) findViewById(R.id.dateTextView);
+        prevBtn = (Button) findViewById(R.id.prevBtn);
+        nextBtn = (Button) findViewById(R.id.nextBtn);
 
         // 변수 초기화
         selectedMovie = null;
@@ -86,6 +98,18 @@ public class ScheduleManageActivity extends AppCompatActivity {
         showYear = -1; // 상영 년도
         showMonth = -1; // 상영 월
         showDay = -1; // 상영 일
+
+        // 오늘 날짜 계산
+        long now = System.currentTimeMillis();
+        currentDate = new Date(now);// 오늘 날짜
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+
+        strDate = sdf.format(currentDate);
+        dateTextView.setText(strDate);
+
+        screenBtn = (Button) findViewById(R.id.screenBtn);
+        dateBtn = (Button) findViewById(R.id.dateBtn);
+        timeBtn = (Button) findViewById(R.id.timeBtn);
 
         // 영화 정보를 서버에서 받아옵시다.
         // 데이터베이스
@@ -152,6 +176,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 상영관 번호 저장
                 screenNum = screenPicker.getValue();
+                screenBtn.setText(String.valueOf(screenNum)+"관"); // 선택한 것 버튼 텍스트에 반영
                 dialog.dismiss(); // 다이어로그 파괴
             }
         });
@@ -193,7 +218,8 @@ public class ScheduleManageActivity extends AppCompatActivity {
             Date screeningDate = new Date(showYear, showMonth, showDay); // Date로 변환
 
             MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate, startHour, startMin); // 객체 생성후
-            scheduleReference.push().setValue(movieSchedule); // 일단 push로 하는데 기본키 뭘로 해야할지 생각해봐야 할듯
+            String key = movieSchedule.getScreenNum()+"관 " + movieSchedule.getScreeningDate().getHours()+":"+movieSchedule.getScreeningDate().getMinutes(); // 기본키
+            scheduleReference.child(key).setValue(movieSchedule);
             Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -221,7 +247,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         // 입력 값에 따라 다른 다이어로그 생성
 
-        Date currentDate = new Date(); // 오늘 날짜
+        currentDate = new Date(); // 오늘 날짜
 
         switch(id) {
             case DATE_DIALOG: // 날짜 다이어로그
@@ -235,6 +261,8 @@ public class ScheduleManageActivity extends AppCompatActivity {
                                         showYear = year;
                                         showMonth = monthOfYear;
                                         showDay = dayOfMonth;
+
+                                        dateBtn.setText(year+"년 "+(monthOfYear+1)+"월 "+dayOfMonth+"일"); // 버튼에 선택 날짜 반영
                                     }
                                 }
                                 , // 사용자가 날짜설정 후 다이얼로그 빠져나올때
@@ -253,6 +281,8 @@ public class ScheduleManageActivity extends AppCompatActivity {
                                         // 설정 후 변수에 저장
                                         startHour = hourOfDay;
                                         startMin = minute;
+
+                                        timeBtn.setText(hourOfDay +"시 " + minute+"분");
                                     }
                                 }, // 값설정시 호출될 리스너 등록
                                 0,0, false); // 기본값 시분 등록
