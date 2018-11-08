@@ -73,13 +73,13 @@ public class LoginActivity extends AppCompatActivity {
                             break;
                         }
                     }
-                    //로그인 오류 처리
-                    else{
-                        //로그인 오류 알림
-                        Toast.makeText(LoginActivity.this, "잘못된 로그인 정보입니다", Toast.LENGTH_SHORT).show();
-                        //비밀번호 지움
-                        login_pw.setText("");
-                    }
+//                    //로그인 오류 처리
+//                    else{
+//                        //로그인 오류 알림
+//                        Toast.makeText(LoginActivity.this, "잘못된 로그인 정보입니다", Toast.LENGTH_SHORT).show();
+//                        //비밀번호 지움
+//                        login_pw.setText("");
+//                    }
                 }
             }
 
