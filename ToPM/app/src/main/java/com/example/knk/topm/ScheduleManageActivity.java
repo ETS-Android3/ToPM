@@ -141,13 +141,14 @@ public class ScheduleManageActivity extends AppCompatActivity {
             strDate = sdf.format(future);
             strDate = future.getYear() + "년 " + strDate;
 
+            final int index = i;
             // 스케줄 데이터베이스 변경 이벤트 핸들러
             scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
                     MovieSchedule newSchedule = dataSnapshot.getValue(MovieSchedule.class); // 새로 추가된 스케줄 받아옴
-                    scheduleData[dateCount].add(newSchedule); // 리스트 뷰에 갱신
+                    scheduleData[index].add(newSchedule); // 리스트 뷰에 갱신
                     schAdapter.notifyDataSetChanged();
                 }
 
