@@ -350,8 +350,9 @@ public class ScheduleManageActivity extends AppCompatActivity {
 //            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
 //            strDate = sdf.format(future);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM월 dd일");
             strDate = sdf.format(screeningDate);
+            strDate = String.valueOf(showYear) + "년 " + strDate;
             Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
 
             MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/); // 객체 생성후
