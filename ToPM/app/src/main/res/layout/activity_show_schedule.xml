@@ -20,6 +20,7 @@
         android:layout_gravity="center"
         android:text="나의 예매목록"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:onClick="showMyBookingBtn"/>
 
 </LinearLayout>
