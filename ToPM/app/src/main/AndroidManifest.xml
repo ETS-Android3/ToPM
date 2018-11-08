@@ -17,13 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<<<<<<< HEAD
+
         <activity android:name=".JoinActivity"
             android:windowSoftInputMode="adjustPan"/>
-=======
-        <activity android:name=".JoinActivity" />
         <activity android:name=".ScheduleManageActivity"></activity>
->>>>>>> Admin_schedule_branch
 
         <activity android:name=".AdminActivities.MyButtonTestActivity" />
         <activity android:name=".UserActivities.ShowScheduleActivity"></activity>
