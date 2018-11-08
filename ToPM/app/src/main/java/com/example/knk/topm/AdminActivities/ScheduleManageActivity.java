@@ -1,4 +1,4 @@
-package com.example.knk.topm;
+package com.example.knk.topm.AdminActivities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -23,6 +23,7 @@ import com.example.knk.topm.CustomAdapters.ScheduleListAdapter;
 import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.Object.Movie;
 import com.example.knk.topm.Object.MovieSchedule;
+import com.example.knk.topm.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

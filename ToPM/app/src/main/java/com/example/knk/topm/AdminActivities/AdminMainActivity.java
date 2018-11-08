@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.example.knk.topm.Object.User;
 import com.example.knk.topm.R;
-import com.example.knk.topm.ScheduleManageActivity;
 
 public class AdminMainActivity extends AppCompatActivity {
 
