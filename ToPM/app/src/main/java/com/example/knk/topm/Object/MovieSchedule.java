@@ -8,9 +8,9 @@ public class MovieSchedule {
     String movieTitle;
     String screenNum;
 
-    Date screeningDate; // 상영 날짜
-    int startHour; // 시작 시간
-    int startMin; // 시작 분
+    public Date screeningDate; // 상영 날짜
+//    int startHour; // 시작 시간
+//    int startMin; // 시작 분
     int bookedSeats; // 예약된 좌석 숫자
     int restSeats; // 남은 좌석 숫자
 
@@ -18,12 +18,12 @@ public class MovieSchedule {
 
     }
 
-    public MovieSchedule(String movieTitle, String screenNum, Date screeningDate, int startHour, int startMin) {
+    public MovieSchedule(String movieTitle, String screenNum, Date screeningDate/*, int startHour, int startMin*/) {
         this.movieTitle = movieTitle;
         this.screenNum = screenNum;
         this.screeningDate = screeningDate;
-        this.startHour = startHour;
-        this.startMin = startMin;
+//        this.startHour = startHour;
+//        this.startMin = startMin;
 
         this.bookedSeats = 0;
         this.restSeats = 0; // 일단
@@ -60,21 +60,21 @@ public class MovieSchedule {
         this.screeningDate = screeningDate;
     }
 
-    public int getStartHour() {
-        return startHour;
-    }
-
-    public void setStartHour(int startHour) {
-        this.startHour = startHour;
-    }
-
-    public int getStartMin() {
-        return startMin;
-    }
-
-    public void setStartMin(int startMin) {
-        this.startMin = startMin;
-    }
+//    public int getStartHour() {
+//        return startHour;
+//    }
+//
+//    public void setStartHour(int startHour) {
+//        this.startHour = startHour;
+//    }
+//
+//    public int getStartMin() {
+//        return startMin;
+//    }
+//
+//    public void setStartMin(int startMin) {
+//        this.startMin = startMin;
+//    }
 
     public int getBookedSeats() {
         return bookedSeats;
