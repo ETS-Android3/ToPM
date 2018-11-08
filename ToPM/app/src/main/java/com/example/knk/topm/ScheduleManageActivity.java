@@ -137,8 +137,9 @@ public class ScheduleManageActivity extends AppCompatActivity {
             today.add(Calendar.DATE, i);
             Date future = today.getTime();
 
-            sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+            sdf = new SimpleDateFormat("MM월 dd일");
             strDate = sdf.format(future);
+            strDate = future.getYear() + "년 " + strDate;
 
             // 스케줄 데이터베이스 변경 이벤트 핸들러
             scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
@@ -339,13 +340,10 @@ public class ScheduleManageActivity extends AppCompatActivity {
         if(inputCheck(args)) {
             // 검사 통과
             // 데이터 베이스에 업로드
-            Date screeningDate = new Date(); // Date로 변환
-            screeningDate.setYear(showYear);
-            screeningDate.setMonth(showMonth);
-            screeningDate.setDate(showDay);
+            Date screeningDate = new Date(showYear, showMonth, showDay); // Date로 변환
             screeningDate.setHours(startHour); // 시간
             screeningDate.setMinutes(startMin); // 분도 넣어줍니다.
-
+            Toast.makeText(this, String.valueOf(showYear) + String.valueOf(screeningDate.getYear()), Toast.LENGTH_SHORT).show();
 //            Calendar today = Calendar.getInstance();
 //            today.add(Calendar.DATE, dateCount);
 //            Date future = today.getTime();
@@ -353,8 +351,9 @@ public class ScheduleManageActivity extends AppCompatActivity {
 //            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
 //            strDate = sdf.format(future);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("YYYY년 MM월 dd일");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM월 dd일");
             strDate = sdf.format(screeningDate);
+            strDate = String.valueOf(showYear) + "년 " + strDate;
             Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
 
             MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/); // 객체 생성후
@@ -395,7 +394,6 @@ public class ScheduleManageActivity extends AppCompatActivity {
                                     public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
                                         Toast.makeText(getApplicationContext(),year+"년 "+(monthOfYear+1)+"월 "+dayOfMonth+"일 을 선택했습니다",
                                                 Toast.LENGTH_SHORT).show();
-
                                         // 설정 후 변수에 저장
                                         showYear = year;
                                         showMonth = monthOfYear;
