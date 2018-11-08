@@ -170,28 +170,29 @@ public class ScheduleManageActivity extends AppCompatActivity {
         });
 
         // 데이터베이스에서 스케줄 정보 받아와서 scheduleData에 저장
-        scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // 모든 데이터 가지고 오기
-                for(DataSnapshot data : dataSnapshot.getChildren()) {
-                    MovieSchedule schedule = data.getValue(MovieSchedule.class);
-
-                    if(schedule == null)
-                        Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
-                    else {
-                        scheduleData.add(schedule); // scheduleData에 삽입
-                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-                schAdapter.notifyDataSetChanged(); // 데이터 갱신 통지
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        // addChild 리스너 있으면 이 리스너는 필요가 없습니다.
+//        scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                // 모든 데이터 가지고 오기
+//                for(DataSnapshot data : dataSnapshot.getChildren()) {
+//                    MovieSchedule schedule = data.getValue(MovieSchedule.class);
+//
+//                    if(schedule == null)
+//                        Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
+//                    else {
+//                        scheduleData.add(schedule); // scheduleData에 삽입
+//                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//                schAdapter.notifyDataSetChanged(); // 데이터 갱신 통지
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
 
 
         // 스케줄 데이터베이스 변경 이벤트 핸들러

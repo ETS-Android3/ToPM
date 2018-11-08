@@ -61,8 +61,7 @@ public class ScheduleListAdapter extends ArrayAdapter<MovieSchedule> {
 
             if (title!=null){
                 title.setText(movieSchedule.getMovieTitle());
-                // time.setText(movieSchedule.);
-                time.setText("시간");
+                time.setText(movieSchedule.screeningDate.getHours()+"시 " + movieSchedule.screeningDate.getMinutes()+"분");
             }
         }
 
