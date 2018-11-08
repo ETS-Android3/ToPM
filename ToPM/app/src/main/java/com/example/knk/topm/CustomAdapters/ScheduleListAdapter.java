@@ -47,6 +47,7 @@ public class ScheduleListAdapter extends ArrayAdapter<MovieSchedule> {
         View v = view;
         TextView title;
         TextView time;
+        TextView screen;
 
         if(v == null){
             LayoutInflater inflater= (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -58,10 +59,11 @@ public class ScheduleListAdapter extends ArrayAdapter<MovieSchedule> {
         if(movieSchedule != null){
             title = v.findViewById(R.id.titleTextView);
             time = v.findViewById(R.id.timeTextview);
-
-            if (title!=null){
+            screen = v.findViewById(R.id.screenTextview);
+            if (title!=null&&time!=null&&screen!=null){
                 title.setText(movieSchedule.getMovieTitle());
-                time.setText(movieSchedule.screeningDate.getHours()+"시 " + movieSchedule.screeningDate.getMinutes()+"분");
+                time.setText(movieSchedule.screeningDate.getHours()+":" + movieSchedule.screeningDate.getMinutes());
+                screen.setText(movieSchedule.getScreenNum()+"관 ");
             }
         }
 
