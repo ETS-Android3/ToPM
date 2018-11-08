@@ -119,6 +119,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
         strDate = sdf.format(currentDate);
         dateTextView.setText(strDate);
+        String str = strDate;       //strDate 초기 값 보존 용 -> adapter에 쓰기 위해
 
         Calendar today = Calendar.getInstance();
         // 미래 날짜 계산 후 오늘날짜로부터 이후 3일까지의 스케줄 데이터 arrayList 객체배열에 저장
@@ -161,7 +162,8 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
         }
         //init함수 안이므로 오늘 날짜에 맞게 어댑터 달기
-        schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[0],this,strDate,0);
+        Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
+        schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[0],this,str,0);
         dayScheduleList.setAdapter(schAdapter);
         scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
             @Override
@@ -470,15 +472,17 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     public void onScheduleDeleteBtnClick(int position, String strDateKey, int dateCount) {
 
         if(deleteCheck()){
+            Toast.makeText(getApplicationContext(),strDateKey,Toast.LENGTH_SHORT).show();
             //스케줄 arrayList객체 배열의 해당 포지션을 지운다. (객체배열의 인덱스 번호와 리스트뷰의 열 번호가 일치함)
             scheduleData[dateCount].remove(position);
             schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[dateCount],this,strDateKey,dateCount);
             dayScheduleList.setAdapter(schAdapter);
             schAdapter.notifyDataSetChanged();
 
+            Toast.makeText(getApplicationContext(),scheduleData[dateCount].size()+"",Toast.LENGTH_SHORT).show();
+
             scheduleReference.child(strDateKey).setValue(null);
-            for(int i=0;i<scheduleData[dateCount].size();i++)
-                scheduleReference.child(strDateKey).setValue(scheduleData[dateCount].get(i));
+            schAdapter.notifyDataSetChanged();
 
         }
         //삭제할 수 없다면 알림
