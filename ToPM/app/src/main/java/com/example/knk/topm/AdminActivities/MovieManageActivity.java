@@ -64,6 +64,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
                     Toast.makeText(MovieManageActivity.this, "nullllll", Toast.LENGTH_SHORT).show();
                 else {
                     movieData.add(movie); // movieData에 삽입
+                    adapter.notifyDataSetChanged();
                 }
             }
 
