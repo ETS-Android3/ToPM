@@ -22,11 +22,12 @@
 
         <TextView
             android:id="@+id/timeTextview"
-            android:text="상영시간"
+            android:text="00:00"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
             android:padding="5dp"/>
 
         <TextView

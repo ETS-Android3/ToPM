@@ -38,7 +38,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class ScheduleManageActivity extends AppCompatActivity {
+public class ScheduleManageActivity extends AppCompatActivity implements ScheduleListAdapter.ScheduleDeleteBtnClickListener {
 
     Spinner movieSpinner;           // 등록된 영화 목록 Spinner
     ArrayList<Movie> movieData;     // 서버에 저장된 영화 데이터 받아오는 배열
@@ -161,7 +161,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
 
         }
         //init함수 안이므로 오늘 날짜에 맞게 어댑터 달기
-        schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[0]);
+        schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[0],this,strDate,0);
         dayScheduleList.setAdapter(schAdapter);
         scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
             @Override
@@ -416,7 +416,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
             if(dateCount == 0) // 오늘 날짜에 도달
                 prevBtn.setEnabled(false);
 
-            schAdapter = new ScheduleListAdapter(this, R.layout.schedule_list_adapter_row, scheduleData[dateCount]); // 어댑터 새로 정의
+            schAdapter = new ScheduleListAdapter(this, R.layout.schedule_list_adapter_row, scheduleData[dateCount],this,str,dateCount); // 어댑터 새로 정의
             dayScheduleList.setAdapter(schAdapter); // 어댑터 새로 설정
             schAdapter.notifyDataSetChanged(); // 변경 통지
         }
@@ -442,7 +442,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
             if(dateCount == FUTURE_DATE - 1) // 가장 미래 날짜에 도달
                 nextBtn.setEnabled(false);
 
-            schAdapter = new ScheduleListAdapter(this, R.layout.schedule_list_adapter_row, scheduleData[dateCount]); // 어댑터 새로 정의
+            schAdapter = new ScheduleListAdapter(this, R.layout.schedule_list_adapter_row, scheduleData[dateCount],this, str,dateCount); // 어댑터 새로 정의
             dayScheduleList.setAdapter(schAdapter); // 어댑터 새로 설정
             schAdapter.notifyDataSetChanged(); // 변경 통지
         }
@@ -460,5 +460,30 @@ public class ScheduleManageActivity extends AppCompatActivity {
         str = sdf.format(future);
 
         return str;
+    }
+    public boolean deleteCheck(){
+        return true;
+    }
+
+    //스케줄 삭제버튼에 대한 클릭이벤트 - 삭제하기
+    @Override
+    public void onScheduleDeleteBtnClick(int position, String strDateKey, int dateCount) {
+
+        if(deleteCheck()){
+            //스케줄 arrayList객체 배열의 해당 포지션을 지운다. (객체배열의 인덱스 번호와 리스트뷰의 열 번호가 일치함)
+            scheduleData[dateCount].remove(position);
+            schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[dateCount],this,strDateKey,dateCount);
+            dayScheduleList.setAdapter(schAdapter);
+            schAdapter.notifyDataSetChanged();
+
+            scheduleReference.child(strDateKey).setValue(null);
+            for(int i=0;i<scheduleData[dateCount].size();i++)
+                scheduleReference.child(strDateKey).setValue(scheduleData[dateCount].get(i));
+
+        }
+        //삭제할 수 없다면 알림
+        else{
+            Toast.makeText(getApplicationContext(),"지울 수 없는 영화입니다.",Toast.LENGTH_SHORT).show();
+        }
     }
 }
