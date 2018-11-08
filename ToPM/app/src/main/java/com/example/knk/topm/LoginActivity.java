@@ -1,15 +1,15 @@
 package com.example.knk.topm;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.knk.topm.AdminActivities.AdminMainActivity;
-import com.example.knk.topm.AdminActivities.MovieManageActivity;
 import com.example.knk.topm.Object.User;
 import com.example.knk.topm.UserActivities.ShowScheduleActivity;
 import com.google.firebase.database.DataSnapshot;
@@ -55,14 +55,14 @@ public class LoginActivity extends AppCompatActivity {
                         //아이디가 같다면 유저 인스턴스를 하나 생성해서 데이터를 받아온 다음
                         User user = data.getValue(User.class);
                         //유저 인스턴스의 비밀번호가 입력한 비밀번호와 일치한다면 -> 로그인 성공
-                        if(user.getPw().equals(login_pw.getText().toString())){
+                        if(user.getPw().equals(login_pw.getText().toString())) {
                             Intent intent;
                             //유저 인스턴스가 관리자라면
-                            if(user.isStaff())  //관리자 액티비티로
-                                intent = new Intent(getApplicationContext(),AdminMainActivity.class);
-                            //유저 인스턴스가 일반 사용자라면
+                            if (user.isStaff())  //관리자 액티비티로
+                                intent = new Intent(getApplicationContext(), AdminMainActivity.class);
+                                //유저 인스턴스가 일반 사용자라면
                             else                //일반 사용자 액티비티로
-                                intent = new Intent(getApplicationContext(),ShowScheduleActivity.class);
+                                intent = new Intent(getApplicationContext(), ShowScheduleActivity.class);
                             //유저 인스턴스의 객체정보를 다음 액티비티로 전달한다.
                             intent.putExtra(user_putExtra_tag, user);
                             //로그인 정보 입력창을 다시 빈칸으로 초기화한 다음 (뒤로가기 눌렀을 때 정보가 남아있는 것을 방지)
@@ -72,6 +72,13 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                             break;
                         }
+                    }
+                    //로그인 오류 처리
+                    else{
+                        //로그인 오류 알림
+                        Toast.makeText(LoginActivity.this, "잘못된 로그인 정보입니다", Toast.LENGTH_SHORT).show();
+                        //비밀번호 지움
+                        login_pw.setText("");
                     }
                 }
             }
