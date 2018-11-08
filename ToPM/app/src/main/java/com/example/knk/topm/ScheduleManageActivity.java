@@ -137,8 +137,9 @@ public class ScheduleManageActivity extends AppCompatActivity {
             today.add(Calendar.DATE, i);
             Date future = today.getTime();
 
-            sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+            sdf = new SimpleDateFormat("MM월 dd일");
             strDate = sdf.format(future);
+            strDate = future.getYear() + "년 " + strDate;
 
             // 스케줄 데이터베이스 변경 이벤트 핸들러
             scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
