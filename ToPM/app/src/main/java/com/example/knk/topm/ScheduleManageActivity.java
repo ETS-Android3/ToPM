@@ -77,7 +77,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
     final static int SCREENS = 5;    // 상영관 5개
     final int DATE_DIALOG = 1111; // 날짜 다이어로그
     final int TIME_DIALOG = 2222; // 시간 다이어로그
-
+    final int FUTURE_DATE = 3; // 미래 날짜
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -199,6 +199,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
         scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 MovieSchedule newSchedule = dataSnapshot.getValue(MovieSchedule.class); // 새로 추가된 스케줄 받아옴
                 scheduleData.add(newSchedule); // 리스트 뷰에 갱신
                 schAdapter.notifyDataSetChanged();
@@ -287,14 +288,13 @@ public class ScheduleManageActivity extends AppCompatActivity {
         if(inputCheck(args)) {
             // 검사 통과
             // 데이터 베이스에 업로드
-            // String movieTitle, String screenNum, Date screeningDate, int startHour, int startMin
             Date screeningDate = new Date(showYear, showMonth, showDay); // Date로 변환
             screeningDate.setHours(startHour); // 시간
             screeningDate.setMinutes(startMin); // 분도 넣어줍니다.
 
             MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/); // 객체 생성후
-            String key = selectedMovie.getTitle();
-            scheduleReference.child(strDate).child(key).push().setValue(movieSchedule); // "오늘 날짜" 아래 "영화 제목"에 저장
+            // String key = movieSchedule.getScreenNum() + "관" + movieSchedule.screeningDate.getHours()+":"+movieSchedule.screeningDate.getMinutes();
+            scheduleReference.child(strDate).push().setValue(movieSchedule); // "오늘 날짜" 아래 push\
             Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
         }
         else {
