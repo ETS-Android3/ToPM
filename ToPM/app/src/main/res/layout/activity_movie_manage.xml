@@ -84,7 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="9"
-                android:hint="running time "
+                android:hint="running time (분 단위)"
                 android:id="@+id/edittxtruntime"
                 android:inputType="numberDecimal"/>
         </LinearLayout>
