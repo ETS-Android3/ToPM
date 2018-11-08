@@ -13,27 +13,30 @@
         <TextView
             android:id="@+id/titleTextView"
             android:text="영화 제목"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="10dp"
+            android:padding="5dp"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/timeTextview"
             android:text="상영시간"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="10dp"/>
+            android:padding="5dp"/>
 
         <TextView
             android:id="@+id/screenTextview"
-            android:text="상영관번호"
-            android:layout_width="wrap_content"
+            android:text="상영관"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="10dp"/>
+            android:padding="5dp"/>
     </LinearLayout>
     <Button
         android:id="@+id/deleteBtn"

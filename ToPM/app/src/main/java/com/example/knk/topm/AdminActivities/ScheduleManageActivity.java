@@ -91,56 +91,40 @@ public class ScheduleManageActivity extends AppCompatActivity {
     }
 
     public void init() {
-        // 객체 생성
-        // 스피너
-        movieSpinner = (Spinner) findViewById(R.id.movieSpinner);
-        movieData = new ArrayList<Movie>();
-        adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, movieData);
-        movieSpinner.setAdapter(adapter);
+        //초기화
 
+        /*1.액티비티 타이틀, 디비 연결*/
         // 상단 텍스트뷰, 버튼
-        dateTextView = (TextView) findViewById(R.id.dateTextView);
-        prevBtn = (Button) findViewById(R.id.prevBtn);
-        nextBtn = (Button) findViewById(R.id.nextBtn);
+        dateTextView = findViewById(R.id.dateTextView);
+        prevBtn = findViewById(R.id.prevBtn);
+        nextBtn = findViewById(R.id.nextBtn);
+        //데이터베이스
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        scheduleReference = firebaseDatabase.getReference(schedule_ref);
 
+
+        /*2. 해당 날짜 스케줄*/
         // 리스트뷰
-        dayScheduleList = (ListView) findViewById(R.id.dayScheduleList);
+        dayScheduleList = findViewById(R.id.dayScheduleList);
         scheduleData = new ArrayList[FUTURE_DATE];
         dateCount = 0; // 0이면 오늘, 1, 2, 3일 +됨
         for(int i=0; i<FUTURE_DATE; i++) {
             scheduleData[i] = new ArrayList<>();
         }
-        schAdapter = new ScheduleListAdapter(this, R.layout.schedule_list_adapter_row, scheduleData[dateCount]);
-        dayScheduleList.setAdapter(schAdapter);
-
-        // 변수 초기화
-        selectedMovie = null;
-        screenNum = -1; // 상영관 번호 선택 전에는 -1, 선택 후 1~5
-        startHour = -1; // 시작 시간
-        startMin = -1; // 시작 분
-        showYear = -1; // 상영 년도
-        showMonth = -1; // 상영 월
-        showDay = -1; // 상영 일
 
         // 오늘 날짜 계산
         long now = System.currentTimeMillis();
         currentDate = new Date(now);// 오늘 날짜
-        SimpleDateFormat sdf = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+        strDate = sdf.format(currentDate);
+        dateTextView.setText(strDate);
 
-        // 데이터베이스
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        rootReference = firebaseDatabase.getReference(movie_ref);
-        scheduleReference = firebaseDatabase.getReference(schedule_ref);
-
-        // 미래 날짜 계산
+        Calendar today = Calendar.getInstance();
+        // 미래 날짜 계산 후 오늘날짜로부터 이후 3일까지의 스케줄 데이터 arrayList 객체배열에 저장
         for(int i=0; i<FUTURE_DATE; i++) {
-            Calendar today = Calendar.getInstance();
-            today.add(Calendar.DATE, i);
-            Date future = today.getTime();
 
-            sdf = new SimpleDateFormat("MM월 dd일");
-            strDate = sdf.format(future);
-            strDate = future.getYear() + "년 " + strDate;
+            today.add(Calendar.DATE, i);            //날짜 더하기
+            strDate = sdf.format(today.getTime());
 
             final int index = i;
             // 스케줄 데이터베이스 변경 이벤트 핸들러
@@ -175,17 +159,40 @@ public class ScheduleManageActivity extends AppCompatActivity {
             });
 
         }
+        //init함수 안이므로 오늘 날짜에 맞게 어댑터 달기
+        schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[0]);
+        dayScheduleList.setAdapter(schAdapter);
+        scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // 모든 데이터 가지고 오기
+                for(DataSnapshot data : dataSnapshot.getChildren()) {
+                    MovieSchedule schedule = data.getValue(MovieSchedule.class);
 
-        strDate = sdf.format(currentDate);
-        dateTextView.setText(strDate);
+                    if(schedule == null)
+                        Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
+                    else {
+                        scheduleData[0].add(schedule); // scheduleData에 삽입
+                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                schAdapter.notifyDataSetChanged(); // 데이터 갱신 통지
+            }
 
-        screenBtn = (Button) findViewById(R.id.screenBtn);
-        dateBtn = (Button) findViewById(R.id.dateBtn);
-        timeBtn = (Button) findViewById(R.id.timeBtn);
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        // 영화 정보를 서버에서 받아옵시다.
+            }
+        });
 
+
+
+        /*3. 입력 부분*/
+        // 스피너
+        movieSpinner = (Spinner) findViewById(R.id.movieSpinner);
+        movieData = new ArrayList<Movie>();
         // 데이터 베이스에서 정보 받아와서 movieData에 저장
+        rootReference = firebaseDatabase.getReference(movie_ref);
         rootReference.addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -195,20 +202,20 @@ public class ScheduleManageActivity extends AppCompatActivity {
 
                     if(movie == null)
                         Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
-                    else {
+                    else
                         movieData.add(movie); // movieData에 삽입
-                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
-                    }
                 }
-                adapter.notifyDataSetChanged(); // 데이터 갱신 통지
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
         });
+        adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, movieData);
+        movieSpinner.setAdapter(adapter);
 
+        //스피너에 셀렉티드 리스너 달기
+        selectedMovie = null;
         movieSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -221,64 +228,17 @@ public class ScheduleManageActivity extends AppCompatActivity {
             }
         });
 
-        // 데이터베이스에서 스케줄 정보 받아와서 scheduleData에 저장
-        // addChild 리스너 있으면 이 리스너는 필요가 없습니다.
-//        scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                // 모든 데이터 가지고 오기
-//                for(DataSnapshot data : dataSnapshot.getChildren()) {
-//                    MovieSchedule schedule = data.getValue(MovieSchedule.class);
-//
-//                    if(schedule == null)
-//                        Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
-//                    else {
-//                        scheduleData.add(schedule); // scheduleData에 삽입
-//                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//                schAdapter.notifyDataSetChanged(); // 데이터 갱신 통지
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        // 변수 초기화
+        screenNum = -1; // 상영관 번호 선택 전에는 -1, 선택 후 1~5
+        startHour = -1; // 시작 시간
+        startMin = -1; // 시작 분
+        showYear = -1; // 상영 년도
+        showMonth = -1; // 상영 월
+        showDay = -1; // 상영 일
 
-//        // 스케줄 데이터베이스 변경 이벤트 핸들러
-//        for(int i=0; i<FUTURE_DATE; i++) {
-//
-//        }
-//        scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                MovieSchedule newSchedule = dataSnapshot.getValue(MovieSchedule.class); // 새로 추가된 스케줄 받아옴
-//                scheduleData[dateCount].add(newSchedule); // 리스트 뷰에 갱신
-//                schAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        screenBtn = (Button) findViewById(R.id.screenBtn);
+        dateBtn = (Button) findViewById(R.id.dateBtn);
+        timeBtn = (Button) findViewById(R.id.timeBtn);
 
     }
 
@@ -450,7 +410,7 @@ public class ScheduleManageActivity extends AppCompatActivity {
             String str = dateCalculator(dateCount);
             dateTextView.setText(str);
 
-            Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
 
             if(dateCount == 0) // 오늘 날짜에 도달
                 prevBtn.setEnabled(false);
