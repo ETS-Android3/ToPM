@@ -16,16 +16,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="관리자 메인 화면"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:textStyle="bold"
             android:layout_gravity="center"
             android:padding="10dp"/>
-        <ListView
-            android:id="@+id/dayScheduleList"
+
+        <LinearLayout
             android:layout_width="300dp"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:padding="10dp"/>
+            android:orientation="vertical">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+                <Button
+                    android:id="@+id/prevBtn"
+                    android:text="◀"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="prevBtnClick"/>
+                <TextView
+                    android:text="날짜"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:id="@+id/dateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"/>
+                <Button
+                    android:id="@+id/nextBtn"
+                    android:text="▶"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="nextBtnClick"/>
+            </LinearLayout>
+            <ListView
+                android:id="@+id/dayScheduleList"
+                android:layout_width="300dp"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:padding="10dp"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="300dp"
