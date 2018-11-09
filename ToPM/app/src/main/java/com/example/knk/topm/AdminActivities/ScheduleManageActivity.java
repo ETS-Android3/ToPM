@@ -38,104 +38,111 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class ScheduleManageActivity extends AppCompatActivity implements ScheduleListAdapter.ScheduleDeleteBtnClickListener {
+public class ScheduleManageActivity extends AppCompatActivity implements ScheduleListAdapter.ScheduleDeleteBtnClickListener {   //스케쥴리스트어댑터 클릭리스너 implements
 
-    Spinner movieSpinner;           // 등록된 영화 목록 Spinner
-    ArrayList<Movie> movieData;     // 서버에 저장된 영화 데이터 받아오는 배열
-    ArrayAdapter<Movie> adapter;    // 스피너에 연결하는 어댑터
-
-    ListView dayScheduleList;       // 영화 스케줄 출력
-    ArrayList<MovieSchedule>[] scheduleData; // 서버에 저장된 스케줄 데이터 받아오는 배열
-    ScheduleListAdapter schAdapter; // 리스트뷰에 연결하는 어댑터
-
-    Button screenBtn;
-    Button dateBtn;
-    Button timeBtn;
-
-    TextView dateTextView;
-    Button prevBtn;
-    Button nextBtn;
-
-    Date currentDate; // 오늘 날짜
-    String strDate; // 오늘 날짜 문자열
-
-    Movie selectedMovie; // 선택한 영화
-    int screenNum; // 선택한 상영관
-    int startHour; // 시작 시간
-    int startMin; // 시작 분
-    int showYear; // 상영 년도
-    int showMonth; // 상영 월
-    int showDay; // 상영 일
-
-    int dateCount;
-
-    // 데이터베이스
-    private FirebaseDatabase firebaseDatabase;      //firebaseDatabase
-    private DatabaseReference movieReference;        //rootReference
+    /*상단뷰를 위한 변수*/
+    private TextView dateTextView;          //현재 이동돼있는 날짜를 보여주는 텍스트뷰
+    private Button prevBtn;                 //이전날짜로 가는 버튼
+    private Button nextBtn;                 //이후날짜로 가는 버튼
+    /*데이터베이스*/
+    private FirebaseDatabase firebaseDatabase;          //firebaseDatabase
+    private DatabaseReference movieReference;           //rootReference
     private DatabaseReference scheduleReference;        //rootReference
-    private static String movie_ref = "movie";
-    private static String schedule_ref = "schedule";
+    final private static String movie_ref = "movie";          //영화 레퍼런스로 가는 키
+    final private static String schedule_ref = "schedule";    //스케줄 레퍼런스로 가는 키
 
-    /* 상수 */
-    final static int SCREENS = 5;    // 상영관 5개
-    final int DATE_DIALOG = 1111; // 날짜 다이어로그
-    final int TIME_DIALOG = 2222; // 시간 다이어로그
-    final int FUTURE_DATE = 4; // 미래 날짜
+    /*영화 스케줄 리스트 출력을 위한 변수*/
+    private ListView dayScheduleList;                   // 영화 스케줄 출력을 위한 리스트 뷰
+    private ArrayList<MovieSchedule>[] scheduleData;    // 서버에 저장된 스케줄 데이터를 날짜별로 인덱스를 나눠 받아오는 "arrayList객체" 배열
+    private ScheduleListAdapter schAdapter;             // 리스트뷰에 연결show하는 어댑터
+    private final int SCH_LIST_ROW_LAYOUT_RESOURCE = R.layout.schedule_list_adapter_row;
+
+
+    /*스케줄 등록 위한 변수*/
+    //1.영화 선택 스피너 변수들
+    private Spinner movieSpinner;           // 등록된 영화 목록 Spinner
+    private ArrayList<Movie> movieData;     // 데이터베이스에 저장된 영화 데이터 받아오는 배열
+    private ArrayAdapter<Movie> adapter;    // 스피너에 연결하는 어댑터
+    //2.상영관 선택
+    private Button screenBtn;               //상영관 선택을 위한 버튼
+    //3.상영날짜 선택
+    private Button dateBtn;                 //상영날짜 선택을 위한 버튼
+    //4.상영시간 선택
+    private Button timeBtn;                 //상영시간 선택을 위한 버튼
+
+    Date currentDate;                       // 오늘 날짜
+    String strDate;                         // 오늘 날짜 문자열
+    //5. 입력한 스케쥴값을 저장하는 변수 - 따로 변수를 둔 것은 입력이 아우것도 안돼있을 때를 예외처리하기 위해서
+    private Movie selectedMovie;            // 선택한 영화
+    private int screenNum;                  // 선택한 상영관
+    private int startHour;                  // 시작 시간
+    private int startMin;                   // 시작 분
+    private int showYear;                   // 상영 년도
+    private int showMonth;                  // 상영 월
+    private int showDay;                    // 상영 일
+    public int dateCount;                          //설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
+
+    /*상수*/
+    final static int SCREENS = 5;           // 상영관 5개
+    final int DATE_DIALOG = 1111;           // 날짜 다이어로그
+    final int TIME_DIALOG = 2222;           // 시간 다이어로그
+    final int FUTURE_DATE = 4;              // 미래 날짜
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_manage);
-
-        init();
+        initViewAndDB();                    //액티비티 타이틀, 디비연결 초기화
+        initScheduleListView();             //날짜별 스케줄 리스트뷰 초기화
+        initInputView();                    //스케쥴 입력 초기화
     }
 
-    public void init() {
-        //초기화
-
+    //액티비티 타이틀, 디비연결 초기화
+    public void initViewAndDB() {
         /*1.액티비티 타이틀, 디비 연결*/
         // 상단 텍스트뷰, 버튼
         dateTextView = findViewById(R.id.dateTextView);
         prevBtn = findViewById(R.id.prevBtn);
+        prevBtn.setEnabled(false);              //초기화면은 무조건 오늘날짜이므로 이전 날짜 버튼 비활성화하기
         nextBtn = findViewById(R.id.nextBtn);
         //데이터베이스
         firebaseDatabase = FirebaseDatabase.getInstance();
         scheduleReference = firebaseDatabase.getReference(schedule_ref);
         movieReference = firebaseDatabase.getReference(movie_ref);
+    }
 
-
-        /*2. 해당 날짜 스케줄*/
+    //날짜별 스케줄 리스트뷰 초기화
+    public void initScheduleListView(){
+        /*2.날짜별 스케줄*/
         // 리스트뷰
-        dayScheduleList = findViewById(R.id.dayScheduleList);
-        scheduleData = new ArrayList[FUTURE_DATE];
-        dateCount = 0; // 0이면 오늘, 1, 2, 3일 +됨
-        for(int i=0; i<FUTURE_DATE; i++) {
+        dayScheduleList = findViewById(R.id.dayScheduleList);   //리스트뷰 초기화
+        scheduleData = new ArrayList[FUTURE_DATE];              //파이어베이스로부터 가져온 스케줄데이터를 저장하는 arrayList, 날짜별로 인덱스를 나눠 arrayList객체 배열 생성
+        dateCount = 0;                                          //0이면 오늘, 1, 2, 3일 +됨
+        for(int i=0; i<FUTURE_DATE; i++) {                      //오늘부터 최대 3일후까지만 생성
             scheduleData[i] = new ArrayList<>();
         }
 
         // 오늘 날짜 계산
-        long now = System.currentTimeMillis();
-        currentDate = new Date(now);// 오늘 날짜
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
-        strDate = sdf.format(currentDate);
-        dateTextView.setText(strDate);
-        String str = strDate;       //strDate 초기 값 보존 용 -> adapter에 쓰기 위해
+        //long now = System.currentTimeMillis();                    // 오늘 날짜를 시스템에서 받아옴
+        currentDate = new Date(System.currentTimeMillis());         // 시스템으로부터 받아온 오늘 날짜를 Date형으로 저장
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");   //날짜 포맷
+        strDate = sdf.format(currentDate);                          // 오늘 날짜를 날짜 포맷에 맞게 변형
+        dateTextView.setText(strDate);                              // 오늘 날짜로 설정한 날짜를 보여주는 텍스트뷰에 setText
 
-        Calendar today = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();                    // 캘린더 객체
         // 미래 날짜 계산 후 오늘날짜로부터 이후 3일까지의 스케줄 데이터 arrayList 객체배열에 저장
         for(int i=0; i<FUTURE_DATE; i++) {
 
             today.add(Calendar.DATE, i);            //날짜 더하기
-            strDate = sdf.format(today.getTime());
+            strDate = sdf.format(today.getTime());  //yyyy년 MM월 dd일
 
             final int index = i;
             // 스케줄 데이터베이스 변경 이벤트 핸들러
             scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
                     MovieSchedule newSchedule = dataSnapshot.getValue(MovieSchedule.class); // 새로 추가된 스케줄 받아옴
-                    scheduleData[index].add(newSchedule); // 리스트 뷰에 갱신
+                    scheduleData[index].add(newSchedule);                                   // 리스트 뷰에 갱신
                     schAdapter.notifyDataSetChanged();
                 }
 
@@ -161,9 +168,12 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             });
 
         }
+
+        //어댑터에는 현재액티비티의 context, 뿌려줄 리스트뷰 한 줄(row)의 레아이웃, 뿌려줄 데이터 정보, 삭제버튼 클릭리스너, 현재설정된 날짜, 현재선택한날짜-오늘날짜
+        //어댑터에 넘기는 파라미터중 뒤에서 세 개는 삭제버튼 때문에 넘기는 인자
         //init함수 안이므로 오늘 날짜에 맞게 어댑터 달기
-        Toast.makeText(this,str,Toast.LENGTH_SHORT).show();
-        schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[0],this,str,0);
+        //따라서 context,R.layout.schedule_list_adapter_row,오늘날짜의 scheduleData, implements한 리스너, 오늘날짜의 string, 0 을 넘긴다.
+        schAdapter = new ScheduleListAdapter(this,SCH_LIST_ROW_LAYOUT_RESOURCE,scheduleData[0],this,sdf.format(currentDate),0);
         dayScheduleList.setAdapter(schAdapter);
         scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
             @Override
@@ -174,10 +184,9 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
                     if(schedule == null)
                         Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
-                    else {
-                        scheduleData[0].add(schedule); // scheduleData에 삽입
-                        // Toast.makeText(MovieManageActivity.this, movie.getTitle(), Toast.LENGTH_SHORT).show();
-                    }
+                    //스케쥴 객체가 정상적으로 들어갔을 때
+                    else
+                        scheduleData[0].add(schedule); // scheduleData[0]에 삽입 (오늘날짜)
                 }
                 schAdapter.notifyDataSetChanged(); // 데이터 갱신 통지
             }
@@ -188,14 +197,17 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             }
         });
 
+    }
 
-
+    //스케쥴 입력 초기화
+    public void initInputView(){
         /*3. 입력 부분*/
         // 스피너
-        movieSpinner = (Spinner) findViewById(R.id.movieSpinner);
-        movieData = new ArrayList<Movie>();
-        adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, movieData);
+        movieSpinner = (Spinner) findViewById(R.id.movieSpinner);               //스피너 초기화
+        movieData = new ArrayList<Movie>();                                     //데이터베이스로부터 받아올 영화정보를 저장할 arrayList 초기화
+        adapter = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, movieData); //기본 ArrayAdapter
         movieSpinner.setAdapter(adapter);
+
         // 데이터 베이스에서 정보 받아와서 movieData에 저장
         movieReference.addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
             @Override
@@ -206,9 +218,10 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
                     if(movie == null)
                         Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
+                    //영화객체가 정상적으로 들어왔을 때
                     else
-                        movieData.add(movie); // movieData에 삽입
-                    adapter.notifyDataSetChanged();
+                        movieData.add(movie);               // movieData에 삽입
+                    adapter.notifyDataSetChanged();         // 스피너 갱신
                 }
             }
             @Override
@@ -232,67 +245,63 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         });
 
         // 변수 초기화
-        screenNum = -1; // 상영관 번호 선택 전에는 -1, 선택 후 1~5
-        startHour = -1; // 시작 시간
-        startMin = -1; // 시작 분
-        showYear = -1; // 상영 년도
-        showMonth = -1; // 상영 월
-        showDay = -1; // 상영 일
+        screenNum = -1;     // 상영관 번호 선택 전에는 -1, 선택 후 1~5
+        startHour = -1;     // 시작 시간
+        startMin = -1;      // 시작 분
+        showYear = -1;      // 상영 년도
+        showMonth = -1;     // 상영 월
+        showDay = -1;       // 상영 일
 
-        screenBtn = (Button) findViewById(R.id.screenBtn);
-        dateBtn = (Button) findViewById(R.id.dateBtn);
-        timeBtn = (Button) findViewById(R.id.timeBtn);
+        screenBtn = (Button) findViewById(R.id.screenBtn);  //스크린 선택 다이얼로그를 띄우는 버튼
+        dateBtn = (Button) findViewById(R.id.dateBtn);      //날짜 선택 다이얼로그를 띄우는 버튼
+        timeBtn = (Button) findViewById(R.id.timeBtn);      //시간 선택 다이얼로그를 띄우는 버튼
 
     }
 
+    // 상영관 선택 다이어로그 (NumberPicker 다이어로그)
     public void selectScreenBtn(View view) {
-        // 상영관 선택 다이어로그 (NumberPicker 다이어로그)
-
         final Dialog dialog = new Dialog(this);
         dialog.setTitle("상영관 선택");
         dialog.setContentView(R.layout.numberpicker_dialog);
 
-        Button setBtn = (Button) dialog.findViewById(R.id.setButn);
-        // Button cancelBtn = (Button) dialog.findViewById(R.id.cancelBtn);
+        Button setBtn = dialog.findViewById(R.id.setBtn);
 
-        final NumberPicker screenPicker = (NumberPicker) dialog.findViewById(R.id.screenPicker);
+        final NumberPicker screenPicker = dialog.findViewById(R.id.screenPicker);
         screenPicker.setMaxValue(SCREENS); // max value SCREENS (5)
         screenPicker.setMinValue(1);   // min value 1
         screenPicker.setWrapSelectorWheel(false);
-        // screenPicker.setOnValueChangedListener((NumberPicker.OnValueChangeListener) this);
-
         setBtn.setOnClickListener(new View.OnClickListener() {
             // 확인 버튼 클릭
             @Override
             public void onClick(View v) {
                 // 상영관 번호 저장
                 screenNum = screenPicker.getValue();
-                screenBtn.setText(String.valueOf(screenNum)+"관"); // 선택한 것 버튼 텍스트에 반영
+                screenBtn.setText(String.valueOf(screenNum)+"관");   // 선택한 것 버튼 텍스트에 반영
                 dialog.dismiss(); // 다이어로그 파괴
             }
         });
-//        cancelBtn.setOnClickListener(new View.OnClickListener() {
-//            // 취소 버튼 클릭
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss(); // 그냥 끔
-//            }
-//        });
         dialog.show();
     }
 
+    // 날짜 선택 버튼 (DatePicker 다이어로그)
     public void inputDateBtn(View view) {
-        // 날짜 선택 버튼 (DatePicker 다이어로그)
+        //onCreateDialog참조
         showDialog(DATE_DIALOG);
     }
 
+    // 시작 시간 입력 (TimePicker 다이어로그)
     public void inputStartTimeBtn(View view) {
-        // 시작 시간 입력 (TimePicker 다이어로그)
+        //onCreateDialog참조
         showDialog(TIME_DIALOG);
     }
 
+    //DB 넣을 수 있는지 체크
+    public boolean checkAddableToDB(){
+        return true;
+    }
+
+    // 스케쥴 추가 완료 버튼 클릭
     public void scheduleComplete(View view) {
-        // 완료 버튼 클릭
         // Input 검사
         int[] args = new int[6];
         args[0] = showYear;
@@ -305,26 +314,35 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         if(inputCheck(args)) {
             // 검사 통과
             // 데이터 베이스에 업로드
-            Date screeningDate = new Date(showYear, showMonth, showDay); // Date로 변환
-            screeningDate.setHours(startHour); // 시간
-            screeningDate.setMinutes(startMin); // 분도 넣어줍니다.
-            Toast.makeText(this, String.valueOf(showYear) + String.valueOf(screeningDate.getYear()), Toast.LENGTH_SHORT).show();
-//            Calendar today = Calendar.getInstance();
-//            today.add(Calendar.DATE, dateCount);
-//            Date future = today.getTime();
-//
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
-//            strDate = sdf.format(future);
+            Date screeningDate = new Date(showYear, showMonth, showDay);    // Date로 변환
+            screeningDate.setHours(startHour);                              // 시간
+            screeningDate.setMinutes(startMin);                             // 분도 넣어줍니다.
 
             SimpleDateFormat sdf = new SimpleDateFormat("MM월 dd일");
             strDate = sdf.format(screeningDate);
             strDate = String.valueOf(showYear) + "년 " + strDate;
-            Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
+            // 객체 생성후
+            MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/);
+            /*
+            1. 스케쥴데이터베이스 구조
+            schedule/(key1)yyyy년 MM월 dd일/(key2)상영관번호+상영시간객체/스케쥴객체
+            key는 특히 유일해야함!!!!! 특히 key2는 유일하게 입력받도록 확인하는 함수 필요
+            상영관번호가 같으면서 + 상영시간객체까지 동일할 수 없음 따라서 스케쥴 추가할때 확인 필요!!!
+            */
+            //데이터베이스 순서 : schedule/yyyy년 MM월 ddd일/상영관번호+상영시간객체/상영스케쥴객체
+            //scheduleKey = 상영관번호+상영시간객체
+            String scheduleKey = movieSchedule.getScreenNum()+movieSchedule.getScreeningDate();
 
-            MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/); // 객체 생성후
-            // String key = movieSchedule.getScreenNum() + "관" + movieSchedule.screeningDate.getHours()+":"+movieSchedule.screeningDate.getMinutes();
-            scheduleReference.child(strDate).push().setValue(movieSchedule); // "오늘 날짜" 아래 push\
-            Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+            if(checkAddableToDB()){
+                //데이터베이스에 해당 순서대로 스케쥴객체 삽입.
+                scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);
+                //Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                Toast.makeText(this,"해당 스케쥴은 중복입니다.",Toast.LENGTH_SHORT).show();
+            }
+
         }
         else {
             // 틀린 점이 있음
@@ -337,8 +355,8 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         }
     }
 
+    // args가 모두 -1이 아니여야만 true 반환
     public boolean inputCheck(int[] args) {
-        // args가 모두 -1이 아니여야만 true 반환
         for(int i=0; i<args.length; i++) {
             if(args[i] == -1)
                 return false;
@@ -346,40 +364,36 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         return true;
     }
 
+    // 입력 값에 따라 다른 다이어로그 생성
     @Override
     protected Dialog onCreateDialog(int id) {
-        // 입력 값에 따라 다른 다이어로그 생성
-
         switch(id) {
-            case DATE_DIALOG: // 날짜 다이어로그
+            // 날짜 다이어로그
+            case DATE_DIALOG:
                 Calendar calendar = new GregorianCalendar(Locale.KOREA);
                 DatePickerDialog dateDialog = new DatePickerDialog
                         (this, // 현재화면의 제어권자
                                 new DatePickerDialog.OnDateSetListener() {
                                     public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
-                                        Toast.makeText(getApplicationContext(),year+"년 "+(monthOfYear+1)+"월 "+dayOfMonth+"일 을 선택했습니다",
-                                                Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getApplicationContext(),year+"년 "+(monthOfYear+1)+"월 "+dayOfMonth+"일 을 선택했습니다",Toast.LENGTH_SHORT).show();
                                         // 설정 후 변수에 저장
                                         showYear = year;
                                         showMonth = monthOfYear;
                                         showDay = dayOfMonth;
-
                                         dateBtn.setText(year+"년 "+(monthOfYear+1)+"월 "+dayOfMonth+"일"); // 버튼에 선택 날짜 반영
                                     }
                                 }
-                                , // 사용자가 날짜설정 후 다이얼로그 빠져나올때
-                                //    호출할 리스너 등록
+                                ,// 사용자가 날짜설정 후 다이얼로그 빠져나올때 호출할 리스너 등록
                                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)); // 기본값 연월일
                 return dateDialog;
-
-            case TIME_DIALOG: // 시간 다이어로그
+            // 시간 다이어로그
+            case TIME_DIALOG:
                 TimePickerDialog timeDialog =
                         new TimePickerDialog(this,
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        Toast.makeText(getApplicationContext(), hourOfDay +"시 " + minute+"분 을 선택했습니다",
-                                                Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(getApplicationContext(), hourOfDay +"시 " + minute+"분 을 선택했습니다",Toast.LENGTH_SHORT).show();
                                         // 설정 후 변수에 저장
                                         startHour = hourOfDay;
                                         startMin = minute;
@@ -394,100 +408,93 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         return super.onCreateDialog(id);
     }
 
+    // 이전 날짜 버튼 클릭 리스너
     public void prevBtnClicked(View view) {
-        // 이전 날짜 버튼
-
+        // 미래 날짜를 보고 있을 때만 동작하도록
         if(dateCount != 0) {
-            // 미래 날짜를 보고 있을 때만 동작하도록
             dateCount--; // 하루 감소
-
             nextBtn.setEnabled(true); // 다음 버튼 활성화
-
-//            Calendar today = Calendar.getInstance();
-//            today.add(Calendar.DATE, -dateCount);
-//            Date future = today.getTime();
-//
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
-//            String str = sdf.format(future);
-
             String str = dateCalculator(dateCount);
             dateTextView.setText(str);
 
-            //Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
-
             if(dateCount == 0) // 오늘 날짜에 도달
-                prevBtn.setEnabled(false);
+                prevBtn.setEnabled(false);  //이전버튼 비활성화
 
-            schAdapter = new ScheduleListAdapter(this, R.layout.schedule_list_adapter_row, scheduleData[dateCount],this,str,dateCount); // 어댑터 새로 정의
+            // 어댑터 새로 정의
+            schAdapter = new ScheduleListAdapter(this, SCH_LIST_ROW_LAYOUT_RESOURCE, scheduleData[dateCount],this,str,dateCount);
             dayScheduleList.setAdapter(schAdapter); // 어댑터 새로 설정
             schAdapter.notifyDataSetChanged(); // 변경 통지
         }
     }
 
+    // 이후 날짜 버튼 클릭 리스너
     public void nextBtnClicked(View view) {
-
+        // 가장 미래 날짜를 보고 있으면 안됨
         if(dateCount < FUTURE_DATE) {
-            // 가장 미래 날짜를 보고 있으면 안되어야죠
             dateCount++; // 하루 증가
-
             prevBtn.setEnabled(true); // 다음 버튼 활성화
-
-//            Calendar today = Calendar.getInstance();
-//            today.add(Calendar.DATE, dateCount);
-//            Date future = today.getTime();
-//
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
-//            String str = sdf.format(future);
             String str = dateCalculator(dateCount);
             dateTextView.setText(str);
 
             if(dateCount == FUTURE_DATE - 1) // 가장 미래 날짜에 도달
                 nextBtn.setEnabled(false);
-
-            schAdapter = new ScheduleListAdapter(this, R.layout.schedule_list_adapter_row, scheduleData[dateCount],this, str,dateCount); // 어댑터 새로 정의
+            // 어댑터 새로 정의
+            schAdapter = new ScheduleListAdapter(this,SCH_LIST_ROW_LAYOUT_RESOURCE, scheduleData[dateCount],this, str,dateCount);
             dayScheduleList.setAdapter(schAdapter); // 어댑터 새로 설정
             schAdapter.notifyDataSetChanged(); // 변경 통지
         }
     }
 
+    // n일 후 날짜 스트링 반환
     public String dateCalculator(int n) {
-        // n일 후 날짜 스트링 계산
         String str;
-
         Calendar today = Calendar.getInstance();
         today.add(Calendar.DATE, n);
         Date future = today.getTime();
-
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
         str = sdf.format(future);
-
         return str;
     }
+
+    // 스케쥴 삭제 시 체크하는 함수 : 조건확인하기
     public boolean deleteCheck(){
         return true;
     }
 
-    //스케줄 삭제버튼에 대한 클릭이벤트 - 삭제하기
+    // 스케줄 삭제버튼에 대한 어댑터의 클릭이벤트 - 삭제하기
     @Override
     public void onScheduleDeleteBtnClick(int position, String strDateKey, int dateCount) {
 
+        /*
+        1. 스케쥴데이터베이스 구조
+          schedule/(key1)yyyy년 MM월 dd일/(key2)상영관번호+상영시간객체/스케쥴객체
+        2. 파라미터 설명
+         1. position : 선택한 버튼이 속한 열(row)의 position
+         2. strDateKey : 그 열(row)의 데이터인 스케쥴이 등록된 날짜. yyyy년 MM월 dd일 형태. 스케쥴DB에 접근하기 위한 첫번째 키(key1)
+         3. dateCount : 그 열(row)의 데이터인 스케쥴이 등록된 날짜가 오늘로부터 몇일 후인 지 저장하고 있는 변수.
+        */
+
+        //삭제조건을 통과했을 시에만 삭제 가능
         if(deleteCheck()){
-            Toast.makeText(getApplicationContext(),strDateKey,Toast.LENGTH_SHORT).show();
+            //key2
+            String scheduleKey = scheduleData[dateCount].get(position).getScreenNum()+scheduleData[dateCount].get(position).getScreeningDate();
+            //스케쥴데이터베이스 구조대로 접근해 해당 객체를 null로 set
+            scheduleReference.child(strDateKey).child(scheduleKey).setValue(null);
             //스케줄 arrayList객체 배열의 해당 포지션을 지운다. (객체배열의 인덱스 번호와 리스트뷰의 열 번호가 일치함)
             scheduleData[dateCount].remove(position);
-            schAdapter = new ScheduleListAdapter(this,R.layout.schedule_list_adapter_row,scheduleData[dateCount],this,strDateKey,dateCount);
-            dayScheduleList.setAdapter(schAdapter);
+            //리스트뷰에 갱신
             schAdapter.notifyDataSetChanged();
 
-            Toast.makeText(getApplicationContext(),scheduleData[dateCount].size()+"",Toast.LENGTH_SHORT).show();
-
-            scheduleReference.child(strDateKey).setValue(null);
-            schAdapter.notifyDataSetChanged();
+            /*scheduleData[]정보 출력해보기
+            String temp = "";
+            for(int i=0;i<scheduleData[dateCount].size();i++){
+                temp = temp+i+"번째"+scheduleData[dateCount].get(i).getMovieTitle()+"\n";
+            }
+            Toast.makeText(getApplicationContext(),temp,Toast.LENGTH_SHORT).show();*/
 
         }
         //삭제할 수 없다면 알림
-        else{
+        else
             Toast.makeText(getApplicationContext(),"지울 수 없는 영화입니다.",Toast.LENGTH_SHORT).show();
-        }
     }
 }
