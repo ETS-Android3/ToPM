@@ -137,7 +137,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         else {
             //런닝타임 int형으로 변경
             int runTime = Integer.parseInt(runningTime);
-            if(runTime<=0){
+            if(runTime>0){
                 Movie movie = new Movie(runTime, title, director, 0); // 객체 생성 후
                 //movie/'영화이름'을 키로 해서 데이터베이스에 추가
                 rootReference.child(movie.getTitle()).setValue(movie);
