@@ -259,7 +259,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     }
 
     // 상영관 선택 다이어로그 (NumberPicker 다이어로그)
-    public void selectScreenBtn(View view) {
+    public void selectScreenClick(View view) {
         final Dialog dialog = new Dialog(this);
         dialog.setTitle("상영관 선택");
         dialog.setContentView(R.layout.numberpicker_dialog);
@@ -284,13 +284,13 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     }
 
     // 날짜 선택 버튼 (DatePicker 다이어로그)
-    public void inputDateBtn(View view) {
+    public void inputDateClick(View view) {
         //onCreateDialog참조
         showDialog(DATE_DIALOG);
     }
 
     // 시작 시간 입력 (TimePicker 다이어로그)
-    public void inputStartTimeBtn(View view) {
+    public void inputStartTimeClick(View view) {
         //onCreateDialog참조
         showDialog(TIME_DIALOG);
     }
@@ -301,7 +301,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     }
 
     // 스케쥴 추가 완료 버튼 클릭
-    public void scheduleComplete(View view) {
+    public void scheduleCompleteClick(View view) {
         // Input 검사
         int[] args = new int[6];
         args[0] = showYear;
@@ -409,7 +409,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     }
 
     // 이전 날짜 버튼 클릭 리스너
-    public void prevBtnClicked(View view) {
+    public void prevBtnClick(View view) {
         // 미래 날짜를 보고 있을 때만 동작하도록
         if(dateCount != 0) {
             dateCount--; // 하루 감소
@@ -427,7 +427,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     }
 
     // 이후 날짜 버튼 클릭 리스너
-    public void nextBtnClicked(View view) {
+    public void nextBtnClick(View view) {
         // 가장 미래 날짜를 보고 있으면 안됨
         if(dateCount < FUTURE_DATE) {
             dateCount++; // 하루 증가
