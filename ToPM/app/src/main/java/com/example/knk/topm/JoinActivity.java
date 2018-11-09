@@ -41,8 +41,8 @@ public class JoinActivity extends AppCompatActivity {
     private Button idCheckBtn;                      //아이디 중복체크 버튼이자 아이디 재입력 버튼 : 아이디체크가 통과되면 재입력용 버튼으로 바뀜
     private boolean idCheckBtnState;                //아이디 중복체크를 했는지 기억하는 변수. false - 체크안됨, true - 체크통과
     private EditText inputIdEditText;               //아이디를 입력하는 editText : 아이디체크가 완료돼면 비활성화됨(입력 불가), 재입력 버튼을 누르면 다시 활성화됨(입력 가능).
-    private RadioGroup staffOrNormal;               //일반사용자 혹은 관리자 둘중 하나의 선택을 받는 라디오버튼 그룹
-    private boolean staff;                          //일반사용자 혹은 관리자 둘중 하나의 선택을 저장하는 변수
+    private RadioGroup join_type;                   //일반사용자 혹은 관리자 둘중 하나의 선택을 받는 라디오버튼 그룹
+    private boolean isAdmin;                        //일반사용자 혹은 관리자 둘중 하나의 선택을 저장하는 변수 : true - admin, false - normal user
     private EditText birthEditText;                 //생일을 입력받는 에딧텍스트 : DatePickerDialog로부터 입력 받은 값 보여주는 곳
     private String birthOutput;                     //User객체에 넣을 생일정보 포맷(yyMMdd)에 맞게 저장하느 변수
 
@@ -61,7 +61,7 @@ public class JoinActivity extends AppCompatActivity {
         //버튼, 에딧텍스트 초기화
         joinBtn = findViewById(R.id.joinBtn);                       //가입 버튼 초기화
         idCheckBtn = findViewById(R.id.idCheckBtn);                 //아이디 중복체크 버튼 초기화
-        inputIdEditText = findViewById(R.id.input_id);              //아이디 입력하는 에딧텍스트 초기화 - 다른 에딧텍스트와 다르게 중복체크작업 때문에 따로 생성함.
+        inputIdEditText = findViewById(R.id.id_join);              //아이디 입력하는 에딧텍스트 초기화 - 다른 에딧텍스트와 다르게 중복체크작업 때문에 따로 생성함.
 
         //아이디를 체크했는지 기억하는 변수 : false - 체크 안됨.
         idCheckBtnState = false;
@@ -69,31 +69,31 @@ public class JoinActivity extends AppCompatActivity {
         setIdInput(idCheckBtnState);
 
         //라디어그룹 초기화 및 체크드체인지리스너 달아주기
-        staffOrNormal = findViewById(R.id.staffOrNormal);
-        staffOrNormal.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        join_type = findViewById(R.id.type_join);
+        join_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 //체크된 라디오가 일반사용자라면 staff는 false
                 if(checkedId == R.id.normalRB)
-                    staff = false;
-                //체크된 라디오가 관리자라면 staff는 true
-                else if(checkedId == R.id.staffRB)
-                    staff = true;
+                    isAdmin = false;
+                //체크된 라디오가 관리자라면 admin은 true
+                else if(checkedId == R.id.adminRB)
+                    isAdmin = true;
                 //그 외는 오류
                 else
                     Toast.makeText(JoinActivity.this,"가입 유형이 제대로 저장되지 않음",Toast.LENGTH_SHORT);
             }
         });
         //생일 보여주는 에딧텍스트 초기화
-        birthEditText = findViewById(R.id.input_birth);
+        birthEditText = findViewById(R.id.birth_join);
         //초기화
         birthOutput = "";
     }
 
     //아이디가 중복체크됐는지 여부에 따라 각종 버튼, 에딧텍스트 상태 바꾸는 함수
-    public void setIdInput(boolean isIcChecked){
+    public void setIdInput(boolean isIdChecked){
         //아이디가 체크되지 않았다면
-        if(!isIcChecked){
+        if(!isIdChecked){
             joinBtn.setEnabled(false);                              //가입 완료 버튼은 비활성화 상태 - 누를 수 없다.
             inputIdEditText.setEnabled(true);                       //아이디를 입력하는 에딧텍스트는 활성화 상태 - 입력할 수 있다.
             idCheckBtn.setText("중복 확인");                         //중복체크 버튼인 상태
@@ -113,7 +113,7 @@ public class JoinActivity extends AppCompatActivity {
         //아이디가 체크되지 않은 상태 - 중복체크 작업
         if(idCheckBtnState==false){
             input_id = inputIdEditText.getText().toString();        //아이디를 입력하는 에딧텍스트의 입력값을 가져와서 input_id에 저장.
-            Log.v("Input_ID",input_id);
+            //Log.v("Input_ID",input_id);
 
             //아이디에 공백은 입력 불가, 혹은 스페이스가 들어가게 입력불가
             if(input_id.equals("")||input_id.charAt(0)==' '){
@@ -175,12 +175,12 @@ public class JoinActivity extends AppCompatActivity {
 
 
     //회원 가입 완료 버튼 클릭이벤트 함수
-    public void completeClick(View view) {
+    public void joinCompleteClick(View view) {
         //ID 중복검사 버튼을 반드시 누르고 그 검사에 통과한 후에 활성화돼야 함.
         if(idCheckBtnState){
-            input_id = ((EditText)findViewById(R.id.input_id)).getText().toString();
-            input_pw = ((EditText)findViewById(R.id.input_pw)).getText().toString();
-            input_name = ((EditText)findViewById(R.id.input_name)).getText().toString();
+            input_id = ((EditText)findViewById(R.id.id_join)).getText().toString();
+            input_pw = ((EditText)findViewById(R.id.pw_join)).getText().toString();
+            input_name = ((EditText)findViewById(R.id.name_join)).getText().toString();
 
             // 입력이 누락된 경우
             if(input_pw.length() <= 0 || input_name.length() <= 0 || birthOutput.length() <= 0) {
@@ -193,7 +193,7 @@ public class JoinActivity extends AppCompatActivity {
             }
             else{
                 //뉴비 생성
-                newbie = new User(input_id,input_pw,input_name,birthOutput,staff);
+                newbie = new User(input_id,input_pw,input_name,birthOutput,isAdmin);
                 rootReference.child(newbie.id).setValue(newbie);
                 Toast.makeText(this,"가입을 축하드립니다.",Toast.LENGTH_SHORT).show();
                 this.finish();
@@ -208,7 +208,7 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     //생일 선택시 DatePickerDialog 생성하는 버튼
-    public void birthPickClick(View view) {
+    public void birthClick(View view) {
         //현재 시간 받아오는 Calendear 객체
         final Calendar calendar = Calendar.getInstance();
         //데이트픽커 다이얼로그

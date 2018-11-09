@@ -8,14 +8,14 @@ public class User implements Serializable {
     public String pw;
     public String id;
     public String birth;
-    public boolean staff;
+    public boolean admin;
 
-    public User(String id, String pw, String name, String birth, boolean staff){
+    public User(String id, String pw, String name, String birth, boolean admin){
         this.id=id;
         this.pw=pw;
         this.name = name;
         this.birth=birth;
-        this.staff = staff;
+        this.admin = admin;
     }
 
     public User(){}
@@ -52,11 +52,11 @@ public class User implements Serializable {
         this.birth = birth;
     }
 
-    public boolean isStaff() {
-        return staff;
+    public boolean isAdmin() {
+        return admin;
     }
 
-    public void setStaff(boolean staff) {
-        this.staff = staff;
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

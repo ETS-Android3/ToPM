@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(user.getPw().equals(login_pw.getText().toString())) {
                         Intent intent;
                         //유저 인스턴스가 관리자라면
-                        if (user.isStaff())  //관리자 액티비티로
+                        if (user.isAdmin())  //관리자 액티비티로
                             intent = new Intent(getApplicationContext(), AdminMainActivity.class);
                             //유저 인스턴스가 일반 사용자라면
                         else                //일반 사용자 액티비티로

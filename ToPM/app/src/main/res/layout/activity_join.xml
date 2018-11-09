@@ -31,7 +31,7 @@
                 android:text="가입 유형"
                 android:textSize="10sp"/>
             <RadioGroup
-                android:id="@+id/staffOrNormal"
+                android:id="@+id/type_join"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -44,7 +44,7 @@
                     android:text="일반 사용자"
                     android:checked="true"/>
                 <RadioButton
-                    android:id="@+id/staffRB"
+                    android:id="@+id/adminRB"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <EditText
-                    android:id="@+id/input_id"
+                    android:id="@+id/id_join"
                     android:layout_width="0dp"
                     android:layout_weight="5"
                     android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                 android:text="비밀번호"
                 android:textSize="10sp"/>
             <EditText
-                android:id="@+id/input_pw"
+                android:id="@+id/pw_join"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
@@ -91,7 +91,7 @@
                 android:text="이름"
                 android:textSize="10sp"/>
             <EditText
-                android:id="@+id/input_name"
+                android:id="@+id/name_join"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="NAME"/>
@@ -105,14 +105,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <EditText
-                    android:id="@+id/input_birth"
+                    android:id="@+id/birth_join"
                     android:layout_width="0dp"
                     android:layout_weight="5"
                     android:layout_height="wrap_content"
                     android:hint="BIRTH"
                     android:enabled="false"/>
                 <Button
-                    android:onClick="birthPickClick"
+                    android:id="@+id/birthBtn"
+                    android:onClick="birthClick"
                     android:layout_width="0dp"
                     android:layout_weight="2"
                     android:layout_height="wrap_content"
@@ -122,8 +123,8 @@
         </LinearLayout>
     </LinearLayout>
     <Button
-        android:id="@+id/joinBtn"
-        android:onClick="completeClick"
+        android:id="@+id/joinCompleteBtn"
+        android:onClick="joinCompleteClick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="완료"
