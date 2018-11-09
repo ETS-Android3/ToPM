@@ -21,15 +21,15 @@ public class AdminMainActivity extends AppCompatActivity {
         //Toast.makeText(this,user.getId(),Toast.LENGTH_SHORT).show(); //테스트
     }
 
-    public void movieEditBtn(View view) {
+    public void movieEditClick(View view) {
         startActivity(new Intent(this, MovieManageActivity.class));
     }
 
-    public void screenEditBtn(View view) {
+    public void screenEditClick(View view) {
         startActivity(new Intent(this, ScreenListActivity.class));
     }
 
-    public void scheduleEditBtn(View view) {
+    public void scheduleEditClick(View view) {
         startActivity(new Intent(this, ScheduleManageActivity.class));
     }
 }

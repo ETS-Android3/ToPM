@@ -59,7 +59,7 @@ public class JoinActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();          //파이어베이스 데이터베이스 인스턴스 호출
         rootReference = firebaseDatabase.getReference(user_ref);    //"user"라는 이름으로 루트참조 생성
         //버튼, 에딧텍스트 초기화
-        joinBtn = findViewById(R.id.joinBtn);                       //가입 버튼 초기화
+        joinBtn = findViewById(R.id.joinCompleteBtn);                       //가입 버튼 초기화
         idCheckBtn = findViewById(R.id.idCheckBtn);                 //아이디 중복체크 버튼 초기화
         inputIdEditText = findViewById(R.id.id_join);              //아이디 입력하는 에딧텍스트 초기화 - 다른 에딧텍스트와 다르게 중복체크작업 때문에 따로 생성함.
 
