@@ -42,8 +42,9 @@ public class ScreenEditActivity1 extends AppCompatActivity {
         // 다음 버튼
 
         // 입력한 가로 세로 정보 받아옴
-        row = Integer.parseInt(rowEdit.getText().toString());
-        col = Integer.parseInt(colEdit.getText().toString());
+          row = Integer.parseInt(rowEdit.getText().toString());
+          col = Integer.parseInt(colEdit.getText().toString());
+
 
         if(row != -1 && col != -1) {
             // 입력이 된 경우에만
@@ -62,7 +63,7 @@ public class ScreenEditActivity1 extends AppCompatActivity {
                 try {
                     throw new InputException();
                 } catch (InputException e) {
-                    Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "입력을 확인하세요.1", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
@@ -71,7 +72,7 @@ public class ScreenEditActivity1 extends AppCompatActivity {
             try {
                 throw new InputException();
             } catch (InputException e) {
-                Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "입력을 확인하세요.2", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }

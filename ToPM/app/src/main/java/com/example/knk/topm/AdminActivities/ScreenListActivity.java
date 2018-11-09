@@ -1,14 +1,16 @@
 package com.example.knk.topm.AdminActivities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.knk.topm.R;
 
-public class ScreenListActivity extends AppCompatActivity {
+public class ScreenListActivity extends AppCompatActivity implements View.OnClickListener {
 
     final int SCREEN_COUNT = 5; // 상영관 개수
     Button[] screenEdits;
@@ -34,6 +36,16 @@ public class ScreenListActivity extends AppCompatActivity {
             screenEdits[i].setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
             screenEdits[i].setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             buttonLayout.addView(screenEdits[i]);
+
+            //----
+            screenEdits[i].setOnClickListener(this);
         }
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(this,ScreenEditActivity1.class));
     }
 }
