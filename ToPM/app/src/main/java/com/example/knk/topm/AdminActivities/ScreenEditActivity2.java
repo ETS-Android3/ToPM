@@ -15,19 +15,22 @@ import com.example.knk.topm.R;
 
 public class ScreenEditActivity2 extends AppCompatActivity {
 
-    int row, col;
-    int size = row * col;
+    int row;
+    int col;
+    int size ;  //size =row *col
     int db_button_index = -2000;  //database 에 올릴 때 쓰는 바톤 view.getvalue 값
     MyButton btn[];
 
     String r ;//test 용 string 나중에 지워도됩니다 .
 
-    final int DEFAUL_VALUE = 10; // 전송 실패시 디폴트값 10
+    final int DEFAUL_VALUE = 5; // 전송 실패시 디폴트값 10
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screen_edit2);
+
+
 
         init();
     }
@@ -38,7 +41,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         Intent intent = getIntent();
         row = intent.getIntExtra("row", DEFAUL_VALUE);
         col = intent.getIntExtra("col", DEFAUL_VALUE);
-
+        size= row * col;
         //--------
         RelativeLayout layout = new RelativeLayout(this);  //linearlauout으로 button 추가 할때 절대값으로 지정할수없음 relative사용합
         btn = new MyButton[size];
@@ -50,6 +53,16 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 //        p.topMargin = 550;            //버튼 의 위치
 //        p.leftMargin = 100;
 //        layout.addView(wall, p);
+
+//        wall.setOnClickListener(new Button.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                index = -2;
+//            }
+//        });
+
+
+        //***********************
 
 
         int j = 0;   //행땅 버튼 개수 count 하는 변수
@@ -69,6 +82,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
             RL.topMargin = j * 50;            //50는 열간 사이입니다
             layout.addView(btn[i], RL);        //mybutton 출력함
             this.setContentView(layout);
+        }
             //********************
 
             for (int k = 0; k < btn.length - 1; k++) {
@@ -76,8 +90,6 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                 btn[k].setOnTouchListener(new Button.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent m) {
-
-                        //ontouchlistener
                         MyButton mybutton_inside=(MyButton)findViewById(view.getId());  //
 
 //                        this.isAbled = true;
@@ -103,4 +115,3 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         }
 
     }
-}
