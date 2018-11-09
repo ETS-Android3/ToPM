@@ -129,13 +129,13 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         strDate = sdf.format(currentDate);                          // 오늘 날짜를 날짜 포맷에 맞게 변형
         dateTextView.setText(strDate);                              // 오늘 날짜로 설정한 날짜를 보여주는 텍스트뷰에 setText
 
-        Calendar today = Calendar.getInstance();                    // 캘린더 객체
+        Calendar today = Calendar.getInstance();                    // 캘린더 객체 오늘의 날짜
+        today.add(Calendar.DATE,-1);                        //오늘 날짜에서 하루 뺌. (즉, 어제)
         // 미래 날짜 계산 후 오늘날짜로부터 이후 3일까지의 스케줄 데이터 arrayList 객체배열에 저장
         for(int i=0; i<FUTURE_DATE; i++) {
 
-            today.add(Calendar.DATE, i);            //날짜 더하기
-            strDate = sdf.format(today.getTime());  //yyyy년 MM월 dd일
-
+            today.add(Calendar.DATE, 1);                    //날짜 하루씩 더하기 for문순서대로돌면서, 오늘,내일,2일뒤,3일뒤 계산
+            strDate = sdf.format(today.getTime());                  //yyyy년 MM월 dd일
             final int index = i;
             // 스케줄 데이터베이스 변경 이벤트 핸들러
             scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
@@ -419,7 +419,6 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
             if(dateCount == 0) // 오늘 날짜에 도달
                 prevBtn.setEnabled(false);  //이전버튼 비활성화
-
             // 어댑터 새로 정의
             schAdapter = new ScheduleListAdapter(this, SCH_LIST_ROW_LAYOUT_RESOURCE, scheduleData[dateCount],this,str,dateCount);
             dayScheduleList.setAdapter(schAdapter); // 어댑터 새로 설정
@@ -438,6 +437,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
             if(dateCount == FUTURE_DATE - 1) // 가장 미래 날짜에 도달
                 nextBtn.setEnabled(false);
+
             // 어댑터 새로 정의
             schAdapter = new ScheduleListAdapter(this,SCH_LIST_ROW_LAYOUT_RESOURCE, scheduleData[dateCount],this, str,dateCount);
             dayScheduleList.setAdapter(schAdapter); // 어댑터 새로 설정
