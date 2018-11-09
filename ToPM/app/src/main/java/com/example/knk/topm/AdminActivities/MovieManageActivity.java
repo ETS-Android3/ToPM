@@ -48,7 +48,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         init();                                     //초기화
     }
 
-    public void getDataFromFB(){
+    public void getMovieFromFB(){
 
         // 데이터베이스
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -95,12 +95,12 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
 
         //1. 리스트뷰 부분
         //ListView 초기화
-        movieManageList = findViewById(R.id.movie_manage_List);
+        movieManageList = findViewById(R.id.movieList);
         //영화객체배열 초기화
         movieData = new ArrayList<>();
 
         //파이어베이스로부터 데이터 가져오기
-        getDataFromFB();
+        getMovieFromFB();
 
         //리스트 어댑터 초기화, context, 리스트 한 줄의 레이아웃, 뿌려줄 데이터, 삭제버튼 클릭리스너 전달
         adapter =  new MovieListAdapter(this,R.layout.movie_list_adapter_row, movieData,this);
@@ -111,9 +111,9 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
 
         //2. 입력 창 부분
         // 입력 위젯 초기화
-        editTitle = findViewById(R.id.edittxttitle);
-        editDir = findViewById(R.id.edittxtdir);
-        editRun = findViewById(R.id.edittxtruntime);
+        editTitle = findViewById(R.id.movie_name);
+        editDir = findViewById(R.id.movie_director);
+        editRun = findViewById(R.id.movie_runningtime);
     }
 
     //영화 추가 버튼 누를시 클릭이벤트 함수
