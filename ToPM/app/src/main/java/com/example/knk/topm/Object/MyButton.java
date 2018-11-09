@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
 
-public class MyButton extends android.support.v7.widget.AppCompatButton {
+public class MyButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener{
 
     int accessMode; // 관리자가 눌렀는지 고객이 눌렀는지 판별
     // (관리자, 고객 외에도 있을 수 있다고 힌트 주셔서 int로 했습니다.)
@@ -141,4 +141,8 @@ public class MyButton extends android.support.v7.widget.AppCompatButton {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }
