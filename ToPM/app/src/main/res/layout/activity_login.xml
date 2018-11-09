@@ -7,7 +7,6 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:text="admin1"
         android:id="@+id/login_id"
         android:layout_width="210dp"
         android:layout_height="50dp"
@@ -29,7 +28,6 @@
 
     <EditText
         android:id="@+id/login_pw"
-        android:text="1234"
         android:layout_width="210dp"
         android:layout_height="50dp"
         android:layout_marginStart="80dp"
