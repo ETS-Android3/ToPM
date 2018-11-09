@@ -168,7 +168,11 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             });
 
         }
-
+        String temp = "";
+        for(int j=0;j<scheduleData[dateCount].size();j++){
+            temp = temp+j+"번째"+scheduleData[dateCount].get(j).getMovieTitle()+"\n";
+        }
+        Toast.makeText(getApplicationContext(),temp,Toast.LENGTH_SHORT).show();
         //어댑터에는 현재액티비티의 context, 뿌려줄 리스트뷰 한 줄(row)의 레아이웃, 뿌려줄 데이터 정보, 삭제버튼 클릭리스너, 현재설정된 날짜, 현재선택한날짜-오늘날짜
         //어댑터에 넘기는 파라미터중 뒤에서 세 개는 삭제버튼 때문에 넘기는 인자
         //init함수 안이므로 오늘 날짜에 맞게 어댑터 달기
