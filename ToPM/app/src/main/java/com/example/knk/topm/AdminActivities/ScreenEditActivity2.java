@@ -37,6 +37,12 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
     public void init() {
 
+//        해상도 받는 구조 . 아래 코드 해상도 동작할당 안되어있음 .절대값입니다 .
+//        DisplayMetrics dm = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(dm);
+//        int width =dm.widthPixels;
+//        int height=dm.heightPixels;
+
         // 이전 액티비티에서 전송한 정보 수신
         Intent intent = getIntent();
         row = intent.getIntExtra("row", DEFAUL_VALUE);
@@ -57,7 +63,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 //        wall.setOnClickListener(new Button.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//                index = -2;
+//
 //            }
 //        });
 
