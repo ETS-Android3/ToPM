@@ -87,12 +87,19 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                     //유저 인스턴스의 비밀번호가 입력한 비밀번호와 일치하지 않는다면 -> 로그인 실패
-                    else
+                    else{
                         Toast.makeText(getApplicationContext(),"비밀번호를 확인하세요.",Toast.LENGTH_SHORT).show();
+                        login_pw.setText("");
+                    }
+
                 }
                 //아이디가 존재하지 않는다면 -> 로그인 실패
-                else
+                else{
                     Toast.makeText(getApplicationContext(),"해당 아이디는 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
+                    login_id.setText("");
+                    login_pw.setText("");
+                }
+
             }
 
             @Override
