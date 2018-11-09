@@ -26,6 +26,7 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     public void screenEditBtn(View view) {
+        startActivity(new Intent(this, ScreenListActivity.class));
     }
 
     public void scheduleEditBtn(View view) {
