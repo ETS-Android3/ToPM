@@ -74,9 +74,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 //
 //            }
 //        });
-
-
-        //***********************
+//***********************
 
         //  index layout 부분
         for(int count=0;count<row;count++) {   //X (row)열  index
@@ -117,17 +115,18 @@ public class ScreenEditActivity2 extends AppCompatActivity {
             btn[i].setId(2001 + i);                     //mybutton는  value 값 2000부터 시작함
             //id가 2001부터 설치하는 이유 :다른 activity에 있는 id 값과 겹치지않게 해야합니다 .
 
-            btn[i].setBackgroundColor(Color.GRAY);      //배경색
+            //btn[i].setBackgroundColor(Color.GRAY);      //배경색
+            btn[i].setBackgroundResource(R.drawable.movie_seat_ok);//배경 png로 바꿈
             btn[i].setText("" + i);
             btn[i].setTextSize(0, 8);         //끌시체 크기
             RelativeLayout.LayoutParams RL = new RelativeLayout.LayoutParams(40, 40);  //(40,40)-> 버튼의 크기: 40=50-10
 
-            //***************** row * col 배치하는 구조
+            //***************** row * col 배치하기
             if (i % row == 0) {    // >row 시 다음행으로 넘어가기
                 j++;
             }
             //RL.leftMargin = 50 * (i % col);    //index 때문에 수치바꿈
-            RL.leftMargin = 50+50 * (i % col);     //50는 행간 사이입니다   . 추가된 50은 index (0,0)위치의 빈칸입니다 .
+            RL.leftMargin = 50+50 * (i % row);     //50는 행간 사이입니다   . 추가된 50은 index (0,0)위치의 빈칸입니다 .
             RL.topMargin = j * 50;            //50는 열간 사이입니다
             layout.addView(btn[i], RL);        //mybutton 출력함
             this.setContentView(layout);
@@ -150,10 +149,11 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
                         if(!mybutton_inside.isAbled)
                             r = "abled =false ";  //r는 test 용 string 입니다 .나중에 지우면 됩니다 .
-                        view.setBackgroundColor(Color.BLUE);
+                        //view.setBackgroundColor(Color.BLUE);
+                        view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
                         // buttonbuff[(int) view.getId() - db_button_index] //db id value
                         Toast.makeText(getApplicationContext(), "buttonid:" + view.getId() + "value:" + r+"XY :"
-                                +GetMybuttonXY(view.getId()),//좌석 위치 판단함
+                                +GetMybuttonXY(view),//좌석 위치 판단함
                                 Toast.LENGTH_SHORT).show();
 
                         return false;
@@ -164,18 +164,19 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         }
 
         //좌석 위치 판단하고 string로 출력하기
-        public String GetMybuttonXY(int viewID){
-            int x1=(viewID-2000)/row;
-            for(int x1count=0;x1count<=row;x1count++){
-                if(x1==x1count){            //행마다 마지막 위치의 예외처리입니다 .
-                    x1--;
-                }
+        public String GetMybuttonXY(View v){
+
+            int x1=0;
+            for(int cc =0;cc<((int)v.getId()-2000);cc++){   //촤표 판단하기
+                if(cc%row==0)
+                    x1++;
             }
-            int y1=(viewID-2000)%row;
+
+            int y1=((int)v.getId()-2000)%row;
             if(y1==0){
                 y1=row;                     //예외처리입니다 .
             }
-            String sitXY="("+a1[x1+1]+","+String.valueOf(y1)+")";
+            String sitXY="("+a1[x1]+","+String.valueOf(y1)+")";
         return sitXY;
         }
 

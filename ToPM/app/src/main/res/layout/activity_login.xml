@@ -7,7 +7,7 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:text="admin1"
+        android:text="xx"
         android:id="@+id/login_id"
         android:layout_width="210dp"
         android:layout_height="50dp"
