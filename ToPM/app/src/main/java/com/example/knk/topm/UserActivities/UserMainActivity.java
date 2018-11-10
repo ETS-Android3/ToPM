@@ -29,6 +29,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
     private ListView dayScheduleList;
     private ArrayList<MovieSchedule>[] scheduleData;
+    private ArrayList<String>[] keyData; // 키값을 저장할거임
     private NormalScheduleListAdapter adapter;
 
     /* 상단뷰를 위한 변수 */
@@ -66,6 +67,12 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         }
         adapter = new NormalScheduleListAdapter(this, R.layout.schedule_list_adpater_row2, scheduleData[0]);
         dayScheduleList.setAdapter(adapter);
+
+        keyData = new ArrayList[FUTURE_DATE];
+        for(int i=0; i<FUTURE_DATE; i++) {                      //오늘부터 최대 3일후까지만 생성
+            keyData[i] = new ArrayList<>();
+        }
+
 
         // 상단 텍스트뷰, 버튼
         dateTextView = findViewById(R.id.dateTextView);
@@ -113,6 +120,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     MovieSchedule newSchedule = dataSnapshot.getValue(MovieSchedule.class); // 새로 추가된 스케줄 받아옴
                     scheduleData[index].add(newSchedule);                                   // 리스트 뷰에 갱신
+                    keyData[index].add(dataSnapshot.getKey());                              // 키값을 저장
                     adapter.notifyDataSetChanged();
                 }
 
@@ -143,10 +151,10 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
     // n일 후 날짜 스트링 반환
     public String dateCalculator(int n) {
         String str;
-        Calendar today = Calendar.getInstance();
-        today.add(Calendar.DATE, n);
+        Calendar today = Calendar.getInstance();        // 오늘 날짜에서
+        today.add(Calendar.DATE, n);                    // n일 후의 날짜를
         Date future = today.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일"); // String으로 반환합니다.
         str = sdf.format(future);
         return str;
     }
@@ -195,6 +203,37 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        
+
+        // 여기 보세요 경렵슨
+        // 방법 1)
+        String key = keyData[dateCount].get(position); // 해당 위치의 키를 받아오자
+        // 키는 데이터를 한 번에 받아오는 부분에서 모두 같이 저장해놨거든요
+
+        String tempDate = dateCalculator(dateCount);
+
+        rootReference.child(tempDate).child(key); // 해당 날짜의 DB에 접근해서 객체를 갖고오는 것임
+        // 근데 왜 getValue 안됨 아..ㅡㅡ
+        // 하여튼 그거를 받아와서 MovieSchedule 객체로 만든 담에요.
+
+        // 그 객체를 m이라고 가정해보자고요
+        MovieSchedule  m = new MovieSchedule(); // 이걸 받아온 객체라고 쳐보셈
+
+        // 그걸 이제 다음 액티비티로 보내주는거죠
+        // MovieSchedule 객체는 Serialized 해야겠죠
+        Intent intent = new Intent(this, BookMovieActivity.class);
+        intent.putExtra("schedule", m);
+        // 그래서 다음 액티비티에서 객체 받아서 작업하면 수월할 것 같아요
+
+
+        // 방법 2)
+        // 이건 뭔가 실시간이 아닐 것 같아서..
+        MovieSchedule m2 = scheduleData[dateCount].get(position);
+
+        // 그걸 이제 다음 액티비티로 보내주는거죠
+        // MovieSchedule 객체는 Serialized 해야겠죠
+        Intent intent2 = new Intent(this, BookMovieActivity.class);
+        intent2.putExtra("schedule", m);
+        // 그래서 다음 액티비티에서 객체 받아서 작업하면 수월할 것 같아요
+
     }
 }
