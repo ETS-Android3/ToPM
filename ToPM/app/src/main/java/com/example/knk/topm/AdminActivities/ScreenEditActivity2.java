@@ -120,14 +120,14 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
         int j = 0;   //행땅 버튼 개수 count 하는 변수
 
-        int Scree_Hall_ID_Count=Screen_ID_buff*1000+1;
+        int Scree_Hall_ID_Count=Screen_ID_buff*1000+1;  // !!id 값 xxx1 부터 시작해야함. 미리 +1 시키기
         for (int i = 0; i < size; i++) {            //1차원 배열로 정장할수있음
             btn[i] = new MyButton(this);        //객체
 
             //btn[i].setId(2001 + i);                     //mybutton는  value 값 2000부터 시작함
             //id가 2001부터 설치하는 이유 :다른 activity에 있는 id 값과 겹치지않게 해야합니다 .
 
-            btn[i].setId(Scree_Hall_ID_Count+i);
+            btn[i].setId(Scree_Hall_ID_Count+i);  // xxx1 부터 ++
 
            mDatabase.child("DBScreenSits").child(DB_HallNumber).child("ButtonID").child(String.valueOf(Scree_Hall_ID_Count+i)).child("DBisAbler").setValue(btn[i].isAbled);
            mDatabase.child("DBScreenSits").child(DB_HallNumber).child("ButtonID").child(String.valueOf(Scree_Hall_ID_Count+i)).child("DBisBooked").setValue(btn[i].isBooked);

@@ -23,8 +23,8 @@ public class ScreenEditActivity1 extends AppCompatActivity {
     final int ROW_MIN = 5;
     final int COL_MIN = 5;
 
-    String DB_HallNumber;
-    int Screen_ID_buff;
+    String DB_HallNumber;     // db에 2차 메뉴열 넣을떄 쓰는 buff변수
+    int Screen_ID_buff;       // db에 2차 메뉴열 넣을떄 쓰는 buff변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +90,7 @@ public class ScreenEditActivity1 extends AppCompatActivity {
                 try {
                     throw new InputException();
                 } catch (InputException e) {
-                    Toast.makeText(this, "입력을 확인하세요.1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
@@ -99,7 +99,7 @@ public class ScreenEditActivity1 extends AppCompatActivity {
             try {
                 throw new InputException();
             } catch (InputException e) {
-                Toast.makeText(this, "입력을 확인하세요.2", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }

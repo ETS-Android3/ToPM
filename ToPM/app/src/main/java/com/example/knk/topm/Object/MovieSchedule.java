@@ -1,9 +1,8 @@
 package com.example.knk.topm.Object;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class MovieSchedule implements Serializable {
+public class MovieSchedule {
     // Movie movie; // 영화
     // Screen screen; // 상영관
     String movieTitle;
