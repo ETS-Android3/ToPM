@@ -23,6 +23,9 @@ public class ScreenEditActivity1 extends AppCompatActivity {
     final int ROW_MIN = 5;
     final int COL_MIN = 5;
 
+    String DB_HallNumber;
+    int Screen_ID_buff;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +41,20 @@ public class ScreenEditActivity1 extends AppCompatActivity {
         // 입력하지 않았을 경우 -1
         row = -1;
         col = -1;
+
+
+        // ScreenListActivity 에서 Screenid 받아오기
+        Intent GetBuffintent = getIntent();
+        Screen_ID_buff=GetBuffintent.getIntExtra("SCREENID1", -1);
+
+        // "1관" , "2관" ....
+        DB_HallNumber=Screen_ID_buff+"관";
+
     }
 
     public void nextBtnClicked(View view) {
 
+        //db
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -53,8 +66,11 @@ public class ScreenEditActivity1 extends AppCompatActivity {
           row = Integer.parseInt(rowEdit.getText().toString());
           col = Integer.parseInt(colEdit.getText().toString());
 
-        mDatabase.child("DBScreenSits").child("1관").child("DBrow").setValue(row);
-        mDatabase.child("DBScreenSits").child("1관").child("DBcol").setValue(col);
+
+
+          // db에서 추사하기#2   예: ../DBScreenSits/x관/DBrow =9,DBcol=9
+        mDatabase.child("DBScreenSits").child(DB_HallNumber).child("DBrow").setValue(row);
+        mDatabase.child("DBScreenSits").child(DB_HallNumber).child("DBcol").setValue(col);
 
 
         if(row != -1 && col != -1) {
@@ -67,7 +83,7 @@ public class ScreenEditActivity1 extends AppCompatActivity {
                 // 행 열 정보 전송
                 intent.putExtra("row", row);
                 intent.putExtra("col", col);
-
+                intent.putExtra("SCREENID2",Screen_ID_buff);
                 startActivity(intent);
             }
             else {

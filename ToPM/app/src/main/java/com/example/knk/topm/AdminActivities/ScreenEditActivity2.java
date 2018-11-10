@@ -24,15 +24,13 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
     String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // 대문자 string 배열 생성하기
     String a1[]=str.split("");
-
-    int db_button_index ;  //database 에 올릴 때 쓰는 바톤 view.getvalue 값
     MyButton btn[];
-
     RelativeLayout r1,r2; // index X Y
-
     String r ;//test 용 string 나중에 지워도됩니다 .
 
     final int DEFAUL_VALUE = 5; // 전송 실패시 디폴트값 10
+
+    int Screen_ID_buff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +44,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
     }
 
     public void init() {
-
-
+        // db
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -61,6 +58,12 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         Intent intent = getIntent();
         row = intent.getIntExtra("row", DEFAUL_VALUE);
         col = intent.getIntExtra("col", DEFAUL_VALUE);
+
+        // ScreenListActivity 에서 Screenid 받아오기
+        Screen_ID_buff=intent.getIntExtra("SCREENID2", -1);
+        // "1관" , "2관" ....
+        String DB_HallNumber=Screen_ID_buff+"관";
+
         size= row * col;
         //--------
         RelativeLayout layout = new RelativeLayout(this);  //linearlauout으로 button 추가 할때 절대값으로 지정할수없음 relative사용합
@@ -116,15 +119,19 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
 
         int j = 0;   //행땅 버튼 개수 count 하는 변수
+
+        int Scree_Hall_ID_Count=Screen_ID_buff*1000+1;
         for (int i = 0; i < size; i++) {            //1차원 배열로 정장할수있음
             btn[i] = new MyButton(this);        //객체
-            btn[i].setId(2001 + i);                     //mybutton는  value 값 2000부터 시작함
 
+            //btn[i].setId(2001 + i);                     //mybutton는  value 값 2000부터 시작함
             //id가 2001부터 설치하는 이유 :다른 activity에 있는 id 값과 겹치지않게 해야합니다 .
 
-           mDatabase.child("DBScreenSits").child("1관").child("ButtonID").child(String.valueOf(2001+i)).child("DBisAbler").setValue(btn[i].isAbled);
-           mDatabase.child("DBScreenSits").child("1관").child("ButtonID").child(String.valueOf(2001+i)).child("DBisBooked").setValue(btn[i].isBooked);
-           mDatabase.child("DBScreenSits").child("1관").child("ButtonID").child(String.valueOf(2001+i)).child("DBisSpecial").setValue(btn[i].isSpecial);
+            btn[i].setId(Scree_Hall_ID_Count+i);
+
+           mDatabase.child("DBScreenSits").child(DB_HallNumber).child("ButtonID").child(String.valueOf(Scree_Hall_ID_Count+i)).child("DBisAbler").setValue(btn[i].isAbled);
+           mDatabase.child("DBScreenSits").child(DB_HallNumber).child("ButtonID").child(String.valueOf(Scree_Hall_ID_Count+i)).child("DBisBooked").setValue(btn[i].isBooked);
+           mDatabase.child("DBScreenSits").child(DB_HallNumber).child("ButtonID").child(String.valueOf(Scree_Hall_ID_Count+i)).child("DBisSpecial").setValue(btn[i].isSpecial);
 
 
 
@@ -181,12 +188,12 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         public String GetMybuttonXY(View v){
 
             int x1=0;
-            for(int cc =0;cc<((int)v.getId()-2000);cc++){   //촤표 판단하기
+            for(int cc =0;cc<((int)v.getId()-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
                 if(cc%row==0)
                     x1++;
             }
 
-            int y1=((int)v.getId()-2000)%row;
+            int y1=((int)v.getId()-(Screen_ID_buff*1000))%row;
             if(y1==0){
                 y1=row;                     //예외처리입니다 .
             }
@@ -197,12 +204,12 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         public String GetMybuttonXY(int Viewid){   // overloading  int형 id 받는 함수
 
             int x1=0;
-            for(int cc =0;cc<(Viewid-2000);cc++){   //촤표 판단하기
+            for(int cc =0;cc<(Viewid-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
              if(cc%row==0)
                 x1++;
             }
 
-         int y1=(Viewid-2000)%row;
+         int y1=(Viewid-(Screen_ID_buff*1000))%row;
             if(y1==0){
                 y1=row;                     //예외처리입니다 .
          }
