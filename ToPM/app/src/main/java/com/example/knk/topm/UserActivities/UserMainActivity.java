@@ -54,7 +54,6 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         setContentView(R.layout.activity_user_main);
 
         init();
-        getScheduleFromDB();
     }
 
     public void init() {
@@ -64,8 +63,16 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         for(int i=0; i<FUTURE_DATE; i++) {                      //오늘부터 최대 3일후까지만 생성
             scheduleData[i] = new ArrayList<>();
         }
+
+        // 데이터베이스 연결
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        rootReference = firebaseDatabase.getReference(SCHEDULE_REF);
+
+        getScheduleFromDB();
+
         adapter = new NormalScheduleListAdapter(this, R.layout.schedule_list_adpater_row2, scheduleData[0]);
         dayScheduleList.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         // 상단 텍스트뷰, 버튼
         dateTextView = findViewById(R.id.dateTextView);
@@ -81,11 +88,6 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
         // 변수 초기화
         dateCount = 0;
-
-        // 데이터베이스 연결
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        rootReference = firebaseDatabase.getReference(SCHEDULE_REF);
-
 
         // 리스트뷰 클릭 이벤트
         dayScheduleList.setOnItemClickListener(this);
