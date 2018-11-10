@@ -1,4 +1,4 @@
-package com.example.knk.topm;
+package com.example.knk.topm.AdminActivities;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.GridLayout;
 
 import com.example.knk.topm.Object.MyButton;
+import com.example.knk.topm.R;
 
 public class MyButtonTestActivity extends AppCompatActivity {
 
