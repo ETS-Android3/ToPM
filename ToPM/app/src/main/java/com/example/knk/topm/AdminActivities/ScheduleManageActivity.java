@@ -70,8 +70,8 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     //4.상영시간 선택
     private Button timeBtn;                 //상영시간 선택을 위한 버튼
 
-    Date currentDate;                       // 오늘 날짜
-    String strDate;                         // 오늘 날짜 문자열
+    private Date currentDate;               // 오늘 날짜
+    private String strDate;                 // 오늘 날짜 문자열
     //5. 입력한 스케쥴값을 저장하는 변수 - 따로 변수를 둔 것은 입력이 아우것도 안돼있을 때를 예외처리하기 위해서
     private Movie selectedMovie;            // 선택한 영화
     private int screenNum;                  // 선택한 상영관
@@ -80,7 +80,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private int showYear;                   // 상영 년도
     private int showMonth;                  // 상영 월
     private int showDay;                    // 상영 일
-    public int dateCount;                          //설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
+    public int dateCount;                   //설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
 
     /*상수*/
     final static int SCREENS = 5;           // 상영관 5개
