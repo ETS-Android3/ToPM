@@ -23,7 +23,6 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AdminActivities.ScheduleManageActivity" />
         <activity android:name=".AdminActivities.MyButtonTestActivity" />
-        <activity android:name=".UserActivities.ShowScheduleActivity" />
         <activity android:name=".AdminActivities.AdminMainActivity" />
         <activity
             android:name=".AdminActivities.MovieManageActivity"
@@ -31,7 +30,10 @@
         <activity android:name=".AdminActivities.ScreenListActivity" />
         <activity android:name=".AdminActivities.ScreenShowActivity" />
         <activity android:name=".AdminActivities.ScreenEditActivity1" />
-        <activity android:name=".AdminActivities.ScreenEditActivity2"></activity>
+        <activity android:name=".AdminActivities.ScreenEditActivity2" />
+        <activity android:name=".UserActivities.BookMovieActivity" />
+        <activity android:name=".UserActivities.MyBookingListActivity" />
+        <activity android:name=".UserActivities.ShowMovieInfoActivity"></activity>
     </application>
 
 </manifest>
