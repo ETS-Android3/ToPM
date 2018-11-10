@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class UserMainActivity extends AppCompatActivity {
+public class UserMainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     private ListView dayScheduleList;
     private ArrayList<MovieSchedule>[] scheduleData;
@@ -84,6 +85,10 @@ public class UserMainActivity extends AppCompatActivity {
         // 데이터베이스 연결
         firebaseDatabase = FirebaseDatabase.getInstance();
         rootReference = firebaseDatabase.getReference(SCHEDULE_REF);
+
+
+        // 리스트뷰 클릭 이벤트
+        dayScheduleList.setOnItemClickListener(this);
     }
 
     // 데이터베이스에서 스케쥴 정보 받아오기
@@ -188,4 +193,8 @@ public class UserMainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        
+    }
 }
