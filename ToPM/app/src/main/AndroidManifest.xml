@@ -34,6 +34,7 @@
         <activity android:name=".UserActivities.BookMovieActivity" />
         <activity android:name=".UserActivities.MyBookingListActivity" />
         <activity android:name=".UserActivities.ShowMovieInfoActivity"></activity>
+        <activity android:name=".UserActivities.UserMainActivity"/>
     </application>
 
 </manifest>

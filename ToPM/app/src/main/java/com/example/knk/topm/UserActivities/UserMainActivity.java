@@ -60,8 +60,8 @@ public class UserMainActivity extends AppCompatActivity {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     MovieSchedule newSchedule = dataSnapshot.getValue(MovieSchedule.class); // 새로 추가된 스케줄 받아옴
-                    scheduleData[index].add(newSchedule);                                   // 리스트 뷰에 갱신
-                    adapter.notifyDataSetChanged();
+                    //scheduleData[index].add(newSchedule);                                   // 리스트 뷰에 갱신
+                    //adapter.notifyDataSetChanged();
                 }
 
                 @Override
