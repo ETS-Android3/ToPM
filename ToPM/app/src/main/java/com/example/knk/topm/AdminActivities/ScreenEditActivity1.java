@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ScreenEditActivity1 extends AppCompatActivity {
 
@@ -39,11 +41,20 @@ public class ScreenEditActivity1 extends AppCompatActivity {
     }
 
     public void nextBtnClicked(View view) {
+
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+
         // 다음 버튼
 
         // 입력한 가로 세로 정보 받아옴
           row = Integer.parseInt(rowEdit.getText().toString());
           col = Integer.parseInt(colEdit.getText().toString());
+
+        mDatabase.child("DBScreenSits").child("1관").child("DBrow").setValue(row);
+        mDatabase.child("DBScreenSits").child("1관").child("DBcol").setValue(col);
 
 
         if(row != -1 && col != -1) {

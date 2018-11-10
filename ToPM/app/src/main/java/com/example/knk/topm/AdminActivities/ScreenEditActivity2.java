@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.example.knk.topm.Object.MyButton;
 import com.example.knk.topm.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ScreenEditActivity2 extends AppCompatActivity {
 
@@ -23,7 +25,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
     String str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; // 대문자 string 배열 생성하기
     String a1[]=str.split("");
 
-    int db_button_index = -2000;  //database 에 올릴 때 쓰는 바톤 view.getvalue 값
+    int db_button_index ;  //database 에 올릴 때 쓰는 바톤 view.getvalue 값
     MyButton btn[];
 
     RelativeLayout r1,r2; // index X Y
@@ -44,6 +46,10 @@ public class ScreenEditActivity2 extends AppCompatActivity {
     }
 
     public void init() {
+
+
+        DatabaseReference mDatabase;
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 //        해상도 받는 구조 . 아래 코드 해상도 동작할당 안되어있음 .절대값입니다 .
 //        DisplayMetrics dm = new DisplayMetrics();
@@ -113,7 +119,14 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         for (int i = 0; i < size; i++) {            //1차원 배열로 정장할수있음
             btn[i] = new MyButton(this);        //객체
             btn[i].setId(2001 + i);                     //mybutton는  value 값 2000부터 시작함
+
             //id가 2001부터 설치하는 이유 :다른 activity에 있는 id 값과 겹치지않게 해야합니다 .
+
+           mDatabase.child("DBScreenSits").child("1관").child("ButtonID").child(String.valueOf(2001+i)).child("DBisAbler").setValue(btn[i].isAbled);
+           mDatabase.child("DBScreenSits").child("1관").child("ButtonID").child(String.valueOf(2001+i)).child("DBisBooked").setValue(btn[i].isBooked);
+           mDatabase.child("DBScreenSits").child("1관").child("ButtonID").child(String.valueOf(2001+i)).child("DBisSpecial").setValue(btn[i].isSpecial);
+
+
 
             //btn[i].setBackgroundColor(Color.GRAY);      //배경색
             btn[i].setBackgroundResource(R.drawable.movie_seat_ok);//배경 png로 바꿈
@@ -153,7 +166,8 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                         view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
                         // buttonbuff[(int) view.getId() - db_button_index] //db id value
                         Toast.makeText(getApplicationContext(), "buttonid:" + view.getId() + "value:" + r+"XY :"
-                                +GetMybuttonXY(view),//좌석 위치 판단함
+                                //+GetMybuttonXY(view),//좌석 위치 판단함
+                                +GetMybuttonXY(view.getId()),
                                 Toast.LENGTH_SHORT).show();
 
                         return false;
@@ -179,5 +193,21 @@ public class ScreenEditActivity2 extends AppCompatActivity {
             String sitXY="("+a1[x1]+","+String.valueOf(y1)+")";
         return sitXY;
         }
+
+        public String GetMybuttonXY(int Viewid){   // overloading  int형 id 받는 함수
+
+            int x1=0;
+            for(int cc =0;cc<(Viewid-2000);cc++){   //촤표 판단하기
+             if(cc%row==0)
+                x1++;
+            }
+
+         int y1=(Viewid-2000)%row;
+            if(y1==0){
+                y1=row;                     //예외처리입니다 .
+         }
+         String sitXY="("+a1[x1]+","+String.valueOf(y1)+")";
+            return sitXY;
+    }
 
     }

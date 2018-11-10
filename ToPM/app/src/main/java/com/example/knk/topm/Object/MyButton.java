@@ -13,8 +13,8 @@ public class MyButton extends android.support.v7.widget.AppCompatButton implemen
     // boolean nowSelected; // 상태 저장 전 임시로 선택되었는지 판별 (true: 선택됨, false: 안 선택됨)
 
     public boolean isAbled; // 좌석인지 아닌지
-    boolean isBooked; // 예약되었는지 아닌지
-    boolean isSpecial; // 우등석인지 아닌지
+    public boolean isBooked; // 예약되었는지 아닌지
+    public boolean isSpecial; // 우등석인지 아닌지
 
     /* 상수 */
     final static boolean ABLED = true; // 좌석입니다.
