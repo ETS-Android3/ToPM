@@ -21,7 +21,7 @@ public class UserMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_show_schedule);
+        setContentView(R.layout.activity_user_main);
         init();
     }
 
