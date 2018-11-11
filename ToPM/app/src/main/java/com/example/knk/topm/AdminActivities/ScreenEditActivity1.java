@@ -9,15 +9,13 @@ import android.widget.Toast;
 
 import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class ScreenEditActivity1 extends AppCompatActivity {
 
     EditText rowEdit, colEdit;
     int row, col;
 
-    String DB_HallNumber;     // db에 2차 메뉴열 넣을떄 쓰는 buff변수
+//    String DB_HallNumber;     // db에 2차 메뉴열 넣을떄 쓰는 buff변수
     int Screen_ID_buff;       // db에 2차 메뉴열 넣을떄 쓰는 buff변수
 
     /* 상수 */
@@ -49,15 +47,14 @@ public class ScreenEditActivity1 extends AppCompatActivity {
         Screen_ID_buff=GetBuffintent.getIntExtra("SCREENID1", -1);
 
         // "1관" , "2관" ....
-        DB_HallNumber = Screen_ID_buff + "관";
-
+//        DB_HallNumber = Screen_ID_buff + "관";
     }
 
     public void nextBtnClicked(View view) {
 
-        //db
-        DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+//        //db
+//        DatabaseReference mDatabase;
+//        mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
 
@@ -69,9 +66,9 @@ public class ScreenEditActivity1 extends AppCompatActivity {
 
 
 
-          // db에서 추사하기#2   예: ../Screen/x관/DBrow =9,DBcol=9
-        mDatabase.child(screen_ref).child(DB_HallNumber).child("row").setValue(row);
-        mDatabase.child(screen_ref).child(DB_HallNumber).child("col").setValue(col);
+//          // db에서 추사하기#2   예: ../Screen/x관/DBrow =9,DBcol=9
+//        mDatabase.child(screen_ref).child(DB_HallNumber).child("row").setValue(row);
+//        mDatabase.child(screen_ref).child(DB_HallNumber).child("col").setValue(col);
 
 
         if(row != -1 && col != -1) {

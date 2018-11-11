@@ -15,6 +15,9 @@ import com.example.knk.topm.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ScreenEditActivity2 extends AppCompatActivity {
 
     int row;        // 행
@@ -38,7 +41,6 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
     /* 상수 */
     final private static String screen_ref = "screen";          // 상영관 레퍼런스로 가는 키
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,28 +206,39 @@ public class ScreenEditActivity2 extends AppCompatActivity {
             if (i % row == 0) {    // >row 시 다음행으로 넘어가기
                 j++;
             }
-            //RL.leftMargin = 50 * (i % col);    //index 때문에 수치바꿈
-            RL.leftMargin = 50+50 * (i % row);     //50는 행간 사이입니다   . 추가된 50은 index (0,0)위치의 빈칸입니다 .
-            RL.topMargin = j * 50;            //50는 열간 사이입니다
+            //RL.leftMargin = 50 * (i % col);    // index 때문에 수치바꿈
+            RL.leftMargin = 50+50 * (i % row);     // 50는 행간 사이입니다   . 추가된 50은 index (0,0)위치의 빈칸입니다 .
+            RL.topMargin = j * 50;            // 50는 열간 사이입니다
             totalLayout.addView(seats[i], RL);        //mybutton 출력함
             this.setContentView(totalLayout);
         }
     }
 
     public void saveToDataBase() {
+        // 새로 입력한 행, 열 정보를 토대로
         // 데이터베이스에 저장
 
-        Screen newScreen = new Screen(row, col, screenNum);
-
-        int[] IDs = new int[size];
+        // 먼저 ID들을 받아온 다음에
+        ArrayList IDs = new ArrayList();
+        HashMap<String, Boolean> abled = new HashMap<>();
+        HashMap<String, Boolean> booked = new HashMap<>();
+        HashMap<String, Boolean> special = new HashMap<>();
 
         for(int i=0; i<size; i++) {
-            IDs[i] = seats[i].getId();
+            String strID = String.valueOf(seats[i].getId()) ;
+            IDs.add(seats[i].getId());                      // 아이디 저장
+            abled.put(strID, seats[i].isAbled);  // 좌석인지 아닌지 저장
+            booked.put(strID, seats[i].isBooked);  // 좌석인지 아닌지 저장
+            special.put(strID, seats[i].isSpecial);  // 좌석인지 아닌지 저장
         }
 
-        newScreen.setButtonID(IDs);
+        Screen newScreen = new Screen(row, col, screenNum, IDs);     // 객체 생성
+        newScreen.setAbledMap(abled);
+        newScreen.setBookedMap(booked);
+        newScreen.setSpecialMap(special);
+        screenReference.child(screenKey).setValue(newScreen);        // 저장
 
-        screenReference.child(screenKey).setValue(newScreen);
+        // 이 함수는 최종적으로 상영관 정보를 저장할 때 한 번 더 불러와져야 합니다.
     }
 }
 

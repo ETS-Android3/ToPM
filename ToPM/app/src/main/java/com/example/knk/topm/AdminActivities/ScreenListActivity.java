@@ -6,9 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.knk.topm.R;
 import com.google.firebase.database.DatabaseReference;
@@ -54,8 +52,6 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
 
-        //startActivity(new Intent(this,ScreenEditActivity1.class));
-
         // DB 부분
         DatabaseReference mDatabase;
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -73,7 +69,7 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
         //Toast.makeText(this, Screen_Name_Split[0]+"", Toast.LENGTH_SHORT).show();
 
         // db에서 추가하기#1  예: ../Screen/1관/ScreenID=1
-        mDatabase.child("Screen").child(Screen_Name_Buffer).child("ScreenID").setValue(Screen_Name_Split[0]);
+        // mDatabase.child("Screen").child(Screen_Name_Buffer).child("ScreenID").setValue(Screen_Name_Split[0]);
 
 
         Intent intent1 = new Intent();
