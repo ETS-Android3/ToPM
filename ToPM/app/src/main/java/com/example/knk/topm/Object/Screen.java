@@ -1,34 +1,95 @@
 package com.example.knk.topm.Object;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Screen {
 
-    int row; // 좌석 열
-    int col; // 좌석 행
-    int totalSeats; // 전체 좌석 개수
-    String screenNum; // 상영관 번호
-    MyButton[][] seats; // 좌석
+    int row;                // 행
+    int col;                // 열
+    int totalSeats;         // 총 좌석 개수
+    String screenNum;       // 상영관 번호
 
-    /* 상수 */
-    final int ROW_MAX = 20;
-    final int COL_MAX = 20;
-    final int ROW_MIN = 5;
-    final int COL_MIN = 5;
+    ArrayList buttonID;         // MyButton의 ID를 저장할 배열
 
-    public Screen() {
+    HashMap<String, Boolean> abledMap;
+    HashMap<String, Boolean> bookedMap;
+    HashMap<String, Boolean> specialMap;
 
-    }
-
-    public Screen(int row, int col, String screenNum) {
+    public Screen(int row, int col, String screenNum, ArrayList IDs) {
+        // 변수 초기화
         this.row = row;
         this.col = col;
+
+        buttonID = new ArrayList();
+        this.buttonID = IDs;
+
+        totalSeats = row * col;
         this.screenNum = screenNum;
 
-        seats = new MyButton[row][col];
-
-        for(int i=0; i<row; i++) {
-            for(int j=0; j<col; j++) {
-                // seats[i][j] = new MyButton(); // 이거 괄호 안에 Context 들어가야 하는데 뭘 넣어야하지..?
-            }
-        }
+        abledMap = new HashMap<>();
+        bookedMap = new HashMap<>();
+        specialMap = new HashMap<>();
     }
+
+    public Screen() {
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
+
+    public HashMap<String, Boolean> getAbledMap() {
+        return abledMap;
+    }
+
+    public void setAbledMap(HashMap<String, Boolean> abledMap) {
+        this.abledMap = abledMap;
+    }
+
+    public HashMap<String, Boolean> getBookedMap() {
+        return bookedMap;
+    }
+
+    public void setBookedMap(HashMap<String, Boolean> bookedMap) {
+        this.bookedMap = bookedMap;
+    }
+
+    public HashMap<String, Boolean> getSpecialMap() {
+        return specialMap;
+    }
+
+    public void setSpecialMap(HashMap<String, Boolean> specialMap) {
+        this.specialMap = specialMap;
+    }
+
+    public String getScreenNum() {
+        return screenNum;
+    }
+
+    public ArrayList getButtonID() {
+        return buttonID;
+    }
+
+    public void setButtonID(ArrayList buttonID) {
+        this.buttonID = buttonID;
+    }
+
+    public void setScreenNum(String screenNum) {
+        this.screenNum = screenNum;
+    }
+
 }
