@@ -30,6 +30,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
     private ListView dayScheduleList;
     private ArrayList<MovieSchedule>[] scheduleData;
     private NormalScheduleListAdapter adapter;
+    private ArrayList<String>[] keyData;
 
     /* 상단뷰를 위한 변수 */
     private TextView dateTextView;          // 현재 이동돼있는 날짜를 보여주는 텍스트뷰
@@ -62,6 +63,10 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         scheduleData = new ArrayList[FUTURE_DATE];
         for(int i=0; i<FUTURE_DATE; i++) {                      //오늘부터 최대 3일후까지만 생성
             scheduleData[i] = new ArrayList<>();
+        }
+        keyData = new ArrayList[FUTURE_DATE];
+        for(int i=0; i<FUTURE_DATE; i++) {                      //오늘부터 최대 3일후까지만 생성
+            keyData[i] = new ArrayList<>();
         }
 
         // 데이터베이스 연결
@@ -115,6 +120,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     MovieSchedule newSchedule = dataSnapshot.getValue(MovieSchedule.class); // 새로 추가된 스케줄 받아옴
                     scheduleData[index].add(newSchedule);                                   // 리스트 뷰에 갱신
+                    keyData[index].add(dataSnapshot.getKey());
                     adapter.notifyDataSetChanged();
                 }
 
@@ -168,7 +174,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
             dateTextView.setText(str);
 
             if(dateCount == 0) // 오늘 날짜에 도달
-                prevBtn.setEnabled(false);  //이전버튼 비활성화
+                prevBtn.setEnabled(false);  // 이전버튼 비활성화
             // 어댑터 새로 정의
             adapter = new NormalScheduleListAdapter(this, R.layout.schedule_list_adpater_row2, scheduleData[dateCount]);
             dayScheduleList.setAdapter(adapter); // 어댑터 새로 설정
@@ -197,6 +203,24 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        
+        // 방법 1)
+        String key = keyData[dateCount].get(position); // 클릭한 위치의 위치의 키를 받아오자
+        String date = dateCalculator(dateCount);
+
+        // 다음 액티비티로 정보를 전송한다.
+        Intent intent = new Intent(this, BookMovieActivity.class);
+        intent.putExtra("key", key);    // 데이터베이스 접근 키
+        intent.putExtra("date", date);
+        startActivity(intent);
+
+//        // 방법 2)
+//        // 이건 뭔가 실시간이 아닐 것 같아서..
+//        MovieSchedule m2 = scheduleData[dateCount].get(position);
+//
+//        // 그걸 이제 다음 액티비티로 보내주는거죠
+//        // MovieSchedule 객체는 Serialized 해야겠죠
+//        Intent intent2 = new Intent(this, BookMovieActivity.class);
+//        intent2.putExtra("schedule", m);
+//        // 그래서 다음 액티비티에서 객체 받아서 작업하면 수월할 것 같아요
     }
 }
