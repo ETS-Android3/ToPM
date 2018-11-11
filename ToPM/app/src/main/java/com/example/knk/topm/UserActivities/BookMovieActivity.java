@@ -2,19 +2,25 @@ package com.example.knk.topm.UserActivities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class BookMovieActivity extends AppCompatActivity {
 
 
     String scheduleKey;                             // 이전 액티비티에서 넘겨준 데이터베이스 접근 키
     String strDate;                                 // 이전 액티비티에서 넘겨준 상영 날짜 스트링
+    MovieSchedule movieSchedule;                    // 해당 스케쥴
 
     // 데이터베이스
     private FirebaseDatabase firebaseDatabase;      // firebaseDatabase
@@ -41,11 +47,27 @@ public class BookMovieActivity extends AppCompatActivity {
         // 데이터베이스
         firebaseDatabase = FirebaseDatabase.getInstance();
         scheduleReference = firebaseDatabase.getReference(schedule_ref);
+        // 리스너 달기
+        scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        // cheduleReference.child(key)
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    if(data.getKey().equals(scheduleKey)) {
+                        movieSchedule = data.getValue(MovieSchedule.class); // 객체 저장
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // 뷰 초기화
         TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+        titleTextView.setText(movieSchedule.getMovieTitle());
 
 
     }

@@ -221,20 +221,18 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         // 먼저 ID들을 받아온 다음에
         ArrayList IDs = new ArrayList();
         HashMap<String, Boolean> abled = new HashMap<>();
-        HashMap<String, Boolean> booked = new HashMap<>();
+
         HashMap<String, Boolean> special = new HashMap<>();
 
         for(int i=0; i<size; i++) {
             String strID = String.valueOf(seats[i].getId()) ;
             IDs.add(seats[i].getId());                      // 아이디 저장
             abled.put(strID, seats[i].isAbled);  // 좌석인지 아닌지 저장
-            booked.put(strID, seats[i].isBooked);  // 좌석인지 아닌지 저장
-            special.put(strID, seats[i].isSpecial);  // 좌석인지 아닌지 저장
+            special.put(strID, seats[i].isSpecial);  // 우등석인지 아닌지 저장
         }
 
         Screen newScreen = new Screen(row, col, screenNum, IDs);     // 객체 생성
         newScreen.setAbledMap(abled);
-        newScreen.setBookedMap(booked);
         newScreen.setSpecialMap(special);
         screenReference.child(screenKey).setValue(newScreen);        // 저장
 

@@ -13,7 +13,6 @@ public class Screen {
     ArrayList buttonID;         // MyButton의 ID를 저장할 배열
 
     HashMap<String, Boolean> abledMap;
-    HashMap<String, Boolean> bookedMap;
     HashMap<String, Boolean> specialMap;
 
     public Screen(int row, int col, String screenNum, ArrayList IDs) {
@@ -28,7 +27,6 @@ public class Screen {
         this.screenNum = screenNum;
 
         abledMap = new HashMap<>();
-        bookedMap = new HashMap<>();
         specialMap = new HashMap<>();
     }
 
@@ -60,14 +58,6 @@ public class Screen {
         this.abledMap = abledMap;
     }
 
-    public HashMap<String, Boolean> getBookedMap() {
-        return bookedMap;
-    }
-
-    public void setBookedMap(HashMap<String, Boolean> bookedMap) {
-        this.bookedMap = bookedMap;
-    }
-
     public HashMap<String, Boolean> getSpecialMap() {
         return specialMap;
     }
@@ -91,5 +81,14 @@ public class Screen {
     public void setScreenNum(String screenNum) {
         this.screenNum = screenNum;
     }
+
+    public int getTotalSeats() {
+        return totalSeats;
+    }
+
+    public void setTotalSeats(int totalSeats) {
+        this.totalSeats = totalSeats;
+    }
+
 
 }

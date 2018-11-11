@@ -1,16 +1,16 @@
 package com.example.knk.topm.Object;
 
 import java.util.Date;
+import java.util.HashMap;
 
 public class MovieSchedule {
-    // Movie movie; // 영화
-    // Screen screen; // 상영관
+
     String movieTitle;
     String screenNum;
 
+    HashMap<String, Boolean> bookedMap;
+
     public Date screeningDate; // 상영 날짜
-//    int startHour; // 시작 시간
-//    int startMin; // 시작 분
     int bookedSeats; // 예약된 좌석 숫자
     int restSeats; // 남은 좌석 숫자
 
@@ -18,15 +18,15 @@ public class MovieSchedule {
 
     }
 
-    public MovieSchedule(String movieTitle, String screenNum, Date screeningDate/*, int startHour, int startMin*/) {
+    public MovieSchedule(String movieTitle, String screenNum, Date screeningDate) {
         this.movieTitle = movieTitle;
         this.screenNum = screenNum;
         this.screeningDate = screeningDate;
-//        this.startHour = startHour;
-//        this.startMin = startMin;
-
         this.bookedSeats = 0;
+
         this.restSeats = 0; // 일단
+
+        bookedMap = new HashMap<>();
     }
 
 //    public MovieSchedule(Movie movie, Screen screen, Date screeningDate) {
@@ -90,6 +90,14 @@ public class MovieSchedule {
 
     public void setRestSeats(int restSeats) {
         this.restSeats = restSeats;
+    }
+
+    public HashMap<String, Boolean> getBookedMap() {
+        return bookedMap;
+    }
+
+    public void setBookedMap(HashMap<String, Boolean> bookedMap) {
+        this.bookedMap = bookedMap;
     }
 
 //    public int[] countEnd() {

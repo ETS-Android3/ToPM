@@ -17,12 +17,12 @@ public class MyButton extends android.support.v7.widget.AppCompatButton implemen
     public boolean isSpecial; // 우등석인지 아닌지
 
     /* 상수 */
-    final static boolean ABLED = true; // 좌석입니다.
-    final static boolean UNABLED = false; // 좌석이 아닙니다.
-    final static boolean BOOKED = true; // 예약되었습니다.
-    final static boolean UNBOOKED = false; // 예약 안 되었습니다.
-    final static boolean SPECIAL = true; // 우등 좌석입니다.
-    final static boolean UNSPECIAL = false; // 일반 좌석입니다.
+    public final static boolean ABLED = true; // 좌석입니다.
+    public final static boolean UNABLED = false; // 좌석이 아닙니다.
+    public final static boolean BOOKED = true; // 예약되었습니다.
+    public final static boolean UNBOOKED = false; // 예약 안 되었습니다.
+    public final static boolean SPECIAL = true; // 우등 좌석입니다.
+    public final static boolean UNSPECIAL = false; // 일반 좌석입니다.
 
 //    final static int ADMIN_MODE = 0;
 //    final static int USER_MODE = 1;
