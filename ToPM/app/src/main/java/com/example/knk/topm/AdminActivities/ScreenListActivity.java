@@ -72,8 +72,8 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
         //test 하는 toast 입니다. 나중에 지우세요
         //Toast.makeText(this, Screen_Name_Split[0]+"", Toast.LENGTH_SHORT).show();
 
-        // db에서 추가하기#1  예: ../DBScreenSits/1관/ScreenID=1
-        mDatabase.child("DBScreenSits").child(Screen_Name_Buffer).child("ScreenID").setValue(Screen_Name_Split[0]);
+        // db에서 추가하기#1  예: ../Screen/1관/ScreenID=1
+        mDatabase.child("Screen").child(Screen_Name_Buffer).child("ScreenID").setValue(Screen_Name_Split[0]);
 
 
         Intent intent1 = new Intent();

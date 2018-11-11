@@ -61,38 +61,6 @@ public class MyButton extends android.support.v7.widget.AppCompatButton implemen
         // nowSelected = false;
     }
 
-
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        // 클릭 이벤트
-//
-//        Toast.makeText(getContext(), "onTouchEvent", Toast.LENGTH_SHORT).show();
-//        if(this.accessMode == ADMIN_MODE) {
-//            // 관리자 접근
-//
-//        }
-//        else if(this.accessMode == USER_MODE) {
-//            // 고객 접근
-//
-//            if(nowSelected) {
-//                // 현재 선택됨 -> 선택된 것 풀어야 함
-//                this.setBackgroundColor(Color.LTGRAY);
-//                Toast.makeText(getContext(), "선택 취소", Toast.LENGTH_SHORT).show();
-//                this.nowSelected = false;
-//                return false;
-//            }
-//            else {
-//                // 현재 선택되지 않음 -> 선택이 되어야 함
-//                this.setBackgroundColor(Color.BLUE);
-//                Toast.makeText(getContext(), "좌석 선택", Toast.LENGTH_SHORT).show();
-//                this.nowSelected = true;
-//                return false;
-//            }
-//        }
-//
-//        return super.onTouchEvent(event);
-//    }
-
     public void showSeatsState() {
         // 현재 좌석 상태를 보여주는 함수
 

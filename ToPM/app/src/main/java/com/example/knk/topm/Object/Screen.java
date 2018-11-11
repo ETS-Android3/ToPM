@@ -2,33 +2,95 @@ package com.example.knk.topm.Object;
 
 public class Screen {
 
-    int row; // 좌석 열
-    int col; // 좌석 행
-    int totalSeats; // 전체 좌석 개수
-    String screenNum; // 상영관 번호
-    MyButton[][] seats; // 좌석
+    int row;                // 행
+    int col;                // 열
+    int totalSeats;         // 총 좌석 개수
+    boolean isAbled;        // 좌석인지 아닌지
+    boolean isBooked;       // 예약 되었는지 아닌지
+    boolean isSpecial;      // 우등석인지 아닌지
+    String screenNum;       // 상영관 번호
+
+    int[] ButtonID;         // MyButton의 ID를 저장할 배열
 
     /* 상수 */
-    final int ROW_MAX = 20;
-    final int COL_MAX = 20;
-    final int ROW_MIN = 5;
-    final int COL_MIN = 5;
+    final static boolean ABLED = true;
+    final static boolean UNABLED = false;
+    final static boolean BOOKED = true;
+    final static boolean UNBOOKED = false;
+    final static boolean SPECIAL = true;
+    final static boolean UNSPECIAL = false;
 
-    public Screen() {
+    public Screen(int row, int col, String screenNum) {
+        // 변수 초기화
+        this.row = row;
+        this.col = col;
+
+        totalSeats = row * col;
+        this.screenNum = screenNum;
+
+        this.isAbled = ABLED;   // 좌석임
+        this.isBooked = UNBOOKED;  // 예매되지 않음
+        this.isSpecial = UNSPECIAL; // 우등석이 아님
+
 
     }
 
-    public Screen(int row, int col, String screenNum) {
+    public Screen() {
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public void setRow(int row) {
         this.row = row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public void setCol(int col) {
         this.col = col;
+    }
+
+    public boolean isAbled() {
+        return isAbled;
+    }
+
+    public void setAbled(boolean abled) {
+        isAbled = abled;
+    }
+
+    public boolean isBooked() {
+        return isBooked;
+    }
+
+    public void setBooked(boolean booked) {
+        isBooked = booked;
+    }
+
+    public boolean isSpecial() {
+        return isSpecial;
+    }
+
+    public void setSpecial(boolean special) {
+        isSpecial = special;
+    }
+
+    public String getScreenNum() {
+        return screenNum;
+    }
+
+    public void setScreenNum(String screenNum) {
         this.screenNum = screenNum;
+    }
 
-        seats = new MyButton[row][col];
+    public int[] getButtonID() {
+        return ButtonID;
+    }
 
-        for(int i=0; i<row; i++) {
-            for(int j=0; j<col; j++) {
-                // seats[i][j] = new MyButton(); // 이거 괄호 안에 Context 들어가야 하는데 뭘 넣어야하지..?
-            }
-        }
+    public void setButtonID(int[] buttonID) {
+        ButtonID = buttonID;
     }
 }

@@ -17,14 +17,16 @@ public class ScreenEditActivity1 extends AppCompatActivity {
     EditText rowEdit, colEdit;
     int row, col;
 
+    String DB_HallNumber;     // db에 2차 메뉴열 넣을떄 쓰는 buff변수
+    int Screen_ID_buff;       // db에 2차 메뉴열 넣을떄 쓰는 buff변수
+
     /* 상수 */
     final int ROW_MAX = 20;
     final int COL_MAX = 20;
     final int ROW_MIN = 5;
     final int COL_MIN = 5;
 
-    String DB_HallNumber;     // db에 2차 메뉴열 넣을떄 쓰는 buff변수
-    int Screen_ID_buff;       // db에 2차 메뉴열 넣을떄 쓰는 buff변수
+    final private static String screen_ref = "screen";          // 상영관 레퍼런스로 가는 키
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +44,12 @@ public class ScreenEditActivity1 extends AppCompatActivity {
         row = -1;
         col = -1;
 
-
         // ScreenListActivity 에서 Screenid 받아오기
         Intent GetBuffintent = getIntent();
         Screen_ID_buff=GetBuffintent.getIntExtra("SCREENID1", -1);
 
         // "1관" , "2관" ....
-        DB_HallNumber=Screen_ID_buff+"관";
+        DB_HallNumber = Screen_ID_buff + "관";
 
     }
 
@@ -68,9 +69,9 @@ public class ScreenEditActivity1 extends AppCompatActivity {
 
 
 
-          // db에서 추사하기#2   예: ../DBScreenSits/x관/DBrow =9,DBcol=9
-        mDatabase.child("DBScreenSits").child(DB_HallNumber).child("DBrow").setValue(row);
-        mDatabase.child("DBScreenSits").child(DB_HallNumber).child("DBcol").setValue(col);
+          // db에서 추사하기#2   예: ../Screen/x관/DBrow =9,DBcol=9
+        mDatabase.child(screen_ref).child(DB_HallNumber).child("row").setValue(row);
+        mDatabase.child(screen_ref).child(DB_HallNumber).child("col").setValue(col);
 
 
         if(row != -1 && col != -1) {
