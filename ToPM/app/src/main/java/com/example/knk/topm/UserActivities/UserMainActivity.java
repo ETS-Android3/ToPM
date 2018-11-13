@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.knk.topm.CustomAdapters.NormalScheduleListAdapter;
 import com.example.knk.topm.Object.MovieSchedule;
+import com.example.knk.topm.Object.User;
 import com.example.knk.topm.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +27,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class UserMainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+
+    User user;                              // 현재 로그인 한 유저
 
     private ListView dayScheduleList;
     private ArrayList<MovieSchedule>[] scheduleData;
@@ -58,6 +61,10 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
     }
 
     public void init() {
+
+        Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");
+
         // 위젯 초기화
         dayScheduleList = findViewById(R.id.dayScheduleList);
         scheduleData = new ArrayList[FUTURE_DATE];
@@ -215,6 +222,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
         // 다음 액티비티로 정보를 전송한다.
         Intent intent = new Intent(this, BookMovieActivity.class);
+        intent.putExtra("user", user);  // 현재 로그인 유저
         intent.putExtra("key", key);    // 데이터베이스 접근 키
         intent.putExtra("date", date);
         startActivity(intent);

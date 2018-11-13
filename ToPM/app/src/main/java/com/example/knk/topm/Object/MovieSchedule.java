@@ -5,9 +5,8 @@ import java.util.HashMap;
 
 public class MovieSchedule {
 
-    String movieTitle;
-    String screenNum;
-
+    String movieTitle;                          // 영화 이름
+    String screenNum;                           // 상영관번호
 
     HashMap<String, Boolean> bookedMap;
 

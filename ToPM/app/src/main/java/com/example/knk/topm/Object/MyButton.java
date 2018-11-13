@@ -61,37 +61,6 @@ public class MyButton extends android.support.v7.widget.AppCompatButton implemen
         // nowSelected = false;
     }
 
-    public void showSeatsState() {
-        // 현재 좌석 상태를 보여주는 함수
-
-        // 예약 여부
-        if(this.isBooked == BOOKED) { // 이미 예약된 좌석
-            this.setEnabled(false); // 클릭할 수 없게
-        }
-        else { // 미예약
-
-        }
-
-        // 좌석 여부
-        if(this.isAbled == ABLED) { // 좌석임
-
-        }
-        else { // 좌석이 아님
-            this.setEnabled(false); // 클릭할 수 없고
-            this.setVisibility(View.INVISIBLE); // 안 보이되 공간 차지
-        }
-
-        // 우등석 여부 - 나중에 추가 요청이 있으면 구현합시다.
-//        if(this.isAbled == ABLED) { // 좌석임
-//
-//        }
-//        else { // 좌석이 아님
-//
-//        }
-
-
-    }
-
     public void bookingComplete() {
         // 좌석이 예매 완료되면 해당 좌석 mode 값을 변경
 
