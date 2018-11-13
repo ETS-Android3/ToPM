@@ -7,10 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.Object.MyButton;
 import com.example.knk.topm.Object.Screen;
@@ -33,6 +35,10 @@ public class BookMovieActivity extends AppCompatActivity {
     Screen screen;                                  // 해당 스크린
     MyButton[] seats;                               // 좌석
     int size;
+    int personnelCount;                             // 좌석을 클릭한 갯수 카운트하는 변수
+
+    EditText editPersonnel;                         // 인원 받는 EditText
+    int personnel;                                  // 인원 저장
 
     HashMap<String, Boolean> abled;
     HashMap<String, Boolean> booked;
@@ -61,6 +67,8 @@ public class BookMovieActivity extends AppCompatActivity {
 
         // View를 초기화
         final TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+        editPersonnel = (EditText) findViewById(R.id.editPersonnel);
+        personnelCount = 0;
 
         // 이전 액티비티에서 전송한 정보 수신
         Intent intent = getIntent();
@@ -269,5 +277,43 @@ public class BookMovieActivity extends AppCompatActivity {
     }
 
 
+    public void completeBtnClicked(View view) {
+        
+    }
 
+    public boolean personnelInputComplete(View view) {
+        // 인원 정보 입력 완료
+        String str = editPersonnel.getText().toString();
+        
+        if(str == "") {
+            // 입력 되지 않음
+            try {
+                throw new InputException();
+            } catch (InputException e) {
+                Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }
+        else {
+            // 입력됨
+            personnel = Integer.parseInt(str);
+
+            if(personnel <= 0) {
+                // 0보다 같거나 작다면
+                try {
+                    throw new InputException();
+                } catch (InputException e) {
+                    Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+            else {
+                // 0보다 큰 숫자 입력시 입력창, 버튼 비활성화
+                Button personnelInputBtn = (Button) findViewById(R.id.personnelInputBtn);
+                personnelInputBtn.setEnabled(false);
+                editPersonnel.setEnabled(false);
+                return true;
+            }
+        }
+    }
 }

@@ -204,9 +204,14 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+        // 이미 매진 된 회차가 아닌 경우에만 BookMovieActivity로 전환됨
+        // 여기 해야됩닏당
+
         // 방법 1)
         String key = keyData[dateCount].get(position); // 클릭한 위치의 위치의 키를 받아오자
         String date = dateCalculator(dateCount);
+
 
         // 다음 액티비티로 정보를 전송한다.
         Intent intent = new Intent(this, BookMovieActivity.class);
