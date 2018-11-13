@@ -19,6 +19,7 @@ public class User implements Serializable {
         this.birth=birth;
         this.admin = admin;
         bookedSchedules = new ArrayList<>();
+        bookedSchedules.add("null");
     }
 
     public ArrayList<String> getBookedSchedules() {

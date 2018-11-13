@@ -11,10 +11,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.knk.topm.Object.BookingInfo;
 import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.Object.MyButton;
 import com.example.knk.topm.Object.Screen;
+import com.example.knk.topm.Object.User;
 import com.example.knk.topm.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,11 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BookMovieActivity extends AppCompatActivity {
 
-
+    User user;                                      // 현재 로그인한 유저
     String scheduleKey;                             // 이전 액티비티에서 넘겨준 데이터베이스 접근 키
     String strDate;                                 // 이전 액티비티에서 넘겨준 상영 날짜 스트링
     String screenKey;                               // 스케줄 키
@@ -34,7 +37,8 @@ public class BookMovieActivity extends AppCompatActivity {
     Screen screen;                                  // 해당 스크린
     MyButton[] seats;                               // 좌석
     int size;
-    int personnelCount;                             // 좌석을 클릭한 갯수 카운트하는 변수
+    int personnelCount;                             // 좌석을 클릭한 갯수 카운트하는 변수\
+    ArrayList<String> bookedSeats;                  // 예매한 좌석 버튼 ID저장
 
     EditText editPersonnel;                         // 인원 받는 EditText
     int personnel;                                  // 인원 저장
@@ -50,8 +54,12 @@ public class BookMovieActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;      // firebaseDatabase
     private DatabaseReference scheduleReference;        // rootReference
     private DatabaseReference screenReference;        //rootReference
-    final private static String schedule_ref = "schedule";    //스케줄 레퍼런스로 가는 키
-    final private static String screen_ref = "screen";    //스케줄 레퍼런스로 가는 키
+    private DatabaseReference userReference;
+    private DatabaseReference bookingInfoReference;
+    final private static String schedule_ref = "schedule";    // 스케줄 레퍼런스로 가는 키
+    final private static String screen_ref = "screen";    // 스크린 레퍼런스로 가는 키
+    final private static String user_ref = "user";    // 사용자 레퍼런스로 가는 키
+    final private static String bookingInfo_ref = "bookingInfo";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +76,11 @@ public class BookMovieActivity extends AppCompatActivity {
         final TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         editPersonnel = (EditText) findViewById(R.id.editPersonnel);
         personnelCount = 0;
+        bookedSeats = new ArrayList<>();
 
         // 이전 액티비티에서 전송한 정보 수신
         Intent intent = getIntent();
+        user = (User) intent.getSerializableExtra("user");  // 현재 로그인 한 유저
         scheduleKey = intent.getStringExtra("key");     // 스케줄 키
         strDate = intent.getStringExtra("date");        // 날짜
 
@@ -78,6 +88,8 @@ public class BookMovieActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         scheduleReference = firebaseDatabase.getReference(schedule_ref);
         screenReference = firebaseDatabase.getReference(screen_ref);
+        userReference = firebaseDatabase.getReference(user_ref);
+        bookingInfoReference = firebaseDatabase.getReference(bookingInfo_ref);
 
         // 리스너 달기
         scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -153,6 +165,7 @@ public class BookMovieActivity extends AppCompatActivity {
                             v.setBackgroundResource(R.drawable.movie_seat_select); // 배경사진 png 로 바꿈
                             personnelCount++; // 선택한 인원 변수 증가
                             booked.put(String.valueOf(index), MyButton.BOOKED);    // HashMap 해당 키 booked로 상태 변경
+                            bookedSeats.add(String.valueOf(index));
                             Toast.makeText(BookMovieActivity.this, String.valueOf(personnelCount), Toast.LENGTH_SHORT).show();
                         }
                         else {
@@ -266,7 +279,13 @@ public class BookMovieActivity extends AppCompatActivity {
         Toast.makeText(this, "영화 예매가 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
         // 유저의 예매 리스트에 추가하기!!!
-        // 이 부분 구현해야 합니다!!
+        // 여기
+        BookingInfo bookingInfo = new BookingInfo(user.getId(), scheduleKey, personnel, bookedSeats);   // bookingInfo 객체 생성
+        String bookingInfoKey = user.getId() + " " + scheduleKey;        // 예매 정보 키 : 유저 아이디 + 스케줄 키
+
+        bookingInfoReference.child(bookingInfoKey).setValue(bookingInfo);
+        user.bookedSchedules.add(bookingInfoKey);                        // 사용자의 예매 목록에 이번 예매의 키를 추가한다.
+        userReference.child(user.getId()).setValue(user);                // 데이터베이스에 유저 정보 갱신
 
         // 나의 예매 내역으로 이동
         Intent intent = new Intent(this, MyBookingListActivity.class);
