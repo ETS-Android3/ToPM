@@ -73,7 +73,7 @@ public class BookMovieActivity extends AppCompatActivity {
         screenReference = firebaseDatabase.getReference(screen_ref);
 
         // 리스너 달기
-        scheduleReference.child(strDate).addValueEventListener(new ValueEventListener() {
+        scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data : dataSnapshot.getChildren()) {
@@ -96,21 +96,23 @@ public class BookMovieActivity extends AppCompatActivity {
             }
         });
 
-        screenReference.addValueEventListener(new ValueEventListener() {
+        screenReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data : dataSnapshot.getChildren()) {
 
                     if(data.getKey().equals(screenKey)) {
-                        Toast.makeText(BookMovieActivity.this, "스크린 찾았어요", Toast.LENGTH_SHORT).show();
                         screen = data.getValue(Screen.class);
+
                         size = screen.getRow() * screen.getCol();
+                        Toast.makeText(BookMovieActivity.this, String.valueOf(size), Toast.LENGTH_SHORT).show();
                         abled = screen.getAbledMap();
                         special = screen.getSpecialMap();
+                        printSeats();       // 좌석 출력
                         break;
                     }
                 }
-                printSeats();       // 좌석 출력
+
             }
 
             @Override
@@ -141,7 +143,7 @@ public class BookMovieActivity extends AppCompatActivity {
                     //MyButton Class 의 있는 boolean 변수는 public 추가해야함 일단 isabled만 바꿨음 .
 
                     if(!mybutton_inside.isBooked) {
-                        view.setBackgroundResource(R.drawable.movie_seat_selled);//배경사진 png 로 바꿈
+                        view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
                     }
                     else {
                         view.setBackgroundResource(R.drawable.movie_seat_ok);
@@ -209,13 +211,13 @@ public class BookMovieActivity extends AppCompatActivity {
             int id = screen_Hall_ID_Count + i;
             seats[i].setId(id);           // n001 부터 시작해 모든 버튼에 ID 할당
 
-            if(screen.getAbledMap().get(id).equals(MyButton.UNABLED)) {
+            if(abled.get(String.valueOf(id)).equals(MyButton.UNABLED)) {
                 // 좌석이 아닌 곳이라면..
                 seats[i].setVisibility(View.INVISIBLE); // 자리는 차지하되 보이지는 않음
             }
             else {
                 // 좌석인 곳이라면..
-                if(movieSchedule.getBookedMap().get(id).equals(MyButton.BOOKED)) {
+                if(booked.get(String.valueOf(id)).equals(MyButton.BOOKED)) {
                     // 예매 된 자리라면
                     seats[i].setBackgroundResource(R.drawable.movie_seat_selled);
                 }
