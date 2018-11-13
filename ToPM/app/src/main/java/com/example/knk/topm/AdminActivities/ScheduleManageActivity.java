@@ -23,6 +23,8 @@ import com.example.knk.topm.CustomAdapters.ScheduleListAdapter;
 import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.Object.Movie;
 import com.example.knk.topm.Object.MovieSchedule;
+import com.example.knk.topm.Object.MyButton;
+import com.example.knk.topm.Object.Screen;
 import com.example.knk.topm.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +38,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class ScheduleManageActivity extends AppCompatActivity implements ScheduleListAdapter.ScheduleDeleteBtnClickListener {   //스케쥴리스트어댑터 클릭리스너 implements
 
@@ -49,8 +55,10 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private FirebaseDatabase firebaseDatabase;          //firebaseDatabase
     private DatabaseReference movieReference;           //rootReference
     private DatabaseReference scheduleReference;        //rootReference
+    private DatabaseReference screenReference;        //rootReference
     final private static String movie_ref = "movie";          //영화 레퍼런스로 가는 키
     final private static String schedule_ref = "schedule";    //스케줄 레퍼런스로 가는 키
+    final private static String screen_ref = "screen";    //스케줄 레퍼런스로 가는 키
 
     /* 영화 스케줄 리스트 출력을 위한 변수 */
     private ListView dayScheduleList;                   // 영화 스케줄 출력을 위한 리스트 뷰
@@ -83,6 +91,8 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private int showDay;                    // 상영 일
     public int dateCount;                   //설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
 
+    public ArrayList<Screen> screenData;
+
     /* 상수 */
     final static int SCREENS = 5;           // 상영관 5개
     final int DATE_DIALOG = 1111;           // 날짜 다이어로그
@@ -112,6 +122,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         firebaseDatabase = FirebaseDatabase.getInstance();
         scheduleReference = firebaseDatabase.getReference(schedule_ref);
         movieReference = firebaseDatabase.getReference(movie_ref);
+        screenReference = firebaseDatabase.getReference(screen_ref);
     }
 
     // 날짜별 스케줄 리스트뷰 초기화
@@ -259,6 +270,23 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         dateBtn = (Button) findViewById(R.id.dateBtn);      //날짜 선택 다이얼로그를 띄우는 버튼
         timeBtn = (Button) findViewById(R.id.timeBtn);      //시간 선택 다이얼로그를 띄우는 버튼
 
+        screenData = new ArrayList<>();
+        screenReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren()) {
+                    Screen screen = data.getValue(Screen.class);
+                    screenData.add(screen);
+                    Toast.makeText(ScheduleManageActivity.this, screen.getScreenNum(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     // 상영관 선택 다이어로그 (NumberPicker 다이어로그)
@@ -327,6 +355,20 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             //Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
             // 객체 생성후
             MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/);
+            HashMap<String, Boolean> booked = new HashMap<>(); // 예약 현황 초기화해서 스케줄 객체에 넣어줄 것
+
+            Screen screen = screenData.get(screenNum - 1); // 선택한 스크린이요.
+            Set set = screen.getAbledMap().entrySet();
+            Iterator iterator = set.iterator();
+
+            while(iterator.hasNext()) {
+                // 모든 키에 대해서
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String key = (String) entry.getKey();
+                booked.put(key, MyButton.UNBOOKED);     // 예약이 되어있지 않아요.
+            }
+
+            movieSchedule.setBookedMap(booked);
             /*
             1. 스케쥴데이터베이스 구조
             schedule/(key1)yyyy년 MM월 dd일/(key2)상영관번호+상영시간객체/스케쥴객체

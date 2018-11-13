@@ -1,6 +1,5 @@
 package com.example.knk.topm.Object;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -12,18 +11,19 @@ public class Screen {
     int totalSeats;         // 총 좌석 개수
     String screenNum;       // 상영관 번호
 
-    ArrayList buttonID;         // MyButton의 ID를 저장할 배열
+    // ArrayList buttonID;         // MyButton의 ID를 저장할 배열
 
     HashMap<String, Boolean> abledMap;
     HashMap<String, Boolean> specialMap;
 
-    public Screen(int row, int col, String screenNum, ArrayList IDs) {
+
+    public Screen(int row, int col, String screenNum/*, ArrayList IDs*/) {
         // 변수 초기화
         this.row = row;
         this.col = col;
 
-        buttonID = new ArrayList();
-        this.buttonID = IDs;
+//        buttonID = new ArrayList();
+//        this.buttonID = IDs;
 
         totalSeats = row * col;
         this.screenNum = screenNum;
@@ -72,13 +72,13 @@ public class Screen {
         return screenNum;
     }
 
-    public ArrayList getButtonID() {
-        return buttonID;
-    }
-
-    public void setButtonID(ArrayList buttonID) {
-        this.buttonID = buttonID;
-    }
+//    public ArrayList getButtonID() {
+//        return buttonID;
+//    }
+//
+//    public void setButtonID(ArrayList buttonID) {
+//        this.buttonID = buttonID;
+//    }
 
     public void setScreenNum(String screenNum) {
         this.screenNum = screenNum;

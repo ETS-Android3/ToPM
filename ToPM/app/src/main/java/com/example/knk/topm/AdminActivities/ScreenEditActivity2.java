@@ -231,7 +231,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
             special.put(strID, seats[i].isSpecial);  // 우등석인지 아닌지 저장
         }
 
-        Screen newScreen = new Screen(row, col, screenNum, IDs);     // 객체 생성
+        Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
         newScreen.setAbledMap(abled);
         newScreen.setSpecialMap(special);
         screenReference.child(screenKey).setValue(newScreen);        // 저장
