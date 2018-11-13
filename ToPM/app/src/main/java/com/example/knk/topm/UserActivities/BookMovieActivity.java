@@ -265,10 +265,8 @@ public class BookMovieActivity extends AppCompatActivity {
         scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);   // 객체를 데이터베이스에 업로드한다.
         Toast.makeText(this, "영화 예매가 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
-
         // 유저의 예매 리스트에 추가하기!!!
         // 이 부분 구현해야 합니다!!
-
 
         // 나의 예매 내역으로 이동
         Intent intent = new Intent(this, MyBookingListActivity.class);
