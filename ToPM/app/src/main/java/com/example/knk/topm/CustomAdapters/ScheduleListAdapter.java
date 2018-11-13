@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.R;
@@ -24,7 +25,11 @@ public class ScheduleListAdapter extends ArrayAdapter<MovieSchedule> implements 
     private String strDateKey;      // 어댑터에 들어있는 스케쥴객체의 상영날짜 스트링
     private int dateCount;          // 그 상영날짜가 오늘날짜로부터 얼마나 뒤의 날인지 저장
 
-    // 생성자
+    private final int RESOURCE_TYPE_FOR_SCHEDULE_MANAGE = R.layout.schedule_list_adapter_row;
+    private final int RESOURCE_TYPE_FOR_ADMIN_MAIN = R.layout.schedule_list_adpater_row2;
+
+    // 생성자 오버로딩 1
+    // ScheduleManageActivity에서 사용하는 생성자. 한 줄(row) 마다 삭제 버튼이 있음.
     // 어댑터에는 현재액티비티의 context, 뿌려줄 리스트뷰 한 줄(row)의 레아이웃, 뿌려줄 데이터 정보, 삭제버튼 클릭리스너, 현재설정된 날짜, 현재선택한날짜-오늘날짜
     public ScheduleListAdapter(@NonNull Context context, int resource, ArrayList<MovieSchedule> objects, ScheduleDeleteBtnClickListener listener, String strDateKey, int dateCount) {
         super(context, resource, objects);
@@ -34,6 +39,18 @@ public class ScheduleListAdapter extends ArrayAdapter<MovieSchedule> implements 
         this.scheduleDeleteBtnClickListener = listener;
         this.strDateKey = strDateKey;
         this.dateCount = dateCount;
+    }
+    // 생성자 오버로딩 2
+    // AdminMainActivity에서 사용하는 생성자. 버튼은 사용하지 않고 오직 정보만 보여줌.
+    public ScheduleListAdapter(@NonNull Context context, int resource, ArrayList<MovieSchedule> objects) {
+        super(context, resource, objects);
+        this.context = context;
+        this.data = objects;
+        this.resource = resource;
+        //필요없는 부분 - null로 둠
+        this.scheduleDeleteBtnClickListener = null;
+        this.strDateKey = null;
+        this.dateCount = -1;
     }
 
     //삭제버튼 클릭리스너 인터페이스
@@ -75,24 +92,40 @@ public class ScheduleListAdapter extends ArrayAdapter<MovieSchedule> implements 
 
         //현재 포지션에 데이터에 인덱스 순으로 스케쥴인스턴스 생성
         MovieSchedule movieSchedule = data.get(position);
+        title = v.findViewById(R.id.titleTextView);
+        time = v.findViewById(R.id.timeTextview);
+        screen = v.findViewById(R.id.screenTextview);
 
         if(movieSchedule != null){
-            title = v.findViewById(R.id.titleTextView);
-            time = v.findViewById(R.id.timeTextview);
-            screen = v.findViewById(R.id.screenTextview);
-            deleteBtn = v.findViewById(R.id.deleteBtn);
-            if (title!=null&&time!=null&&screen!=null){
-                title.setText(movieSchedule.getMovieTitle());
-                time.setText(movieSchedule.screeningDate.getHours()+":" + movieSchedule.screeningDate.getMinutes());
-                screen.setText(movieSchedule.getScreenNum()+"관 ");
+            if(title!=null&&time!=null&&screen!=null){
+                // 영화제목, 시간, 상영관,(for 영화스케쥴 추가) 삭제버튼(for 영화스케쥴 삭제) 이 모든 것이 필요한 경우 = ScheduleManageActivity
+                if(resource == RESOURCE_TYPE_FOR_SCHEDULE_MANAGE){
+                    title.setText(movieSchedule.getMovieTitle());
+                    time.setText(movieSchedule.screeningDate.getHours()+":" + movieSchedule.screeningDate.getMinutes());
+                    screen.setText(movieSchedule.getScreenNum()+"관 ");
+                    deleteBtn = v.findViewById(R.id.deleteBtn);
+                    if (deleteBtn!=null){
+                        // 삭제버튼에 해당 포지션 태그 달아주고
+                        deleteBtn.setTag(position);
+                        // 클릭리스너도 달아줌
+                        deleteBtn.setOnClickListener(this);
+                    }
+                }
+                // 위의 것들이 필요 없는 경우 = AdminMainActivity
+                else if(resource == RESOURCE_TYPE_FOR_ADMIN_MAIN){
+                    title.setText(movieSchedule.getMovieTitle());
+                    time.setText(movieSchedule.screeningDate.getHours()+":" + movieSchedule.screeningDate.getMinutes());
+                    screen.setText(movieSchedule.getScreenNum()+"관 ");
+                }
             }
-            if(deleteBtn!=null){
-                //삭제버튼에 해당 포지션 태그 달아주고
-                deleteBtn.setTag(position);
-                //클릭리스너도 달아줌
-                deleteBtn.setOnClickListener(this);
+            else{
+                Toast.makeText(getContext(),"텍스트 뷰가 제대로 초기화되지 않았습니다.",Toast.LENGTH_SHORT).show();
             }
         }
+        else{
+            Toast.makeText(getContext(),"스케쥴 정보를 받아오는데 실패했습니다.",Toast.LENGTH_SHORT).show();
+        }
+
 
         return v;
     }

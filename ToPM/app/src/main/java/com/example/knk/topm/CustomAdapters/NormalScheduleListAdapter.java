@@ -61,7 +61,7 @@ public class NormalScheduleListAdapter extends ArrayAdapter<MovieSchedule> {
 
         if(movieSchedule != null){
             title = v.findViewById(R.id.titleTextView);
-            time = v.findViewById(R.id.timeTextView);
+            time = v.findViewById(R.id.timeTextview);
             screen = v.findViewById(R.id.screenTextView);
 
             if (title != null && time != null && screen != null){
