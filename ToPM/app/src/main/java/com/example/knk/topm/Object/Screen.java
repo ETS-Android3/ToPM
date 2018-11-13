@@ -2,6 +2,8 @@ package com.example.knk.topm.Object;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 public class Screen {
 
@@ -83,6 +85,23 @@ public class Screen {
     }
 
     public int getTotalSeats() {
+        // 전체 좌석 수 반환
+        int total = row * col;          // 정사각형 좌석 수
+        Set set = abledMap.keySet();    // 버튼 아이디 set 가져옴
+        Iterator iterator = set.iterator();
+
+        int unabledSeatsNum = 0;        // 좌석이 아닌 것의 개수 저장할 것
+
+        // 모든 키에 대해서 검사
+        while(iterator.hasNext()) {
+            if((abledMap.get((String) iterator.next())).equals(MyButton.UNABLED)) {
+                // 좌석이 아니라면
+                unabledSeatsNum++;      // 좌석이 아닌 것의 개수 증가
+            }
+        }
+
+        totalSeats -= unabledSeatsNum;  // 전체 숫자에서 빼기
+
         return totalSeats;
     }
 

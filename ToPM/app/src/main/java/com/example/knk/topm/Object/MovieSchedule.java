@@ -8,6 +8,7 @@ public class MovieSchedule {
     String movieTitle;
     String screenNum;
 
+
     HashMap<String, Boolean> bookedMap;
 
     public Date screeningDate; // 상영 날짜
