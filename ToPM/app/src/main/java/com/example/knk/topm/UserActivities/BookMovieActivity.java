@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 public class BookMovieActivity extends AppCompatActivity {
 
 
@@ -31,6 +33,10 @@ public class BookMovieActivity extends AppCompatActivity {
     Screen screen;                                  // 해당 스크린
     MyButton[] seats;                               // 좌석
     int size;
+
+    HashMap<String, Boolean> abled;
+    HashMap<String, Boolean> booked;
+    HashMap<String, Boolean> special;
 
     // 레이아웃
     RelativeLayout totalLayout;
@@ -76,6 +82,7 @@ public class BookMovieActivity extends AppCompatActivity {
 
                         // 객체를 가지고 온 후 객체의 정보로 초기화 하는 변수는 이 안에서 초기화 해야합니다.
                         // 왜냐하면, 이 리스너가 Asynchronous 하기 때문입니다.
+                        booked = movieSchedule.getBookedMap();
                         screenKey = movieSchedule.getScreenNum() + "관";       // 스크린 키
                         titleTextView.setText(movieSchedule.getMovieTitle());
                         break;
@@ -98,10 +105,12 @@ public class BookMovieActivity extends AppCompatActivity {
                         Toast.makeText(BookMovieActivity.this, "스크린 찾았어요", Toast.LENGTH_SHORT).show();
                         screen = data.getValue(Screen.class);
                         size = screen.getRow() * screen.getCol();
-                        printSeats();       // 좌석 출력
+                        abled = screen.getAbledMap();
+                        special = screen.getSpecialMap();
                         break;
                     }
                 }
+                printSeats();       // 좌석 출력
             }
 
             @Override
@@ -126,19 +135,17 @@ public class BookMovieActivity extends AppCompatActivity {
             seats[k].setOnTouchListener(new Button.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent m) {
-                    MyButton mybutton_inside = (MyButton)findViewById(view.getId());  //
-
-//                        this.isAbled = true;
-//                        this.isBooked = false;
-//                        this.isSpecial = false;
+                    MyButton mybutton_inside = (MyButton)findViewById(view.getId());
                     mybutton_inside.isAbled=false;
                     //mybutton_inside.isbooked=false ; //error
                     //MyButton Class 의 있는 boolean 변수는 public 추가해야함 일단 isabled만 바꿨음 .
 
-                    if(!mybutton_inside.isAbled)
-                        //view.setBackgroundColor(Color.BLUE);
-                        view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
-                    // buttonbuff[(int) view.getId() - db_button_index] //db id value
+                    if(!mybutton_inside.isBooked) {
+                        view.setBackgroundResource(R.drawable.movie_seat_selled);//배경사진 png 로 바꿈
+                    }
+                    else {
+                        view.setBackgroundResource(R.drawable.movie_seat_ok);
+                    }
 
                     return false;
                 }
@@ -194,13 +201,31 @@ public class BookMovieActivity extends AppCompatActivity {
         int j = 0;   // 행당 버튼 개수 count 하는 변수
 
         // ▼ DB에 스크린 아이디를 저장하기 위한 과정
-        int Scree_Hall_ID_Count = Integer.parseInt(screen.getScreenNum()) * 1000 + 1; // n관일 경우, 버튼의 아이디는 n001부터 시작함.
+        int screen_Hall_ID_Count = Integer.parseInt(screen.getScreenNum()) * 1000 + 1; // n관일 경우, 버튼의 아이디는 n001부터 시작함.
+
         for (int i = 0; i < size; i++) {                     // 1차원 배열로 저장
 
             seats[i] = new MyButton(this);           // 객체 생성
-            seats[i].setId(Scree_Hall_ID_Count + i);           // n001 부터 시작해 모든 버튼에 ID 할당
+            int id = screen_Hall_ID_Count + i;
+            seats[i].setId(id);           // n001 부터 시작해 모든 버튼에 ID 할당
 
-            seats[i].setBackgroundResource(R.drawable.movie_seat_ok);   // 배경 png로 바꿈
+            if(screen.getAbledMap().get(id).equals(MyButton.UNABLED)) {
+                // 좌석이 아닌 곳이라면..
+                seats[i].setVisibility(View.INVISIBLE); // 자리는 차지하되 보이지는 않음
+            }
+            else {
+                // 좌석인 곳이라면..
+                if(movieSchedule.getBookedMap().get(id).equals(MyButton.BOOKED)) {
+                    // 예매 된 자리라면
+                    seats[i].setBackgroundResource(R.drawable.movie_seat_selled);
+                }
+                else {
+                    // 예매 되지 않은 자리라면
+                    seats[i].setBackgroundResource(R.drawable.movie_seat_ok);
+                }
+            }
+
+
             seats[i].setText("" + i);
             seats[i].setTextSize(0, 8);         // 글자 크기
             RelativeLayout.LayoutParams RL = new RelativeLayout.LayoutParams(40, 40);  //(40,40)-> 버튼의 크기: 40=50-10
