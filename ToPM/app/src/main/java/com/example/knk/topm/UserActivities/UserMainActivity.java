@@ -54,7 +54,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_main);
 
-        init();
+        init();                                         //초기화
     }
 
     public void init() {
@@ -69,10 +69,11 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
             keyData[i] = new ArrayList<>();
         }
 
-        // 데이터베이스 연결
+        // 데이터베이스 초기화
         firebaseDatabase = FirebaseDatabase.getInstance();
         rootReference = firebaseDatabase.getReference(SCHEDULE_REF);
 
+        // 데이터베이스에서 스케쥴 정보 받아오기
         getScheduleFromDB();
 
         adapter = new NormalScheduleListAdapter(this, R.layout.schedule_list_adpater_row2, scheduleData[0]);

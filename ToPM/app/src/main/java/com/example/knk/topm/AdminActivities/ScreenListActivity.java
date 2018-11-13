@@ -32,8 +32,9 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
 
         // 객체 생성
         screenEdits = new Button[SCREEN_COUNT];
-        buttonLayout = (LinearLayout) findViewById(R.id.buttonLayout);
+        buttonLayout = findViewById(R.id.buttonLayout);
 
+        // 상영관의 개수가 달라져도 SCREEN_COUNT만 바꾸면 버튼이 늘어나도록 버튼을 직접 자바코드로 작성
         for(int i=0; i<SCREEN_COUNT; i++) {
             screenEdits[i] = new Button(this);
             screenEdits[i].setId(i+1);          // id 추가함
@@ -42,7 +43,6 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
             screenEdits[i].setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
             buttonLayout.addView(screenEdits[i]);
 
-            //----
             screenEdits[i].setOnClickListener(this);
         }
 
@@ -51,11 +51,6 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View v) {
-
-        // DB 부분
-        DatabaseReference mDatabase;
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         // 어느 button 누르는지 id 받을수있게 만든 buff 입니다
         Button DB_Connect_Button = (Button)findViewById(v.getId());
 
@@ -67,10 +62,6 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
 
         //test 하는 toast 입니다. 나중에 지우세요
         //Toast.makeText(this, Screen_Name_Split[0]+"", Toast.LENGTH_SHORT).show();
-
-        // db에서 추가하기#1  예: ../Screen/1관/ScreenID=1
-        // mDatabase.child("Screen").child(Screen_Name_Buffer).child("ScreenID").setValue(Screen_Name_Split[0]);
-
 
         Intent intent1 = new Intent();
         intent1.setClass(this,ScreenEditActivity1.class);
