@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -142,24 +141,33 @@ public class BookMovieActivity extends AppCompatActivity {
         // 버튼 클릭 리스너 설정
         for (int k = 0; k < seats.length ; k++) {
             seats[k].setTag(k);
-            seats[k].setOnTouchListener(new Button.OnTouchListener() {
+            final int index = Integer.parseInt(screen.getScreenNum()) * 1000 + (k + 1);
+            seats[k].setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onTouch(View view, MotionEvent m) {
-                    MyButton mybutton_inside = (MyButton)findViewById(view.getId());
-                    mybutton_inside.isAbled=false;
-                    //mybutton_inside.isbooked=false ; //error
-                    //MyButton Class 의 있는 boolean 변수는 public 추가해야함 일단 isabled만 바꿨음 .
+                public void onClick(View v) {
 
-                    if(!mybutton_inside.isBooked) {
-                        view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
+                    if(personnelCount < personnel) {
+                        // 입력 인원보다 작을 시에만 좌석 클릭이 가능하고요
+                        if(booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)) {
+                            // 예매가 되지 않은 자리를 클릭했을 경우
+                            v.setBackgroundResource(R.drawable.movie_seat_select); // 배경사진 png 로 바꿈
+                            personnelCount++; // 선택한 인원 변수 증가
+                            booked.put(String.valueOf(index), MyButton.BOOKED);    // HashMap 해당 키 booked로 상태 변경
+                            Toast.makeText(BookMovieActivity.this, String.valueOf(personnelCount), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            // 예매가 된 자리를 클릭했을 경우
+                            Toast.makeText(BookMovieActivity.this, "이미 예매가 된 자리랍니다.", Toast.LENGTH_SHORT).show();
+                            // 아무 일도 일어나지 않아야죠
+                        }
                     }
                     else {
-                        view.setBackgroundResource(R.drawable.movie_seat_ok);
+                        // 입력 인원과 선택 좌석 수가 크거나 같으면 좌석을 더이상 클릭할 수가 없죠.
+                        Toast.makeText(BookMovieActivity.this, "이미 모두 선택했습니다.", Toast.LENGTH_SHORT).show();
                     }
-
-                    return false;
                 }
             });
+
         }
     }
 
@@ -252,33 +260,31 @@ public class BookMovieActivity extends AppCompatActivity {
     }
 
     public void saveToDataBase() {
-//        // 새로 입력한 행, 열 정보를 토대로
-//        // 데이터베이스에 저장
-//
-//        // 먼저 ID들을 받아온 다음에
-//        ArrayList IDs = new ArrayList();
-//        HashMap<String, Boolean> abled = new HashMap<>();
-//
-//        HashMap<String, Boolean> special = new HashMap<>();
-//
-//        for(int i=0; i<size; i++) {
-//            String strID = String.valueOf(seats[i].getId()) ;
-//            IDs.add(seats[i].getId());                      // 아이디 저장
-//            abled.put(strID, seats[i].isAbled);  // 좌석인지 아닌지 저장
-//            special.put(strID, seats[i].isSpecial);  // 우등석인지 아닌지 저장
-//        }
-//
-//        Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
-//        newScreen.setAbledMap(abled);
-//        newScreen.setSpecialMap(special);
-//        screenReference.child(screenKey).setValue(newScreen);        // 저장
-//
-//        // 이 함수는 최종적으로 상영관 정보를 저장할 때 한 번 더 불러와져야 합니다.
+
+        movieSchedule.setBookedMap(booked);                             // bookedMap을 갱신한다.
+        scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);   // 객체를 데이터베이스에 업로드한다.
+        Toast.makeText(this, "영화 예매가 완료되었습니다.", Toast.LENGTH_SHORT).show();
+
+
+        // 유저의 예매 리스트에 추가하기!!!
+        // 이 부분 구현해야 합니다!!
+
+
+        // 나의 예매 내역으로 이동
+        Intent intent = new Intent(this, MyBookingListActivity.class);
+        startActivity(intent);
     }
 
 
     public void completeBtnClicked(View view) {
-        
+        if(personnelCount == personnel) {
+            // 입력 인원만큼 좌석을 선택한 경우
+            saveToDataBase();               // 데이터베이스에 저장합니다. ^^
+        }
+        else {
+            // 아닌 경우
+            Toast.makeText(this, "입력 인원만큼 좌석을 선택해주세요.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public boolean personnelInputComplete(View view) {
@@ -292,6 +298,7 @@ public class BookMovieActivity extends AppCompatActivity {
             } catch (InputException e) {
                 Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
+                return false;
             }
         }
         else {
@@ -305,6 +312,7 @@ public class BookMovieActivity extends AppCompatActivity {
                 } catch (InputException e) {
                     Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
+                    return false;
                 }
             }
             else {
