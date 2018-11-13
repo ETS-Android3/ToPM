@@ -112,8 +112,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                 }
             });
         }
-
-        }
+    }
 
         // 좌석 위치 판단하고 string로 출력하기
     public String GetMybuttonXY(View v){
