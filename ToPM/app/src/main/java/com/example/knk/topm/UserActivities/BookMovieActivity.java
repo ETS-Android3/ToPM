@@ -208,6 +208,7 @@ public class BookMovieActivity extends AppCompatActivity {
 
                 }
 
+                    //ontouch 삭제 됨 !!
 
 //                public boolean onTouch(View view, MotionEvent m) {
 //                    MyButton mybutton_inside = (MyButton)findViewById(view.getId());

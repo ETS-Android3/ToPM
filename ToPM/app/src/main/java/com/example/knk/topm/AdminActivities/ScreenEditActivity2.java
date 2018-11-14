@@ -33,6 +33,8 @@ public class ScreenEditActivity2 extends AppCompatActivity {
     RelativeLayout rowLayout,colLayout; // 행과 열의 인덱스를 출력할 레이아웃
     RelativeLayout totalLayout;         // 좌석 전체를 출력할 레이아웃
 
+    int[][] Cancel_Function_index;
+
     /* 데이터베이스 */
     private FirebaseDatabase firebaseDatabase;           // firebaseDatabase
     private DatabaseReference screenReference;           // rootReference
@@ -91,9 +93,11 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
         for (int k = 0; k < seats.length ; k++) {
             seats[k].setTag(k);
-            seats[k].setOnTouchListener(new Button.OnTouchListener() {
+            seats[k].setOnClickListener(new Button.OnClickListener() {
+
+
                 @Override
-                public boolean onTouch(View view, MotionEvent m) {
+                public void onClick(View view) {
                     MyButton mybutton_inside=(MyButton)findViewById(view.getId());  //
 
 //                        this.isAbled = true;
@@ -103,12 +107,25 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                     //mybutton_inside.isbooked=false ; //error
                     //MyButton Class 의 있는 boolean 변수는 public 추가해야함 일단 isabled만 바꿨음 .
 
-                    if(!mybutton_inside.isAbled)
-                    //view.setBackgroundColor(Color.BLUE);
-                    view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
+//                    if(!mybutton_inside.isAbled)
+//                    //view.setBackgroundColor(Color.BLUE);
+//                    view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
                     // buttonbuff[(int) view.getId() - db_button_index] //db id value
 
-                    return false;
+                    switch (Cancel_Function_index[view.getId()-(Integer.parseInt(screenNum)*1000)][0]){
+                        case 0:
+                            view.setBackgroundResource(R.drawable.movie_seat_select);
+                            Cancel_Function_index[view.getId()-(Integer.parseInt(screenNum)*1000)][0]=1;
+                            break;
+                        case 1:
+                            view.setBackgroundResource(R.drawable.movie_seat_ok);
+                            Cancel_Function_index[view.getId()-(Integer.parseInt(screenNum)*1000)][0]=0;
+                            break;
+
+
+                    }
+
+
                 }
             });
         }
@@ -195,6 +212,9 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
             seats[i] = new MyButton(this);           // 객체 생성
             seats[i].setId(Scree_Hall_ID_Count + i);           // n001 부터 시작해 모든 버튼에 ID 할당
+
+            Cancel_Function_index=new int[400][1];
+            Cancel_Function_index[i][0]=0;   // 선택 취소하기
 
             seats[i].setBackgroundResource(R.drawable.movie_seat_ok);   // 배경 png로 바꿈
             seats[i].setText("" + i);
