@@ -153,7 +153,7 @@ public class BookMovieActivity extends AppCompatActivity {
         // 버튼 클릭 리스너 설정
         for (int k = 0; k < seats.length ; k++) {
             seats[k].setTag(k);
-            final int index = Integer.parseInt(screen.getScreenNum()) * 1000 + (k + 1);
+            final int index = Integer.parseInt(screen.getScreenNum()) * 1000 + (k + 1); // 실제 DB에 저장되어있는 버튼의 ID값
             seats[k].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

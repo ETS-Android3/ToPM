@@ -3,11 +3,10 @@ package com.example.knk.topm.AdminActivities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.knk.topm.Object.MyButton;
 import com.example.knk.topm.Object.Screen;
@@ -25,6 +24,9 @@ public class ScreenEditActivity2 extends AppCompatActivity {
     int size ;      // size = row *col
     String screenNum; // "n"
     String screenKey; // "n관"
+
+    HashMap<String, Boolean> abled;   // 좌석인지 아닌지 여부 저장
+    HashMap<String, Boolean> special; // 우등석인지 아닌지 여부 저장
     
     String colChars[];
     int Screen_ID_buff;
@@ -67,6 +69,9 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         row = intent.getIntExtra("row", DEFAUL_VALUE);      // 행 정보
         col = intent.getIntExtra("col", DEFAUL_VALUE);      // 열 정보
 
+        abled = new HashMap<>();
+        special = new HashMap<>();
+
         // ScreenEditActivity1 에서 ScreenId 받아오기
         Screen_ID_buff = intent.getIntExtra("SCREENID2", -1);
 
@@ -82,70 +87,68 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         colChars = new String[alphabet.length()];
         colChars =  alphabet.split("");
 
-        totalLayout = new RelativeLayout(this);             // 전체 좌석을 출력하는 레이아웃
+        totalLayout = (RelativeLayout) findViewById(R.id.totalLayout);             // 전체 좌석을 출력하는 레이아웃
         seats = new MyButton[size];                                 // 사이즈 개수 만큼 버튼 생성
 
         createLayout();     // 레이아웃 생성
         assignButtonID();   // 버튼 ID 할당
         saveToDataBase();   // 데이터베이스에 저장
 
-        for (int k = 0; k < seats.length ; k++) {
+        for (int k = 0; k < size; k++) {
             seats[k].setTag(k);
-            seats[k].setOnTouchListener(new Button.OnTouchListener() {
+            final int index = Integer.parseInt(screenNum) * 1000 + (k + 1); // 실제 DB에 저장되어있는 버튼 ID값
+
+            seats[k].setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onTouch(View view, MotionEvent m) {
-                    MyButton mybutton_inside=(MyButton)findViewById(view.getId());  //
-
-//                        this.isAbled = true;
-//                        this.isBooked = false;
-//                        this.isSpecial = false;
-                    mybutton_inside.isAbled=false;
-                    //mybutton_inside.isbooked=false ; //error
-                    //MyButton Class 의 있는 boolean 변수는 public 추가해야함 일단 isabled만 바꿨음 .
-
-                    if(!mybutton_inside.isAbled)
-                    //view.setBackgroundColor(Color.BLUE);
-                    view.setBackgroundResource(R.drawable.movie_seat_select);//배경사진 png 로 바꿈
-                    // buttonbuff[(int) view.getId() - db_button_index] //db id value
-
-                    return false;
+                public void onClick(View v) {
+                    // 좌석 버튼 클릭 이벤트
+                    if(abled.get(String.valueOf(index)).equals(MyButton.ABLED)) {
+                        // 현재 좌석인 자리라면
+                        abled.put(String.valueOf(index), MyButton.UNABLED);     // 좌석이 아닌 상태로 바꾸어주고
+                        v.setBackgroundResource(R.drawable.movie_seat_repair);  // 이미지 바꾸어줌
+                    }
+                    else if(abled.get(String.valueOf(index)).equals(MyButton.UNABLED)){
+                        // 현재 좌석이 아닌 자리라면
+                        abled.put(String.valueOf(index), MyButton.ABLED);     // 좌석이 아닌 상태로 바꾸어주고
+                        v.setBackgroundResource(R.drawable.movie_seat_ok);  // 이미지 바꾸어줌
+                    }
                 }
             });
         }
     }
 
-        // 좌석 위치 판단하고 string로 출력하기
-    public String GetMybuttonXY(View v){
-
-        int x1=0;
-        for(int cc =0;cc<((int)v.getId()-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
-            if(cc%row==0)
-                x1++;
-        }
-
-        int y1=((int)v.getId()-(Screen_ID_buff*1000))%row;
-        if(y1==0){
-            y1=row;                     //예외처리입니다 .
-        }
-        String sitXY="("+colChars[x1]+","+String.valueOf(y1)+")";
-    return sitXY;
-    }
-
-    public String GetMybuttonXY(int Viewid) {   // overloading  int형 id 받는 함수
-
-        int x1=0;
-        for(int cc =0;cc<(Viewid-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
-         if(cc%row==0)
-            x1++;
-        }
-
-         int y1=(Viewid-(Screen_ID_buff*1000))%row;
-            if(y1==0){
-                y1=row;                     //예외처리입니다 .
-         }
-         String sitXY="("+colChars[x1]+","+String.valueOf(y1)+")";
-            return sitXY;
-    }
+//        // 좌석 위치 판단하고 string로 출력하기
+//    public String GetMybuttonXY(View v){
+//
+//        int x1=0;
+//        for(int cc =0;cc<((int)v.getId()-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
+//            if(cc%row==0)
+//                x1++;
+//        }
+//
+//        int y1=((int)v.getId()-(Screen_ID_buff*1000))%row;
+//        if(y1==0){
+//            y1=row;                     //예외처리입니다 .
+//        }
+//        String sitXY="("+colChars[x1]+","+String.valueOf(y1)+")";
+//    return sitXY;
+//    }
+//
+//    public String GetMybuttonXY(int Viewid) {   // overloading  int형 id 받는 함수
+//
+//        int x1=0;
+//        for(int cc =0;cc<(Viewid-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
+//         if(cc%row==0)
+//            x1++;
+//        }
+//
+//         int y1=(Viewid-(Screen_ID_buff*1000))%row;
+//            if(y1==0){
+//                y1=row;                     //예외처리입니다 .
+//         }
+//         String sitXY="("+colChars[x1]+","+String.valueOf(y1)+")";
+//            return sitXY;
+//    }
     
     public void createLayout() {
         // 버튼들 출력할 레이아웃을 생성하는 함수
@@ -207,9 +210,9 @@ public class ScreenEditActivity2 extends AppCompatActivity {
             }
             //RL.leftMargin = 50 * (i % col);    // index 때문에 수치바꿈
             RL.leftMargin = 50+50 * (i % row);     // 50는 행간 사이입니다   . 추가된 50은 index (0,0)위치의 빈칸입니다 .
-            RL.topMargin = j * 50;            // 50는 열간 사이입니다
+            RL.topMargin = j * 50;                 // 50는 열간 사이입니다
             totalLayout.addView(seats[i], RL);        //mybutton 출력함
-            this.setContentView(totalLayout);
+            // this.setContentView(totalLayout);
         }
     }
 
@@ -219,15 +222,13 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
         // 먼저 ID들을 받아온 다음에
         ArrayList IDs = new ArrayList();
-        HashMap<String, Boolean> abled = new HashMap<>();
 
-        HashMap<String, Boolean> special = new HashMap<>();
-
+        // 초기화
         for(int i=0; i<size; i++) {
             String strID = String.valueOf(seats[i].getId()) ;
             IDs.add(seats[i].getId());                      // 아이디 저장
-            abled.put(strID, seats[i].isAbled);  // 좌석인지 아닌지 저장
-            special.put(strID, seats[i].isSpecial);  // 우등석인지 아닌지 저장
+            abled.put(strID, MyButton.ABLED);  // 좌석인지 아닌지 저장
+            special.put(strID, MyButton.UNABLED);  // 우등석인지 아닌지 저장
         }
 
         Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
@@ -236,6 +237,17 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         screenReference.child(screenKey).setValue(newScreen);        // 저장
 
         // 이 함수는 최종적으로 상영관 정보를 저장할 때 한 번 더 불러와져야 합니다.
+    }
+
+    public void screenEditComplete(View view) {
+        // 상영관 수정을 완료하면 호출하는 함수
+
+        Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
+        newScreen.setAbledMap(abled);
+        newScreen.setSpecialMap(special);
+        screenReference.child(screenKey).setValue(newScreen);        // 저장
+        Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }
 

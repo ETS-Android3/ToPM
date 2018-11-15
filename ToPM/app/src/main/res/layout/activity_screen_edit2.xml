@@ -7,9 +7,16 @@
     tools:context=".AdminActivities.ScreenEditActivity2"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/totalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </RelativeLayout>
+
     <Button
-        android:layout_gravity="right"
+        android:layout_gravity="center"
         android:text="수정 완료"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:onClick="screenEditComplete"/>
 </LinearLayout>
