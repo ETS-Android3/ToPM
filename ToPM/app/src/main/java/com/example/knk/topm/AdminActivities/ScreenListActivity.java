@@ -63,8 +63,7 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
 //        //Toast.makeText(this, Screen_Name_Split[0]+"", Toast.LENGTH_SHORT).show();
 
         Intent intent1 = new Intent(this, ScreenShowActivity.class);
-        // 관 ID 정보 전송
-        intent1.putExtra("SCREENID1", screenNum);
+        intent1.putExtra("SCREENID1", screenNum); // 관 ID 정보 전송
         startActivity(intent1);
     }
 }

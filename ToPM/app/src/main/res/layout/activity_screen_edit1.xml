@@ -32,8 +32,7 @@
             android:hint="5 - 20 사이 숫자를 입력하세요."
             android:layout_weight="5"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="9"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,8 +52,7 @@
             android:hint="5 - 20 사이 숫자를 입력하세요."
             android:layout_weight="5"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="9"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <Button

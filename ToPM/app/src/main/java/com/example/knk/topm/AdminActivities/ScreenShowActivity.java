@@ -51,7 +51,7 @@ public class ScreenShowActivity extends AppCompatActivity {
     public void init() {
         // 이전 액티비티에서 전송한 정보 받아오기
         Intent intent = getIntent();
-        intent.getIntExtra("SCREENID1", DEFAULT_VALUE);     // 상영관 번호
+        screenNum = intent.getIntExtra("SCREENID1", DEFAULT_VALUE);     // 상영관 번호
         screenKey = String.valueOf(screenNum) + "관";
 
         /* 뷰 초기화 */
