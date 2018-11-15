@@ -9,8 +9,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.knk.topm.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class ScreenListActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,21 +50,22 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         // 어느 button 누르는지 id 받을수있게 만든 buff 입니다
-        Button DB_Connect_Button = (Button)findViewById(v.getId());
-
-        // test 하는 toast 입니다. 나중에 지우세요
-        //Toast.makeText(this, b.getText()+"", Toast.LENGTH_SHORT).show();
-
-        String Screen_Name_Buffer= DB_Connect_Button.getText().toString();  // "1관 / 2관" <- 이런 이름 받음
-        Screen_Name_Split= Screen_Name_Buffer.split("관");                  // "1","관"  <- 이런 식으로 나누기
-
-        //test 하는 toast 입니다. 나중에 지우세요
-        //Toast.makeText(this, Screen_Name_Split[0]+"", Toast.LENGTH_SHORT).show();
+        int screenNum = v.getId();
+//        Button DB_Connect_Button = (Button)findViewById(v.getId());
+//
+//        // test 하는 toast 입니다. 나중에 지우세요
+//        //Toast.makeText(this, b.getText()+"", Toast.LENGTH_SHORT).show();
+//
+//        String Screen_Name_Buffer= DB_Connect_Button.getText().toString();  // "1관 / 2관" <- 이런 이름 받음
+//        Screen_Name_Split= Screen_Name_Buffer.split("관");                  // "1","관"  <- 이런 식으로 나누기
+//
+//        //test 하는 toast 입니다. 나중에 지우세요
+//        //Toast.makeText(this, Screen_Name_Split[0]+"", Toast.LENGTH_SHORT).show();
 
         Intent intent1 = new Intent();
-        intent1.setClass(this,ScreenEditActivity1.class);
+        intent1.setClass(this, ScreenShowActivity.class);
         // 관 ID 정보 전송
-        int c=Integer.parseInt(Screen_Name_Split[0]);
+        int c = screenNum;
         intent1.putExtra("SCREENID1", c);
         startActivity(intent1);
 
