@@ -26,6 +26,8 @@ public class ScreenEditActivity1 extends AppCompatActivity {
 
     final private static String screen_ref = "screen";          // 상영관 레퍼런스로 가는 키
 
+    final static int DEFAULT_VALUE = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,7 @@ public class ScreenEditActivity1 extends AppCompatActivity {
 
         // ScreenListActivity 에서 Screenid 받아오기
         Intent GetBuffintent = getIntent();
-        Screen_ID_buff=GetBuffintent.getIntExtra("SCREENID1", -1);
+        Screen_ID_buff=GetBuffintent.getIntExtra("SCREENID1", DEFAULT_VALUE);
 
         // "1관" , "2관" ....
 //        DB_HallNumber = Screen_ID_buff + "관";
