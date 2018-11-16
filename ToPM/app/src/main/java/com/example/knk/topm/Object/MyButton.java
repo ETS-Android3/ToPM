@@ -3,18 +3,8 @@ package com.example.knk.topm.Object;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Toast;
 
 public class MyButton extends android.support.v7.widget.AppCompatButton implements View.OnClickListener{
-
-    int accessMode; // 관리자가 눌렀는지 고객이 눌렀는지 판별
-    // (관리자, 고객 외에도 있을 수 있다고 힌트 주셔서 int로 했습니다.)
-
-    // boolean nowSelected; // 상태 저장 전 임시로 선택되었는지 판별 (true: 선택됨, false: 안 선택됨)
-
-    public boolean isAbled; // 좌석인지 아닌지
-    public boolean isBooked; // 예약되었는지 아닌지
-    public boolean isSpecial; // 우등석인지 아닌지
 
     /* 상수 */
     public final static boolean ABLED = true; // 좌석입니다.
@@ -32,9 +22,9 @@ public class MyButton extends android.support.v7.widget.AppCompatButton implemen
         super(context);
 
         // 모드 초기화
-        this.isAbled = true;
-        this.isBooked = false;
-        this.isSpecial = false;
+//        this.isAbled = true;
+//        this.isBooked = false;
+//        this.isSpecial = false;
 
         // accessMode 초기화
         // this.accessMode = USER_MODE;
@@ -49,9 +39,9 @@ public class MyButton extends android.support.v7.widget.AppCompatButton implemen
         // XML에서 생성 시 호출되는 생성자
         super(context, attrs);
        // 모드 초기화
-        this.isAbled = true;
-        this.isBooked = false;
-        this.isSpecial = false;
+//        this.isAbled = true;
+//        this.isBooked = false;
+//        this.isSpecial = false;
 
         // accessMode 초기화
         // this.accessMode = USER_MODE;
@@ -60,23 +50,23 @@ public class MyButton extends android.support.v7.widget.AppCompatButton implemen
         // nowSelected 초기화
         // nowSelected = false;
     }
-
-    public void bookingComplete() {
-        // 좌석이 예매 완료되면 해당 좌석 mode 값을 변경
-
-        if(this.isBooked == UNBOOKED) {
-            // 미예약 좌석인 경우
-            this.isBooked = BOOKED;
-
-            // FireBase 업데이트
-            // ..
-        }
-        else {
-            // 이미 예약된 좌석인 경우
-            // 사실 이 부분에 들어갈 일은 없을 것 같음.
-            Toast.makeText(getContext(), "오류가 발생헀습니다.", Toast.LENGTH_SHORT).show();
-        }
-    }
+//
+//    public void bookingComplete() {
+//        // 좌석이 예매 완료되면 해당 좌석 mode 값을 변경
+//
+//        if(this.isBooked == UNBOOKED) {
+//            // 미예약 좌석인 경우
+//            this.isBooked = BOOKED;
+//
+//            // FireBase 업데이트
+//            // ..
+//        }
+//        else {
+//            // 이미 예약된 좌석인 경우
+//            // 사실 이 부분에 들어갈 일은 없을 것 같음.
+//            Toast.makeText(getContext(), "오류가 발생헀습니다.", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     @Override
     public void onClick(View v) {

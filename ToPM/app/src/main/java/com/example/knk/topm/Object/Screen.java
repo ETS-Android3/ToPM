@@ -13,8 +13,8 @@ public class Screen {
 
     // ArrayList buttonID;         // MyButton의 ID를 저장할 배열
 
-    HashMap<String, Boolean> abledMap;
-    HashMap<String, Boolean> specialMap;
+    HashMap<String, Boolean> abledMap;      // 좌석인지 아닌지 여부 저장
+    HashMap<String, Boolean> specialMap;    // 우등석인지 아닌지 여부 저장
 
 
     public Screen(int row, int col, String screenNum/*, ArrayList IDs*/) {
