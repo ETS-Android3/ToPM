@@ -40,6 +40,8 @@ public class BookMovieActivity extends AppCompatActivity {
     int personnelCount;                             // 좌석을 클릭한 갯수 카운트하는 변수\
     ArrayList<String> bookedSeats;                  // 예매한 좌석 버튼 ID저장
 
+    boolean personnelCheck;                         // 인원 입력이 완료되었는지 확인
+
     EditText editPersonnel;                         // 인원 받는 EditText
     int personnel;                                  // 인원 저장
 
@@ -76,6 +78,7 @@ public class BookMovieActivity extends AppCompatActivity {
         final TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         editPersonnel = (EditText) findViewById(R.id.editPersonnel);
         personnelCount = 0;
+        personnelCheck = false;
         bookedSeats = new ArrayList<>();
 
         // 이전 액티비티에서 전송한 정보 수신
@@ -158,25 +161,32 @@ public class BookMovieActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    if(personnelCount < personnel) {
-                        // 입력 인원보다 작을 시에만 좌석 클릭이 가능하고요
-                        if(booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)) {
-                            // 예매가 되지 않은 자리를 클릭했을 경우
-                            v.setBackgroundResource(R.drawable.movie_seat_select); // 배경사진 png 로 바꿈
-                            personnelCount++; // 선택한 인원 변수 증가
-                            booked.put(String.valueOf(index), MyButton.BOOKED);    // HashMap 해당 키 booked로 상태 변경
-                            bookedSeats.add(String.valueOf(index));
-                            Toast.makeText(BookMovieActivity.this, String.valueOf(personnelCount), Toast.LENGTH_SHORT).show();
+                    if(personnelCheck) {
+                        // 인원 입력이 완료되었을 경우에만 좌석 선택이 가능하다.
+                        if(personnelCount < personnel) {
+                            // 입력 인원보다 작을 시에만 좌석 클릭이 가능하고요
+                            if(booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)) {
+                                // 예매가 되지 않은 자리를 클릭했을 경우
+                                v.setBackgroundResource(R.drawable.movie_seat_select); // 배경사진 png 로 바꿈
+                                personnelCount++; // 선택한 인원 변수 증가
+                                booked.put(String.valueOf(index), MyButton.BOOKED);    // HashMap 해당 키 booked로 상태 변경
+                                bookedSeats.add(String.valueOf(index));
+                                Toast.makeText(BookMovieActivity.this, String.valueOf(personnelCount), Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                // 예매가 된 자리를 클릭했을 경우
+                                Toast.makeText(BookMovieActivity.this, "이미 예매가 된 자리랍니다.", Toast.LENGTH_SHORT).show();
+                                // 아무 일도 일어나지 않아야죠
+                            }
                         }
                         else {
-                            // 예매가 된 자리를 클릭했을 경우
-                            Toast.makeText(BookMovieActivity.this, "이미 예매가 된 자리랍니다.", Toast.LENGTH_SHORT).show();
-                            // 아무 일도 일어나지 않아야죠
+                            // 입력 인원과 선택 좌석 수가 크거나 같으면 좌석을 더이상 클릭할 수가 없죠.
+                            Toast.makeText(BookMovieActivity.this, "이미 모두 선택했습니다.", Toast.LENGTH_SHORT).show();
                         }
+
                     }
                     else {
-                        // 입력 인원과 선택 좌석 수가 크거나 같으면 좌석을 더이상 클릭할 수가 없죠.
-                        Toast.makeText(BookMovieActivity.this, "이미 모두 선택했습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BookMovieActivity.this, "인원 선택을 완료하세요.", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -337,6 +347,7 @@ public class BookMovieActivity extends AppCompatActivity {
                 Button personnelInputBtn = (Button) findViewById(R.id.personnelInputBtn);
                 personnelInputBtn.setEnabled(false);
                 editPersonnel.setEnabled(false);
+                personnelCheck = true;
                 return true;
             }
         }
