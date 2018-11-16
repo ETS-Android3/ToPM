@@ -23,7 +23,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MovieManageActivity extends AppCompatActivity implements MovieListAdapter.MovieDeleteBtnClickListener {
 
@@ -94,6 +97,16 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
 
             }
         });
+    }
+
+    public String dateCalculator(int n) {
+        String str;
+        Calendar today = Calendar.getInstance();
+        today.add(Calendar.DATE, n);
+        Date future = today.getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
+        str = sdf.format(future);
+        return str;
     }
 
     // 각종 변수 초기화 함수
@@ -198,6 +211,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
                     adapter.notifyDataSetChanged();
 */
                     // 스케쥴테이터베이스 삭제
+
                     DatabaseReference scheduleReference = firebaseDatabase.getReference(SCH_REF);
                     scheduleReference.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
