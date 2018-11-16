@@ -186,8 +186,8 @@ public class BookMovieActivity extends AppCompatActivity {
                                 personnelCount++;                                       // 인원 수 증가
                                 bookedSeats.add(String.valueOf(index));                 // 예매 목록에 추가
                             }
-                            else {
-                                // 현재 선택한 자리인 경우
+                            else if(tempBooked.get(String.valueOf(index)).equals(MyButton.BOOKED) && booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)){
+                                // 현재 선택했고, 예매되지는 않은 자리
                                 // 선택을 취소한다.
                                 tempBooked.put(String.valueOf(index), MyButton.UNBOOKED);   // 비선택으로 상태 변경
                                 v.setBackgroundResource(R.drawable.movie_seat_ok);      // 좌석 이미지 변경

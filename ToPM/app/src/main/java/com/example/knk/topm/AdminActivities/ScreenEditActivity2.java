@@ -232,8 +232,8 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         }
 
         Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
-        newScreen.setAbledMap(abled);
-        newScreen.setSpecialMap(special);
+        newScreen.setAbledMap(abled);                                     // 해쉬 맵 갱신
+        newScreen.setSpecialMap(special);                                // 해쉬 맵 갱신
         screenReference.child(screenKey).setValue(newScreen);        // 저장
 
         // 이 함수는 최종적으로 상영관 정보를 저장할 때 한 번 더 불러와져야 합니다.
