@@ -43,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     }
     //회원 가입 액티비티로
     public void joinClick(View view) {
+        login_id.setText("");
+        login_pw.setText("");
         startActivity(new Intent(this, JoinActivity.class));
     }
 
