@@ -212,7 +212,7 @@ public class BookMovieActivity extends AppCompatActivity {
                         else if (personnel == personnel) {
                             // 선택 인원과 입력 인원이 같은 경우
                             // 선택한 좌석 취소만 가능
-                            if(tempBooked.get(String.valueOf(index)).equals(MyButton.BOOKED)) {
+                            if(tempBooked.get(String.valueOf(index)).equals(MyButton.BOOKED) && booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)) {
                                 // 선택을 취소하려고 하는 경우
                                 tempBooked.put(String.valueOf(index), MyButton.UNBOOKED);   // 비선택으로 상태 변경
                                 v.setBackgroundResource(R.drawable.movie_seat_ok);      // 좌석 이미지 변경
