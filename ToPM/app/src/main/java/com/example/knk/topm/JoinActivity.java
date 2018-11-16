@@ -115,7 +115,7 @@ public class JoinActivity extends AppCompatActivity {
             input_id = inputIdEditText.getText().toString();        //아이디를 입력하는 에딧텍스트의 입력값을 가져와서 input_id에 저장.
             //Log.v("Input_ID",input_id);
 
-            //아이디에 공백은 입력 불가, 혹은 스페이스가 들어가게 입력불가
+            //아이디에 공백은 입력 불가, 혹은 스페이스가 처음으로 들어가게 입력불가
             if(input_id.equals("")||input_id.charAt(0)==' '){
                 Toast.makeText(this,"공백으로 시작하는 아이디는 입력 불가",Toast.LENGTH_SHORT).show();
             }
