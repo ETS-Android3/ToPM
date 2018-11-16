@@ -169,6 +169,8 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
     public void showMyBookingClick(View view) {
         Intent intent = new Intent(this, MyBookingListActivity.class);
+        intent.putExtra("user", user);
+        intent.putExtra("date", strDate);
         startActivity(intent);
     }
 

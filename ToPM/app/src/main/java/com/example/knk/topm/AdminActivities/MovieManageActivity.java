@@ -18,7 +18,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -103,7 +102,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         getMovieFromFB();
 
         //리스트 어댑터 초기화, context, 리스트 한 줄의 레이아웃, 뿌려줄 데이터, 삭제버튼 클릭리스너 전달
-        adapter =  new MovieListAdapter(this,R.layout.movie_list_adapter_row, movieData,this);
+        adapter =  new MovieListAdapter(this, R.layout.movie_list_adapter_row, movieData,this);
         //리스트뷰에 어댑터 set
         movieManageList.setAdapter(adapter);
         // 데이터 갱신 통지

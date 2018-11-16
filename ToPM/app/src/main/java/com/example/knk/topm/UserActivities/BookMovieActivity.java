@@ -289,8 +289,9 @@ public class BookMovieActivity extends AppCompatActivity {
         Toast.makeText(this, "영화 예매가 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
         // 유저의 예매 리스트에 추가하기!!!
-        // 여기
-        BookingInfo bookingInfo = new BookingInfo(user.getId(), scheduleKey, personnel, bookedSeats);   // bookingInfo 객체 생성
+
+        // public BookingInfo(String userID, String scheduleKey, int personnel, ArrayList<String> bookedSeats, Date screeningDate, String title)
+        BookingInfo bookingInfo = new BookingInfo(user.getId(), scheduleKey, personnel, bookedSeats, movieSchedule.getScreeningDate(), movieSchedule.getMovieTitle());   // bookingInfo 객체 생성
         String bookingInfoKey = user.getId() + " " + scheduleKey;        // 예매 정보 키 : 유저 아이디 + 스케줄 키
 
         bookingInfoReference.child(bookingInfoKey).setValue(bookingInfo);
