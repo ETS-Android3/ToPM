@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.R;
@@ -58,19 +59,26 @@ public class NormalScheduleListAdapter extends ArrayAdapter<MovieSchedule> {
 
         //현재 포지션에 데이터에 인덱스 순으로 스케쥴인스턴스 생성
         MovieSchedule movieSchedule = data.get(position);
+        title = v.findViewById(R.id.titleTextView);
+        time = v.findViewById(R.id.timeTextview);
+        screen = v.findViewById(R.id.screenTextview);
 
         if(movieSchedule != null){
-            title = v.findViewById(R.id.titleTextView);
-            time = v.findViewById(R.id.timeTextview);
-            screen = v.findViewById(R.id.screenTextView);
-
             if (title != null && time != null && screen != null){
                 title.setText(movieSchedule.getMovieTitle());
                 time.setText(movieSchedule.screeningDate.getHours()+":" + movieSchedule.screeningDate.getMinutes());
                 screen.setText(movieSchedule.getScreenNum()+"관 ");
+            }else{
+                if(title==null)
+                    Toast.makeText(getContext(),"title이 null이다.",Toast.LENGTH_SHORT).show();
+                if(time==null)
+                    Toast.makeText(getContext(),"time이 null이다.",Toast.LENGTH_SHORT).show();
+                if(screen==null)
+                    Toast.makeText(getContext(),"screen이 null이다.",Toast.LENGTH_SHORT).show();
             }
         }
 
         return v;
     }
 }
+
