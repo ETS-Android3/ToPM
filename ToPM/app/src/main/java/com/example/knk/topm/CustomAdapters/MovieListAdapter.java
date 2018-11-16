@@ -24,7 +24,7 @@ public class MovieListAdapter extends ArrayAdapter<Movie> implements View.OnClic
 
     //삭제버튼 클릭리스너 인터페이스
     public interface MovieDeleteBtnClickListener{
-        void onMovieDeleteBtnClick(int position);               //현재 클릭한 row의 리스트뷰에서의 position을 인자로 받음. -> 어댑터를 선언한 액티비티에서 position을 알 수 있게 됨.
+        void onMovieDeleteBtnClick(final int position);         //현재 클릭한 row의 리스트뷰에서의 position을 인자로 받음. -> 어댑터를 선언한 액티비티에서 position을 알 수 있게 됨.
     }
 
     //생성자 : 인자 - 어댑터를 넣을 곳의 context, 어댑터가 뷰를 뿌려줄 레이아웃 정보, 뷰에 뿌릴 정보, 삭제버튼을 위한 클릭리스너
