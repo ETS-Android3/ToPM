@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class BookMovieActivity extends AppCompatActivity {
@@ -63,6 +64,9 @@ public class BookMovieActivity extends AppCompatActivity {
     final private static String user_ref = "user";    // 사용자 레퍼런스로 가는 키
     final private static String bookingInfo_ref = "bookingInfo";
 
+    // 올해 저장 - 나이제한 대비
+    final int THIS_YEAR = Calendar.getInstance().get(Calendar.YEAR);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +77,6 @@ public class BookMovieActivity extends AppCompatActivity {
     }
 
     public void init() {
-
         // View를 초기화
         final TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         editPersonnel = (EditText) findViewById(R.id.editPersonnel);

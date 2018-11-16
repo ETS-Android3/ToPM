@@ -328,7 +328,34 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     }
 
     // DB 넣을 수 있는지 체크
-    public boolean checkAddableToDB(){
+    public boolean checkAddableToDB(MovieSchedule movieSchedule){
+        scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         return true;
     }
 
@@ -380,7 +407,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             // scheduleKey = 상영관번호+상영시간객체
             String scheduleKey = movieSchedule.getScreenNum()+movieSchedule.getScreeningDate();
 
-            if(checkAddableToDB()){
+            if(checkAddableToDB(movieSchedule)){
                 // 데이터베이스에 해당 순서대로 스케쥴객체 삽입.
                 scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);
                 // Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
@@ -502,11 +529,6 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         return str;
     }
 
-    // 스케쥴 삭제 시 체크하는 함수 : 조건확인하기
-    public boolean deleteCheck(){
-        return true;
-    }
-
     // 스케줄 삭제버튼에 대한 어댑터의 클릭이벤트 - 삭제하기
     @Override
     public void onScheduleDeleteBtnClick(int position, String strDateKey, int dateCount) {
@@ -521,15 +543,14 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         */
 
         //삭제조건을 통과했을 시에만 삭제 가능
-        if(deleteCheck()){
-            // key2
-            String scheduleKey = scheduleData[dateCount].get(position).getScreenNum()+scheduleData[dateCount].get(position).getScreeningDate();
-            // 스케쥴데이터베이스 구조대로 접근해 해당 객체를 null로 set
-            scheduleReference.child(strDateKey).child(scheduleKey).setValue(null);
-            // 스케줄 arrayList 객체 배열의 해당 포지션을 지운다. (객체배열의 인덱스 번호와 리스트뷰의 열 번호가 일치함)
-            scheduleData[dateCount].remove(position);
-            // 리스트뷰에 갱신
-            schAdapter.notifyDataSetChanged();
+        // key2
+        String scheduleKey = scheduleData[dateCount].get(position).getScreenNum()+scheduleData[dateCount].get(position).getScreeningDate();
+        // 스케쥴데이터베이스 구조대로 접근해 해당 객체를 null로 set
+        scheduleReference.child(strDateKey).child(scheduleKey).setValue(null);
+        // 스케줄 arrayList 객체 배열의 해당 포지션을 지운다. (객체배열의 인덱스 번호와 리스트뷰의 열 번호가 일치함)
+        scheduleData[dateCount].remove(position);
+        // 리스트뷰에 갱신
+        schAdapter.notifyDataSetChanged();
 
             /* scheduleData[]정보 출력해보기
             String temp = "";
@@ -538,9 +559,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             }
             Toast.makeText(getApplicationContext(),temp,Toast.LENGTH_SHORT).show();*/
 
-        }
         // 삭제할 수 없다면 알림
-        else
-            Toast.makeText(getApplicationContext(),"지울 수 없는 영화입니다.",Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(),"지울 수 없는 영화입니다.",Toast.LENGTH_SHORT).show();
     }
 }
