@@ -15,7 +15,6 @@ public class ScreenEditActivity1 extends AppCompatActivity {
 
     EditText rowEdit, colEdit;
     int row, col;
-    TextView screenNumView;
 
     String screenName;          // db에 2차 메뉴열 넣을떄 쓰는 buff변수
     int Screen_ID_buff;         // db에 2차 메뉴열 넣을떄 쓰는 buff변수
@@ -52,11 +51,6 @@ public class ScreenEditActivity1 extends AppCompatActivity {
         // Toast.makeText(this,Screen_ID_buff+"",Toast.LENGTH_SHORT).show(); // 정상 확인
         // "1관" , "2관" ....
         screenName = Screen_ID_buff + "관";
-
-        screenNumView = findViewById(R.id.screenTextview);
-
-        if(screenNumView!=null)
-            screenNumView.setText(screenName);
     }
 
     public void nextBtnClicked(View view) {
