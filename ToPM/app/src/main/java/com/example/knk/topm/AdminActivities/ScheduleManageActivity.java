@@ -458,6 +458,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
                                 }
                                 ,// 사용자가 날짜설정 후 다이얼로그 빠져나올때 호출할 리스너 등록
                                 calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)); // 기본값 연월일
+                dateDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                 return dateDialog;
             // 시간 다이어로그
             case TIME_DIALOG:
