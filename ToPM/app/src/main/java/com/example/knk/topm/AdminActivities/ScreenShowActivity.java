@@ -98,40 +98,6 @@ public class ScreenShowActivity extends AppCompatActivity {
 
         createLayout();     // 레이아웃 생성
         assignButtonID();   // 버튼 ID 할당
-
-//        // 버튼 클릭 리스너 설정
-//        for (int k = 0; k < seats.length ; k++) {
-//            seats[k].setTag(k);
-//            final int index = Integer.parseInt(screen.getScreenNum()) * 1000 + (k + 1); // 실제 DB에 저장되어있는 버튼의 ID값
-//            seats[k].setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    if(personnelCount < personnel) {
-//                        // 입력 인원보다 작을 시에만 좌석 클릭이 가능하고요
-//                        if(booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)) {
-//                            // 예매가 되지 않은 자리를 클릭했을 경우
-//                            v.setBackgroundResource(R.drawable.movie_seat_select); // 배경사진 png 로 바꿈
-//                            personnelCount++; // 선택한 인원 변수 증가
-//                            booked.put(String.valueOf(index), MyButton.BOOKED);    // HashMap 해당 키 booked로 상태 변경
-//                            bookedSeats.add(String.valueOf(index));
-//                            Toast.makeText(BookMovieActivity.this, String.valueOf(personnelCount), Toast.LENGTH_SHORT).show();
-//                        }
-//                        else {
-//                            // 예매가 된 자리를 클릭했을 경우
-//                            Toast.makeText(BookMovieActivity.this, "이미 예매가 된 자리랍니다.", Toast.LENGTH_SHORT).show();
-//                            // 아무 일도 일어나지 않아야죠
-//                        }
-//                    }
-//                    else {
-//                        // 입력 인원과 선택 좌석 수가 크거나 같으면 좌석을 더이상 클릭할 수가 없죠.
-//                        Toast.makeText(BookMovieActivity.this, "이미 모두 선택했습니다.", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-//
-//        }
-
     }
 
     public void createLayout() {

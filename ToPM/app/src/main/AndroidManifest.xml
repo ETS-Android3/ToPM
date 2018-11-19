@@ -22,7 +22,6 @@
             android:name=".JoinActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".AdminActivities.ScheduleManageActivity" />
-        <activity android:name=".AdminActivities.MyButtonTestActivity" />
         <activity android:name=".AdminActivities.AdminMainActivity" />
         <activity
             android:name=".AdminActivities.MovieManageActivity"
@@ -33,7 +32,6 @@
         <activity android:name=".AdminActivities.ScreenEditActivity2" />
         <activity android:name=".UserActivities.BookMovieActivity" />
         <activity android:name=".UserActivities.MyBookingListActivity" />
-        <activity android:name=".UserActivities.ShowMovieInfoActivity"></activity>
         <activity android:name=".UserActivities.UserMainActivity"/>
     </application>
 

@@ -3,7 +3,6 @@ package com.example.knk.topm.AdminActivities;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -90,7 +89,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private int showYear;                   // 상영 년도
     private int showMonth;                  // 상영 월
     private int showDay;                    // 상영 일
-    public int dateCount;                   //설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
+    public int dateCount;                   // 설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
 
     public ArrayList<Screen> screenData;
 
@@ -189,29 +188,6 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         // 따라서 context,R.layout.schedule_list_adapter_row,오늘날짜의 scheduleData, implements한 리스너, 오늘날짜의 string, 0 을 넘긴다.
         schAdapter = new ScheduleListAdapter(this,SCH_LIST_ROW_LAYOUT_RESOURCE, scheduleData[0],this, sdf.format(currentDate),0);
         dayScheduleList.setAdapter(schAdapter);
-
-        /* 오늘 날짜 데이터 잘 가져오는지 테스트
-        scheduleReference.child(sdf.format(currentDate)).addListenerForSingleValueEvent(new ValueEventListener() { // 최초 한번 실행되고 삭제되는 콜백
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // 모든 데이터 가지고 오기
-                for(DataSnapshot data : dataSnapshot.getChildren()) {
-                    MovieSchedule schedule = data.getValue(MovieSchedule.class);
-
-                    if(schedule == null)
-                        Toast.makeText(ScheduleManageActivity.this, "null", Toast.LENGTH_SHORT).show();
-                    //스케쥴 객체가 정상적으로 들어갔을 때
-                    else
-                        scheduleData[0].add(schedule); // scheduleData[0]에 삽입 (오늘날짜)
-                }
-                schAdapter.notifyDataSetChanged(); // 데이터 갱신 통지
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
     }
 
     // 스케쥴 입력 초기화
@@ -552,15 +528,5 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         scheduleData[dateCount].remove(position);
         // 리스트뷰에 갱신
         schAdapter.notifyDataSetChanged();
-
-            /* scheduleData[]정보 출력해보기
-            String temp = "";
-            for(int i=0;i<scheduleData[dateCount].size();i++){
-                temp = temp+i+"번째"+scheduleData[dateCount].get(i).getMovieTitle()+"\n";
-            }
-            Toast.makeText(getApplicationContext(),temp,Toast.LENGTH_SHORT).show();*/
-
-        // 삭제할 수 없다면 알림
-        // Toast.makeText(getApplicationContext(),"지울 수 없는 영화입니다.",Toast.LENGTH_SHORT).show();
     }
 }

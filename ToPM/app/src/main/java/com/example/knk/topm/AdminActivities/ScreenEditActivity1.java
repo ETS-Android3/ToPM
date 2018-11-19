@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.knk.topm.Object.InputException;
@@ -24,8 +23,6 @@ public class ScreenEditActivity1 extends AppCompatActivity {
     final int COL_MAX = 20;
     final int ROW_MIN = 5;
     final int COL_MIN = 5;
-
-    //final private static String screen_ref = "screen";          // 상영관 레퍼런스로 가는 키
 
     final static int DEFAULT_VALUE = -1;
 
@@ -48,7 +45,6 @@ public class ScreenEditActivity1 extends AppCompatActivity {
         Intent intent = getIntent();
         Screen_ID_buff = intent.getIntExtra("SCREENID1", DEFAULT_VALUE);
 
-        // Toast.makeText(this,Screen_ID_buff+"",Toast.LENGTH_SHORT).show(); // 정상 확인
         // "1관" , "2관" ....
         screenName = Screen_ID_buff + "관";
     }
@@ -71,9 +67,6 @@ public class ScreenEditActivity1 extends AppCompatActivity {
         else{
             row = Integer.parseInt(rowEdit.getText().toString());
             col = Integer.parseInt(colEdit.getText().toString());
-//        db에서 추사하기#2   예: ../Screen/x관/DBrow =9,DBcol=9
-//        mDatabase.child(screen_ref).child(DB_HallNumber).child("row").setValue(row);
-//        mDatabase.child(screen_ref).child(DB_HallNumber).child("col").setValue(col);
 
             if(row <= ROW_MAX && col <= COL_MAX && row >= ROW_MIN && col >= COL_MIN) {
                 // 최소, 최대 조건 만족시

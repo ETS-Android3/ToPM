@@ -16,8 +16,6 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
     Button[] screenEdits;
     LinearLayout buttonLayout;
 
-    String Screen_Name_Split[];
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,25 +41,11 @@ public class ScreenListActivity extends AppCompatActivity implements View.OnClic
 
             screenEdits[i].setOnClickListener(this);
         }
-
-
     }
 
     @Override
     public void onClick(View v) {
-        // 어느 button 누르는지 id 받을수있게 만든 buff 입니다
-        int screenNum = v.getId();
-//        Button DB_Connect_Button = (Button)findViewById(v.getId());
-//
-//        // test 하는 toast 입니다. 나중에 지우세요
-//        //Toast.makeText(this, b.getText()+"", Toast.LENGTH_SHORT).show();
-//
-//        String Screen_Name_Buffer= DB_Connect_Button.getText().toString();  // "1관 / 2관" <- 이런 이름 받음
-//        Screen_Name_Split= Screen_Name_Buffer.split("관");                  // "1","관"  <- 이런 식으로 나누기
-//
-//        //test 하는 toast 입니다. 나중에 지우세요
-//        //Toast.makeText(this, Screen_Name_Split[0]+"", Toast.LENGTH_SHORT).show();
-
+        int screenNum = v.getId(); // 클릭한 버튼 몇번째인지 알아옴
         Intent intent1 = new Intent(this, ScreenShowActivity.class);
         intent1.putExtra("SCREENID1", screenNum); // 관 ID 정보 전송
         startActivity(intent1);

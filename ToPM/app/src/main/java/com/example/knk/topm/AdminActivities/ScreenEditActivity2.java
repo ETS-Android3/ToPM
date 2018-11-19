@@ -58,12 +58,6 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         screenReference = firebaseDatabase.getReference(screen_ref);
 
-//        해상도 받는 구조 . 아래 코드 해상도 동작할당 안되어있음 .절대값입니다 .
-//        DisplayMetrics dm = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(dm);
-//        int width =dm.widthPixels;
-//        int height=dm.heightPixels;
-
         // 이전 액티비티에서 전송한 정보 수신
         Intent intent = getIntent();
         row = intent.getIntExtra("row", DEFAUL_VALUE);      // 행 정보
@@ -117,39 +111,6 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         }
     }
 
-//        // 좌석 위치 판단하고 string로 출력하기
-//    public String GetMybuttonXY(View v){
-//
-//        int x1=0;
-//        for(int cc =0;cc<((int)v.getId()-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
-//            if(cc%row==0)
-//                x1++;
-//        }
-//
-//        int y1=((int)v.getId()-(Screen_ID_buff*1000))%row;
-//        if(y1==0){
-//            y1=row;                     //예외처리입니다 .
-//        }
-//        String sitXY="("+colChars[x1]+","+String.valueOf(y1)+")";
-//    return sitXY;
-//    }
-//
-//    public String GetMybuttonXY(int Viewid) {   // overloading  int형 id 받는 함수
-//
-//        int x1=0;
-//        for(int cc =0;cc<(Viewid-(Screen_ID_buff*1000));cc++){   //촤표 판단하기
-//         if(cc%row==0)
-//            x1++;
-//        }
-//
-//         int y1=(Viewid-(Screen_ID_buff*1000))%row;
-//            if(y1==0){
-//                y1=row;                     //예외처리입니다 .
-//         }
-//         String sitXY="("+colChars[x1]+","+String.valueOf(y1)+")";
-//            return sitXY;
-//    }
-    
     public void createLayout() {
         // 버튼들 출력할 레이아웃을 생성하는 함수
         
@@ -250,20 +211,3 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         finish();
     }
 }
-
-//******************* 일반 버튼 추가하려면 아래코드 참조 *******************
-//        Button wall = new Button(this);
-//        wall.setText("WALL");
-//        RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(100, 100);  //(100,100) 버튼의 크기
-//        p.topMargin = 550;            //버튼 의 위치
-//        p.leftMargin = 100;
-//        layout.addView(wall, p);
-
-//        wall.setOnClickListener(new Button.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-//***********************
-

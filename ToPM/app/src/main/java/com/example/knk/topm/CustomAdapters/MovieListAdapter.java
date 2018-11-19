@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.knk.topm.Object.Movie;
 import com.example.knk.topm.R;
@@ -92,7 +91,6 @@ public class MovieListAdapter extends ArrayAdapter<Movie> implements View.OnClic
     @Override
     public void onClick(View v) {
         if(this.movieDeleteBtnClickListener != null){
-            //Toast.makeText(getContext(),"Delete버튼 누름",Toast.LENGTH_SHORT).show();
             this.movieDeleteBtnClickListener.onMovieDeleteBtnClick((int)v.getTag());
         }
     }
