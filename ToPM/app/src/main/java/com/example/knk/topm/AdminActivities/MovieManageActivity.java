@@ -192,7 +192,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
                 // 비동기 문제때문에 리스너 안에서 모든 걸 다 합니다.
                 // 영화가 존재한다면 지울 수 있는 영화이다
                 if(!bookingExist){
-                    Toast.makeText(getApplicationContext(),"지울 수 있는 영화입니다.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"영화 삭제 완료",Toast.LENGTH_SHORT).show();
                     // 영화 데이터베이스 삭제
                     // 데이터베이스에 해당 리스트뷰의 포지션에 있는 영화 이름으로 가서 값을 지운다.
                     rootReference.child(movieTitle).removeValue();

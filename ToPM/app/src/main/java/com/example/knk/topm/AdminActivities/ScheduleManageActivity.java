@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.knk.topm.CustomAdapters.ScheduleListAdapter;
+import com.example.knk.topm.Object.BookingInfo;
 import com.example.knk.topm.Object.InputException;
 import com.example.knk.topm.Object.Movie;
 import com.example.knk.topm.Object.MovieSchedule;
@@ -56,9 +57,10 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private DatabaseReference movieReference;           //rootReference
     private DatabaseReference scheduleReference;        //rootReference
     private DatabaseReference screenReference;        //rootReference
-    final private static String movie_ref = "movie";          //영화 레퍼런스로 가는 키
-    final private static String schedule_ref = "schedule";    //스케줄 레퍼런스로 가는 키
-    final private static String screen_ref = "screen";    //스케줄 레퍼런스로 가는 키
+    final private static String MOVIE_REF = "movie";          //영화 레퍼런스로 가는 키
+    final private static String SCH_REF = "schedule";    //스케줄 레퍼런스로 가는 키
+    final private static String SCREEN_REF = "screen";    //스케줄 레퍼런스로 가는 키
+    final private static String BOOKING_REF = "bookingInfo";    //스케줄 레퍼런스로 가는 키
 
     /* 영화 스케줄 리스트 출력을 위한 변수 */
     private ListView dayScheduleList;                   // 영화 스케줄 출력을 위한 리스트 뷰
@@ -91,6 +93,9 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private int showDay;                    // 상영 일
     public int dateCount;                   // 설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
 
+    // 6. 삭제를 위한 변수
+    private boolean bookingExist;           // 삭제하려는 스케쥴이 예매내역에 있는지 확인
+
     public ArrayList<Screen> screenData;
 
     /* 상수 */
@@ -120,9 +125,9 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
         // 데이터베이스
         firebaseDatabase = FirebaseDatabase.getInstance();
-        scheduleReference = firebaseDatabase.getReference(schedule_ref);
-        movieReference = firebaseDatabase.getReference(movie_ref);
-        screenReference = firebaseDatabase.getReference(screen_ref);
+        scheduleReference = firebaseDatabase.getReference(SCH_REF);
+        movieReference = firebaseDatabase.getReference(MOVIE_REF);
+        screenReference = firebaseDatabase.getReference(SCREEN_REF);
     }
 
     // 날짜별 스케줄 리스트뷰 초기화
@@ -507,7 +512,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
     // 스케줄 삭제버튼에 대한 어댑터의 클릭이벤트 - 삭제하기
     @Override
-    public void onScheduleDeleteBtnClick(int position, String strDateKey, int dateCount) {
+    public void onScheduleDeleteBtnClick(final int position, final String strDateKey, final int dateCount) {
 
         /*
         1. 스케쥴데이터베이스 구조
@@ -518,14 +523,56 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
          3. dateCount : 그 열(row)의 데이터인 스케쥴이 등록된 날짜가 오늘로부터 몇일 후인 지 저장하고 있는 변수.
         */
 
-        //삭제조건을 통과했을 시에만 삭제 가능
         // key2
-        String scheduleKey = scheduleData[dateCount].get(position).getScreenNum()+scheduleData[dateCount].get(position).getScreeningDate();
-        // 스케쥴데이터베이스 구조대로 접근해 해당 객체를 null로 set
-        scheduleReference.child(strDateKey).child(scheduleKey).setValue(null);
-        // 스케줄 arrayList 객체 배열의 해당 포지션을 지운다. (객체배열의 인덱스 번호와 리스트뷰의 열 번호가 일치함)
-        scheduleData[dateCount].remove(position);
-        // 리스트뷰에 갱신
-        schAdapter.notifyDataSetChanged();
+        final String scheduleKey = scheduleData[dateCount].get(position).getScreenNum() + scheduleData[dateCount].get(position).getScreeningDate();
+
+        // 예매정보 존재검사 변수 초기화 -false : 없음을 나타냄.
+        bookingExist = false;
+        // 예매정보 데이터베이스 참조
+        DatabaseReference bookingReference = firebaseDatabase.getReference(BOOKING_REF);
+        // 예매정보 데이터베이스에 리스너 달기
+        bookingReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // 데이터베이스에 등록된 예매정보 객체를 탐색하면서
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    BookingInfo bi = data.getValue(BookingInfo.class);
+
+                    // 얘매정보 중에 삭제하려고 선택한 영화와 같은 제목의 영화가 있다면
+                    if(bi.getScheduleKey().equals(scheduleKey)){
+                        // 예매정보가 존재한다. true
+                        bookingExist = true;
+                        Toast.makeText(getApplicationContext(),"해당 스케쥴에는 고객의 예매내역이 존재합니다.",Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    // 같은 key의 스케쥴이 없다.
+                    else{
+                        bookingExist = false;
+                    }
+                }
+
+                // 비동기 문제때문에 리스너 안에서 모든 걸 다 합니다.
+                // 영화가 존재한다면 지울 수 있는 영화이다
+                if(!bookingExist){
+                    Toast.makeText(getApplicationContext(),"스케쥴 삭제 완료",Toast.LENGTH_SHORT).show();
+                    // 스케쥴데이터베이스 구조대로 접근해 해당 객체를 null로 set
+                    scheduleReference.child(strDateKey).child(scheduleKey).setValue(null);
+                    // 스케줄 arrayList 객체 배열의 해당 포지션을 지운다. (객체배열의 인덱스 번호와 리스트뷰의 열 번호가 일치함)
+                    scheduleData[dateCount].remove(position);
+                    // 리스트뷰에 갱신
+                    schAdapter.notifyDataSetChanged();
+                }
+                // 삭제할 수 없다면 알림
+                else{
+                    Toast.makeText(getApplicationContext(),"지울 수 없습니다.",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
