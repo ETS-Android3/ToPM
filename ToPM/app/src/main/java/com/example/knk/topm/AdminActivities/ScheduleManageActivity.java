@@ -254,7 +254,6 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
                 for(DataSnapshot data : dataSnapshot.getChildren()) {
                     Screen screen = data.getValue(Screen.class);
                     screenData.add(screen);
-                    Toast.makeText(ScheduleManageActivity.this, screen.getScreenNum(), Toast.LENGTH_SHORT).show();
                 }
             }
 

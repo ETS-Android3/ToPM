@@ -97,15 +97,6 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         });
     }
 
-    public String dateCalculator(int n) {
-        String str;
-        Calendar today = Calendar.getInstance();
-        today.add(Calendar.DATE, n);
-        Date future = today.getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일");
-        str = sdf.format(future);
-        return str;
-    }
 
     // 각종 변수 초기화 함수
     public void init() {
@@ -181,8 +172,10 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         bookingReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // 데이터베이스에 등록된 예매정보 객체를 탐색하면서
                 for(DataSnapshot data : dataSnapshot.getChildren()){
                     BookingInfo bi = data.getValue(BookingInfo.class);
+
                     // 얘매정보 중에 삭제하려고 선택한 영화와 같은 제목의 영화가 있다면
                     if(bi.getTitle().equals(movieTitle)){
                         // 예매정보가 존재한다. true
@@ -195,11 +188,11 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
                         bookingExist = false;
                     }
                 }
+
                 // 비동기 문제때문에 리스너 안에서 모든 걸 다 합니다.
-                // 영화가 존재한다면 지울 수 있는 영화이다 -> 영화데이터베이스와 스케쥴데이터베이스에 해당 영화 정보가 들어가있으면 다 지운다.
+                // 영화가 존재한다면 지울 수 있는 영화이다
                 if(!bookingExist){
                     Toast.makeText(getApplicationContext(),"지울 수 있는 영화입니다.",Toast.LENGTH_SHORT).show();
-                    /*
                     // 영화 데이터베이스 삭제
                     // 데이터베이스에 해당 리스트뷰의 포지션에 있는 영화 이름으로 가서 값을 지운다.
                     rootReference.child(movieTitle).removeValue();
@@ -207,23 +200,6 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
                     movieData.remove(position);
                     // 변경된 것 어댑터에 반영
                     adapter.notifyDataSetChanged();
-*/
-                    // 스케쥴테이터베이스 삭제
-
-                    DatabaseReference scheduleReference = firebaseDatabase.getReference(SCH_REF);
-                    scheduleReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-
                 }
                 // 삭제할 수 없다면 알림
                 else{
@@ -237,9 +213,6 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
 
             }
         });
-
-
-        // 영화를 삭제할 수 있는지 검사 후 결과가 true 이면 삭제를 수행한다.
 
     }
 }
