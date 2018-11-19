@@ -92,9 +92,11 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private int showMonth;                  // 상영 월
     private int showDay;                    // 상영 일
     public int dateCount;                   // 설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
+    private boolean isAddable;              // 데이터베이스에 겹치지 않는 키(Key2 : key2란 스케쥴 노드 아래 key1노드 아래 key2를 말하며 실질적 값은 "상영관번호+상영시간객체"이다)가 들어가도록 미리 방지하는 변수
 
     // 6. 삭제를 위한 변수
     private boolean bookingExist;           // 삭제하려는 스케쥴이 예매내역에 있는지 확인
+
 
     public ArrayList<Screen> screenData;
 
@@ -307,37 +309,6 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         showDialog(TIME_DIALOG);
     }
 
-    // DB 넣을 수 있는지 체크
-    public boolean checkAddableToDB(MovieSchedule movieSchedule){
-        scheduleReference.child(strDate).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        return true;
-    }
 
     // 스케쥴 추가 완료 버튼 클릭
     public void scheduleCompleteClick(View view) {
@@ -362,7 +333,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             strDate = String.valueOf(showYear) + "년 " + strDate;
             //Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
             // 객체 생성후
-            MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/);
+            final MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/);
             HashMap<String, Boolean> booked = new HashMap<>(); // 예약 현황 초기화해서 스케줄 객체에 넣어줄 것
 
             Screen screen = screenData.get(screenNum - 1); // 선택한 스크린이요.
@@ -385,16 +356,35 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             */
             // 데이터베이스 순서 : schedule/yyyy년 MM월 ddd일/상영관번호+상영시간객체/상영스케쥴객체
             // scheduleKey = 상영관번호+상영시간객체
-            String scheduleKey = movieSchedule.getScreenNum()+movieSchedule.getScreeningDate();
+            final String scheduleKey = movieSchedule.getScreenNum()+movieSchedule.getScreeningDate();
+            scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot data : dataSnapshot.getChildren()){
+                        MovieSchedule ms=data.getValue(MovieSchedule.class);
+                        String temp = ms.getScreenNum()+ms.getScreeningDate();
+                        // Toast.makeText(getApplicationContext(),data.getKey(),Toast.LENGTH_SHORT).show();
+                        if(temp.equals(scheduleKey)){
+                            isAddable=false;
+                            break;
+                        }else{
+                            isAddable=true;
+                        }
+                    }
+                    if(isAddable){
+                        // 데이터베이스에 해당 순서대로 스케쥴객체 삽입.
+                        scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);
+                        finish();
+                    }else {
+                        Toast.makeText(getApplicationContext(),"해당 스케쥴은 상영관의 중복입니다.",Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-            if(checkAddableToDB(movieSchedule)){
-                // 데이터베이스에 해당 순서대로 스케쥴객체 삽입.
-                scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);
-                // Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(this,"해당 스케쥴은 중복입니다.",Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
         }
         else {
