@@ -11,19 +11,14 @@ public class Screen {
     int totalSeats;         // 총 좌석 개수
     String screenNum;       // 상영관 번호
 
-    // ArrayList buttonID;         // MyButton의 ID를 저장할 배열
-
-    HashMap<String, Boolean> abledMap;
-    HashMap<String, Boolean> specialMap;
+    HashMap<String, Boolean> abledMap;      // 좌석인지 아닌지 여부 저장
+    HashMap<String, Boolean> specialMap;    // 우등석인지 아닌지 여부 저장
 
 
     public Screen(int row, int col, String screenNum/*, ArrayList IDs*/) {
         // 변수 초기화
         this.row = row;
         this.col = col;
-
-//        buttonID = new ArrayList();
-//        this.buttonID = IDs;
 
         totalSeats = row * col;
         this.screenNum = screenNum;
@@ -71,14 +66,6 @@ public class Screen {
     public String getScreenNum() {
         return screenNum;
     }
-
-//    public ArrayList getButtonID() {
-//        return buttonID;
-//    }
-//
-//    public void setButtonID(ArrayList buttonID) {
-//        this.buttonID = buttonID;
-//    }
 
     public void setScreenNum(String screenNum) {
         this.screenNum = screenNum;

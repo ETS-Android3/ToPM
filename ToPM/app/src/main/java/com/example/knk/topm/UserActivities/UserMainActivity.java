@@ -228,15 +228,5 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         intent.putExtra("key", key);    // 데이터베이스 접근 키
         intent.putExtra("date", date);
         startActivity(intent);
-
-//        // 방법 2)
-//        // 이건 뭔가 실시간이 아닐 것 같아서..
-//        MovieSchedule m2 = scheduleData[dateCount].get(position);
-//
-//        // 그걸 이제 다음 액티비티로 보내주는거죠
-//        // MovieSchedule 객체는 Serialized 해야겠죠
-//        Intent intent2 = new Intent(this, BookMovieActivity.class);
-//        intent2.putExtra("schedule", m);
-//        // 그래서 다음 액티비티에서 객체 받아서 작업하면 수월할 것 같아요
     }
 }

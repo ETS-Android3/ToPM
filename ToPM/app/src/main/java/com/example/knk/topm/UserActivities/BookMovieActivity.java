@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class BookMovieActivity extends AppCompatActivity {
@@ -63,6 +64,9 @@ public class BookMovieActivity extends AppCompatActivity {
     final private static String user_ref = "user";    // 사용자 레퍼런스로 가는 키
     final private static String bookingInfo_ref = "bookingInfo";
 
+    // 올해 저장 - 나이제한 대비
+    final int THIS_YEAR = Calendar.getInstance().get(Calendar.YEAR);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +77,6 @@ public class BookMovieActivity extends AppCompatActivity {
     }
 
     public void init() {
-
         // View를 초기화
         final TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         editPersonnel = (EditText) findViewById(R.id.editPersonnel);
@@ -129,7 +132,6 @@ public class BookMovieActivity extends AppCompatActivity {
                         screen = data.getValue(Screen.class);
 
                         size = screen.getRow() * screen.getCol();
-                        // Toast.makeText(BookMovieActivity.this, String.valueOf(size), Toast.LENGTH_SHORT).show();
                         abled = screen.getAbledMap();
                         special = screen.getSpecialMap();
                         printSeats();       // 좌석 출력
@@ -145,16 +147,6 @@ public class BookMovieActivity extends AppCompatActivity {
 
             }
         });
-
-//        Iterator iterator = booked.entrySet().iterator();
-//        while(iterator.hasNext()) {
-//            Map.Entry entry = (Map.Entry) iterator.next();
-//            String key = (String) entry.getKey();
-//            boolean value = (boolean) entry.getValue();
-//            tempBooked.put(key, value);
-//        }
-
-
     }
 
     public void printSeats() {
@@ -186,33 +178,19 @@ public class BookMovieActivity extends AppCompatActivity {
                                 personnelCount++;                                       // 인원 수 증가
                                 bookedSeats.add(String.valueOf(index));                 // 예매 목록에 추가
                             }
-                            else {
-                                // 현재 선택한 자리인 경우
+                            else if(tempBooked.get(String.valueOf(index)).equals(MyButton.BOOKED) && booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)){
+                                // 현재 선택했고, 예매되지는 않은 자리
                                 // 선택을 취소한다.
                                 tempBooked.put(String.valueOf(index), MyButton.UNBOOKED);   // 비선택으로 상태 변경
                                 v.setBackgroundResource(R.drawable.movie_seat_ok);      // 좌석 이미지 변경
                                 personnelCount--;                                       // 인원 수 감소
                                 bookedSeats.remove(String.valueOf(index));              // 예매 목록에서 제거
                             }
-//                            if(booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)) {
-//                                // 예매가 되지 않은 자리를 클릭했을 경우
-//
-//                                v.setBackgroundResource(R.drawable.movie_seat_select);
-//                                personnelCount++; // 선택한 인원 변수 증가
-//                                booked.put(String.valueOf(index), MyButton.BOOKED);    // HashMap 해당 키 booked로 상태 변경
-//                                bookedSeats.add(String.valueOf(index));
-//                                Toast.makeText(BookMovieActivity.this, String.valueOf(personnelCount), Toast.LENGTH_SHORT).show();
-//                            }
-//                            else {
-//                                // 예매가 된 자리를 클릭했을 경우
-//                                Toast.makeText(BookMovieActivity.this, "이미 예매가 된 자리랍니다.", Toast.LENGTH_SHORT).show();
-//                                // 아무 일도 일어나지 않아야죠
-//                            }
                         }
                         else if (personnel == personnel) {
                             // 선택 인원과 입력 인원이 같은 경우
                             // 선택한 좌석 취소만 가능
-                            if(tempBooked.get(String.valueOf(index)).equals(MyButton.BOOKED)) {
+                            if(tempBooked.get(String.valueOf(index)).equals(MyButton.BOOKED) && booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)) {
                                 // 선택을 취소하려고 하는 경우
                                 tempBooked.put(String.valueOf(index), MyButton.UNBOOKED);   // 비선택으로 상태 변경
                                 v.setBackgroundResource(R.drawable.movie_seat_ok);      // 좌석 이미지 변경
@@ -225,11 +203,6 @@ public class BookMovieActivity extends AppCompatActivity {
                                 Toast.makeText(BookMovieActivity.this, "이미 모두 선택했습니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
-//                        else {
-//                            // 입력 인원과 선택 좌석 수가 크거나 같으면 좌석을 더이상 클릭할 수가 없죠.
-//                            Toast.makeText(BookMovieActivity.this, "이미 모두 선택했습니다.", Toast.LENGTH_SHORT).show();
-//                        }
-
                     }
                     else {
                         Toast.makeText(BookMovieActivity.this, "인원 선택을 완료하세요.", Toast.LENGTH_SHORT).show();
@@ -331,14 +304,11 @@ public class BookMovieActivity extends AppCompatActivity {
     public void saveToDataBase() {
 
         /* MovieSchedule 갱신 */
-        // movieSchedule.setBookedMap(booked);                             // bookedMap을 갱신한다.
         movieSchedule.setBookedMap(tempBooked);                             // bookedMap을 갱신한다.
         scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);   // 객체를 데이터베이스에 업로드한다.
         Toast.makeText(this, "영화 예매가 완료되었습니다.", Toast.LENGTH_SHORT).show();
 
         // 유저의 예매 리스트에 추가하기!!!
-
-        // public BookingInfo(String userID, String scheduleKey, int personnel, ArrayList<String> bookedSeats, Date screeningDate, String title)
         BookingInfo bookingInfo = new BookingInfo(user.getId(), scheduleKey, personnel, bookedSeats, movieSchedule.getScreeningDate(), movieSchedule.getMovieTitle());   // bookingInfo 객체 생성
         String bookingInfoKey = user.getId() + " " + scheduleKey;        // 예매 정보 키 : 유저 아이디 + 스케줄 키
 
@@ -368,7 +338,7 @@ public class BookMovieActivity extends AppCompatActivity {
         // 인원 정보 입력 완료
         String str = editPersonnel.getText().toString();
         
-        if(str == "") {
+        if(str.equals("")) {
             // 입력 되지 않음
             try {
                 throw new InputException();

@@ -15,16 +15,14 @@ public class ScreenEditActivity1 extends AppCompatActivity {
     EditText rowEdit, colEdit;
     int row, col;
 
-//    String DB_HallNumber;     // db에 2차 메뉴열 넣을떄 쓰는 buff변수
-    int Screen_ID_buff;       // db에 2차 메뉴열 넣을떄 쓰는 buff변수
+    String screenName;          // db에 2차 메뉴열 넣을떄 쓰는 buff변수
+    int Screen_ID_buff;         // db에 2차 메뉴열 넣을떄 쓰는 buff변수
 
     /* 상수 */
     final int ROW_MAX = 20;
     final int COL_MAX = 20;
     final int ROW_MIN = 5;
     final int COL_MIN = 5;
-
-    final private static String screen_ref = "screen";          // 상영관 레퍼런스로 가는 키
 
     final static int DEFAULT_VALUE = -1;
 
@@ -35,46 +33,41 @@ public class ScreenEditActivity1 extends AppCompatActivity {
 
         init();
     }
-
+    // 초기화
     public void init() {
-        rowEdit = (EditText) findViewById(R.id.rowEdit);
-        colEdit = (EditText) findViewById(R.id.colEdit);
 
-        // 입력하지 않았을 경우 -1
-        row = -1;
-        col = -1;
+        // 가로 열 입력
+        rowEdit = findViewById(R.id.rowEdit);
+        // 세로 행 입력
+        colEdit = findViewById(R.id.colEdit);
 
         // ScreenListActivity 에서 Screenid 받아오기
-        Intent GetBuffintent = getIntent();
-        Screen_ID_buff=GetBuffintent.getIntExtra("SCREENID1", DEFAULT_VALUE);
+        Intent intent = getIntent();
+        Screen_ID_buff = intent.getIntExtra("SCREENID1", DEFAULT_VALUE);
 
         // "1관" , "2관" ....
-//        DB_HallNumber = Screen_ID_buff + "관";
+        screenName = Screen_ID_buff + "관";
     }
 
     public void nextBtnClicked(View view) {
 
-//        //db
-//        DatabaseReference mDatabase;
-//        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
-
-        // 다음 버튼
-
         // 입력한 가로 세로 정보 받아옴
-          row = Integer.parseInt(rowEdit.getText().toString());
-          col = Integer.parseInt(colEdit.getText().toString());
 
+        String rowIsEmpty = rowEdit.getText().toString();
+        String colIsEmpty = colEdit.getText().toString();
 
+        if(rowIsEmpty.equals("")||colIsEmpty.equals(""))
+            try {
+                throw new InputException();
+            } catch (InputException e) {
+                Toast.makeText(this, "두 항목을 모두 입력해주세요.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
 
-//          // db에서 추사하기#2   예: ../Screen/x관/DBrow =9,DBcol=9
-//        mDatabase.child(screen_ref).child(DB_HallNumber).child("row").setValue(row);
-//        mDatabase.child(screen_ref).child(DB_HallNumber).child("col").setValue(col);
+        else{
+            row = Integer.parseInt(rowEdit.getText().toString());
+            col = Integer.parseInt(colEdit.getText().toString());
 
-
-        if(row != -1 && col != -1) {
-            // 입력이 된 경우에만
             if(row <= ROW_MAX && col <= COL_MAX && row >= ROW_MIN && col >= COL_MIN) {
                 // 최소, 최대 조건 만족시
                 // 다음 액티비티로 전환
@@ -90,18 +83,11 @@ public class ScreenEditActivity1 extends AppCompatActivity {
                 try {
                     throw new InputException();
                 } catch (InputException e) {
-                    Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "5이상 20 사이의 숫자를 입력하세요.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
             }
-        }
-        else {
-            try {
-                throw new InputException();
-            } catch (InputException e) {
-                Toast.makeText(this, "입력을 확인하세요.", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
+
         }
     }
 }

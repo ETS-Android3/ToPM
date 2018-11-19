@@ -59,9 +59,6 @@ public class MyBookingListActivity extends AppCompatActivity {
         user = (User) intent.getSerializableExtra("user");      // 현재 로그인 중인 회원
         strDate = intent.getStringExtra("date");                // 오늘 날짜
 
-        // 뷰 객체 초기화
-
-
         getMyBookingListFromDB();
     }
 

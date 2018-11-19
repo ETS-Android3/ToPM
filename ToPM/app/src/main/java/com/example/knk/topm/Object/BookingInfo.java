@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class BookingInfo {
-//    User user;
-//    MovieSchedule schedule;
     String userID;                  // 예매자 아이디
     String scheduleKey;             // 예매한 스케줄 key
     int personnel;                  // 인원

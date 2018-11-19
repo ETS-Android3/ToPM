@@ -57,7 +57,6 @@ public class AdminMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_main);
         Intent intent = getIntent();
         user = (User)intent.getSerializableExtra(USER_PUTEXTRA_TAG);
-        //Toast.makeText(this,user.getId(),Toast.LENGTH_SHORT).show(); //테스트
         initViewAndDB();
         initScheduleListView();
     }
