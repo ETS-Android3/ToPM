@@ -32,7 +32,8 @@
         <activity android:name=".AdminActivities.ScreenEditActivity2" />
         <activity android:name=".UserActivities.BookMovieActivity" />
         <activity android:name=".UserActivities.MyBookingListActivity" />
-        <activity android:name=".UserActivities.UserMainActivity"/>
+        <activity android:name=".UserActivities.UserMainActivity" />
+        <activity android:name=".UserActivities.ShowMovieInfoActivity"></activity>
     </application>
 
 </manifest>
