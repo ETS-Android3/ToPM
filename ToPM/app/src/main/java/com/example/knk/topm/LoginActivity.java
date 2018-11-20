@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private BackPressedHandler backPressedHandler;
     private EditText login_id;                          //로그인 아이디를 입력하는 에딧텍스트
     private EditText login_pw;                          //로그인 비밀번호를 입력하는 에딧텍스트
     private FirebaseDatabase firebaseDatabase;          //파이어베이스
@@ -30,8 +31,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        backPressedHandler = new BackPressedHandler(this, 0);
         init();                                         //초기화
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressedHandler.onBackPressed();
     }
 
     //초기화

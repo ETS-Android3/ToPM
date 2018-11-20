@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.knk.topm.BackPressedHandler;
 import com.example.knk.topm.CustomAdapters.NormalScheduleListAdapter;
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.Object.User;
@@ -27,6 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class UserMainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
+
+    private BackPressedHandler backPressedHandler;
 
     User user;                              // 현재 로그인 한 유저
 
@@ -56,8 +59,13 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_main);
-
+        backPressedHandler = new BackPressedHandler(this,1);
         init();                                         //초기화
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressedHandler.onBackPressed();
     }
 
     public void init() {
@@ -229,4 +237,5 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         intent.putExtra("date", date);
         startActivity(intent);
     }
+
 }

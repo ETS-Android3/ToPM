@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.knk.topm.BackPressedHandler;
 import com.example.knk.topm.CustomAdapters.ScheduleListAdapter;
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.Object.User;
@@ -26,6 +27,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AdminMainActivity extends AppCompatActivity {
+
+    private BackPressedHandler backPressedHandler;
 
     /* 상단뷰를 위한 변수 */
     private TextView dateTextView;          //현재 이동돼있는 날짜를 보여주는 텍스트뷰
@@ -55,11 +58,18 @@ public class AdminMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
+        backPressedHandler = new BackPressedHandler(this,1);
         Intent intent = getIntent();
         user = (User)intent.getSerializableExtra(USER_PUTEXTRA_TAG);
         initViewAndDB();
         initScheduleListView();
     }
+
+    @Override
+    public void onBackPressed() {
+        backPressedHandler.onBackPressed();
+    }
+
     public void initViewAndDB(){
 
         // 상단 텍스트뷰, 버튼
