@@ -28,7 +28,7 @@ import java.util.Date;
 
 public class AdminMainActivity extends AppCompatActivity {
 
-    private BackPressedHandler backPressedHandler;
+    private BackPressedHandler backPressedHandler;  // 뒤로가기 핸들러
 
     /* 상단뷰를 위한 변수 */
     private TextView dateTextView;          //현재 이동돼있는 날짜를 보여주는 텍스트뷰
@@ -58,13 +58,17 @@ public class AdminMainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_main);
-        backPressedHandler = new BackPressedHandler(this,1);
+        backPressedHandler = new BackPressedHandler(this,1);    // 뒤로가기 핸들러 초기화
+
+        // 이전 액티비티에서 로그인한 User정보 가져옴
         Intent intent = getIntent();
         user = (User)intent.getSerializableExtra(USER_PUTEXTRA_TAG);
+
         initViewAndDB();
         initScheduleListView();
     }
 
+    // 뒤로가기 눌렀을 때 처리하는 함수
     @Override
     public void onBackPressed() {
         backPressedHandler.onBackPressed();

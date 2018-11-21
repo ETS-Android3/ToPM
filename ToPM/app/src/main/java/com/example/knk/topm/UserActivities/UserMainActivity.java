@@ -29,7 +29,7 @@ import java.util.Date;
 
 public class UserMainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
-    private BackPressedHandler backPressedHandler;
+    private BackPressedHandler backPressedHandler;  // 뒤로가기 핸들러
 
     User user;                              // 현재 로그인 한 유저
 
@@ -59,10 +59,11 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_main);
-        backPressedHandler = new BackPressedHandler(this,1);
+        backPressedHandler = new BackPressedHandler(this,1);    // 뒤로가기 핸들러 초기화
         init();                                         //초기화
     }
 
+    // 뒤로가기 눌렀을 때 처리하는 함수
     @Override
     public void onBackPressed() {
         backPressedHandler.onBackPressed();

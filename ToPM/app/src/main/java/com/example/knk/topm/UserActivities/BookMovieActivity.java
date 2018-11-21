@@ -316,11 +316,13 @@ public class BookMovieActivity extends AppCompatActivity {
         user.bookedSchedules.add(bookingInfoKey);                        // 사용자의 예매 목록에 이번 예매의 키를 추가한다.
         userReference.child(user.getId()).setValue(user);                // 데이터베이스에 유저 정보 갱신
 
+        // 현재 액티비티 종료 후
         finish();
         // 나의 예매 내역으로 이동
         Intent intent = new Intent(this, MyBookingListActivity.class);
         intent.putExtra("user", user);
         startActivity(intent);
+        // 이동한 나의 예매 내역에서 뒤로가기를 눌렀을 때 예매했었던 액티비티로 넘어가지 않게하기 위해서
     }
 
 

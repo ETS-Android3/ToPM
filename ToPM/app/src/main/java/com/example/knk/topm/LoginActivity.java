@@ -19,33 +19,35 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private BackPressedHandler backPressedHandler;
-    private EditText login_id;                          //로그인 아이디를 입력하는 에딧텍스트
-    private EditText login_pw;                          //로그인 비밀번호를 입력하는 에딧텍스트
-    private FirebaseDatabase firebaseDatabase;          //파이어베이스
-    private DatabaseReference rootReference;            //파이어베이스 데이터베이스 참조
-    private final String USER_REF = "user";                   //여기서 데이터베이스는 user 참조
-    private String USER_PUTEXTRA_TAG = "user";          //인텐트로 다음 액티비티로 넘길 태그
+    private BackPressedHandler backPressedHandler;      // 뒤로가기 핸들러
+    private EditText login_id;                          // 로그인 아이디를 입력하는 에딧텍스트
+    private EditText login_pw;                          // 로그인 비밀번호를 입력하는 에딧텍스트
+    private FirebaseDatabase firebaseDatabase;          // 파이어베이스
+    private DatabaseReference rootReference;            // 파이어베이스 데이터베이스 참조
+    private final String USER_REF = "user";             // 여기서 데이터베이스는 user 참조
+    private String USER_PUTEXTRA_TAG = "user";          // 인텐트로 다음 액티비티로 넘길 태그
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        backPressedHandler = new BackPressedHandler(this, 0);
-        init();                                         //초기화
+        backPressedHandler = new BackPressedHandler(this, 0);   // 뒤로가기 핸들러 초기화
+
+        init();                                         // 초기화
     }
 
+    // 뒤로가기 눌렀을 때 처리하는 함수
     @Override
     public void onBackPressed() {
         backPressedHandler.onBackPressed();
     }
 
-    //초기화
+    // 초기화
     public void init(){
         login_id = findViewById(R.id.login_id);
         login_pw = findViewById(R.id.login_pw);
-        firebaseDatabase = FirebaseDatabase.getInstance();          //파이어베이스 데이터베이스 인스턴스 호출
-        rootReference = firebaseDatabase.getReference(USER_REF);    //"user"라는 이름으로 루트참조 생성
+        firebaseDatabase = FirebaseDatabase.getInstance();          // 파이어베이스 데이터베이스 인스턴스 호출
+        rootReference = firebaseDatabase.getReference(USER_REF);    // "user"라는 이름으로 루트참조 생성
     }
     //회원 가입 액티비티로
     public void joinClick(View view) {
