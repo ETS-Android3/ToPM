@@ -1,6 +1,7 @@
 package com.example.knk.topm.Object;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class User implements Serializable {
@@ -17,16 +18,6 @@ public class User implements Serializable {
         this.name = name;
         this.birth=birth;
         this.admin = admin;
-        bookedSchedules = new ArrayList<>();
-        bookedSchedules.add("null");
-    }
-
-    public ArrayList<String> getBookedSchedules() {
-        return bookedSchedules;
-    }
-
-    public void setBookedSchedules(ArrayList<String> bookedSchedules) {
-        this.bookedSchedules = bookedSchedules;
     }
 
     public User(){}
