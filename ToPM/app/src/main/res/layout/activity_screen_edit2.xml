@@ -13,6 +13,34 @@
         android:layout_height="wrap_content">
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/modeNormal"
+            android:text="일반석 지정"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setSeatsModes"/>
+
+        <Button
+            android:id="@+id/modeSpecial"
+            android:text="우등석 지정"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setSeatsModes"/>
+
+        <Button
+            android:id="@+id/modeCouple"
+            android:text="커플석 지정"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="setSeatsModes"/>
+    </LinearLayout>
+
     <Button
         android:layout_gravity="center"
         android:text="수정 완료"

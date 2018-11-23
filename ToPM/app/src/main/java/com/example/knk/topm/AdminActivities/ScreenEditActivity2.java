@@ -25,8 +25,11 @@ public class ScreenEditActivity2 extends AppCompatActivity {
     String screenNum; // "n"
     String screenKey; // "n관"
 
+    int mode;       // 좌석 수정 모드 (좌석/우등석/커플석)
+
     HashMap<String, Boolean> abled;   // 좌석인지 아닌지 여부 저장
     HashMap<String, Boolean> special; // 우등석인지 아닌지 여부 저장
+    HashMap<String, Boolean> couple;  // 커플석인지 아닌지 여부 저장
     
     String colChars[];
     int Screen_ID_buff;
@@ -43,6 +46,9 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
     /* 상수 */
     final private static String screen_ref = "screen";          // 상영관 레퍼런스로 가는 키
+    final static int MODE_NORMAL = 11;
+    final static int MODE_SPECIAL = 22;
+    final static int MODE_COUPLE = 33;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,10 @@ public class ScreenEditActivity2 extends AppCompatActivity {
     }
 
     public void init() {
+
+        // 좌석 수정 모드
+        mode = MODE_NORMAL;     // 처음에는 좌석으로 설정
+
         // db
         firebaseDatabase = FirebaseDatabase.getInstance();
         screenReference = firebaseDatabase.getReference(screen_ref);
@@ -65,6 +75,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
         abled = new HashMap<>();
         special = new HashMap<>();
+        couple = new HashMap<>();
 
         // ScreenEditActivity1 에서 ScreenId 받아오기
         Screen_ID_buff = intent.getIntExtra("SCREENID2", -1);
@@ -96,15 +107,43 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     // 좌석 버튼 클릭 이벤트
-                    if(abled.get(String.valueOf(index)).equals(MyButton.ABLED)) {
-                        // 현재 좌석인 자리라면
-                        abled.put(String.valueOf(index), MyButton.UNABLED);     // 좌석이 아닌 상태로 바꾸어주고
-                        v.setBackgroundResource(R.drawable.movie_seat_repair);  // 이미지 바꾸어줌
-                    }
-                    else if(abled.get(String.valueOf(index)).equals(MyButton.UNABLED)){
-                        // 현재 좌석이 아닌 자리라면
-                        abled.put(String.valueOf(index), MyButton.ABLED);     // 좌석이 아닌 상태로 바꾸어주고
-                        v.setBackgroundResource(R.drawable.movie_seat_ok);  // 이미지 바꾸어줌
+                    switch(mode) {
+                        case MODE_NORMAL:   // 좌석 수정 모드
+                            if(abled.get(String.valueOf(index)).equals(MyButton.ABLED)) {
+                                // 현재 좌석인 자리라면
+                                abled.put(String.valueOf(index), MyButton.UNABLED);     // 좌석이 아닌 상태로 바꾸어주고
+                                v.setBackgroundResource(R.drawable.movie_seat_repair);  // 이미지 바꾸어줌
+                            }
+                            else if(abled.get(String.valueOf(index)).equals(MyButton.UNABLED)){
+                                // 현재 좌석이 아닌 자리라면
+                                abled.put(String.valueOf(index), MyButton.ABLED);     // 좌석인 상태로 바꾸어주고
+                                v.setBackgroundResource(R.drawable.movie_seat_ok);  // 이미지 바꾸어줌
+                            }
+                            break;
+                        case MODE_SPECIAL:  // 우등석 수정 모드
+                            if(special.get(String.valueOf(index)).equals(MyButton.SPECIAL)) {
+                                // 현재 우등석인 자리라면
+                                special.put(String.valueOf(index), MyButton.UNSPECIAL); // 우등석이 아닌 상태로 바꾸고
+                                v.setBackgroundResource(R.drawable.movie_seat_ok); // 이미지 바꾸어줌
+                            }
+                            else if(special.get(String.valueOf(index)).equals(MyButton.UNSPECIAL)) {
+                                // 현재 우등석이 아닌 자리라면
+                                special.put(String.valueOf(index), MyButton.SPECIAL);   // 우등석 상태로 바꾸어주고
+                                v.setBackgroundResource(R.drawable.movie_seat_special_ok); // 이미지 바꾸어줌
+                            }
+                            break;
+                        case MODE_COUPLE:   // 커플석 수정 모드
+                            if(couple.get(String.valueOf(index)).equals(MyButton.SPECIAL)) {
+                                // 현재 커플석인 자리라면
+                                couple.put(String.valueOf(index), MyButton.UNSPECIAL); // 우등석이 아닌 상태로 바꾸고
+                                v.setBackgroundResource(R.drawable.movie_seat_ok); // 이미지 바꾸어줌
+                            }
+                            else if(couple.get(String.valueOf(index)).equals(MyButton.UNSPECIAL)) {
+                                // 현재 커플석이 아닌 자리라면
+                                couple.put(String.valueOf(index), MyButton.SPECIAL);   // 우등석 상태로 바꾸어주고
+                                v.setBackgroundResource(R.drawable.movie_seat_couple_ok); // 이미지 바꾸어줌
+                            }
+                            break;
                     }
                 }
             });
@@ -190,24 +229,44 @@ public class ScreenEditActivity2 extends AppCompatActivity {
             IDs.add(seats[i].getId());                      // 아이디 저장
             abled.put(strID, MyButton.ABLED);  // 좌석인지 아닌지 저장
             special.put(strID, MyButton.UNABLED);  // 우등석인지 아닌지 저장
+            couple.put(strID, MyButton.UNCOUPLE); // 커플석인지 아닌지 저장
         }
 
         Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
         newScreen.setAbledMap(abled);                                     // 해쉬 맵 갱신
         newScreen.setSpecialMap(special);                                // 해쉬 맵 갱신
-        screenReference.child(screenKey).setValue(newScreen);        // 저장
+        newScreen.setSpecialMap(couple);                                // 해쉬 맵 갱신
 
-        // 이 함수는 최종적으로 상영관 정보를 저장할 때 한 번 더 불러와져야 합니다.
+        screenReference.child(screenKey).setValue(newScreen);        // 저장
     }
 
     public void screenEditComplete(View view) {
         // 상영관 수정을 완료하면 호출하는 함수
-
         Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
         newScreen.setAbledMap(abled);
         newScreen.setSpecialMap(special);
+        newScreen.setCoupleMap(couple);
         screenReference.child(screenKey).setValue(newScreen);        // 저장
         Toast.makeText(this, "저장되었습니다.", Toast.LENGTH_SHORT).show();
         finish();
+    }
+
+
+    public void setSeatsModes(View view) {
+        // 수정 모드 변경
+        switch(view.getId()) {
+            case R.id.modeNormal:   // 좌석
+                mode = MODE_NORMAL;
+                Toast.makeText(this, "좌석을 지정하세요.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.modeSpecial:  // 우등석
+                mode = MODE_SPECIAL;
+                Toast.makeText(this, "우등석을 지정하세요.", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.modeCouple:   // 커플석
+                mode = MODE_COUPLE;
+                Toast.makeText(this, "커플석을 지정하세요.", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

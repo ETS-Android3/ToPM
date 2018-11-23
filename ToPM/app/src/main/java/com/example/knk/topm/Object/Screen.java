@@ -13,7 +13,7 @@ public class Screen {
 
     HashMap<String, Boolean> abledMap;      // 좌석인지 아닌지 여부 저장
     HashMap<String, Boolean> specialMap;    // 우등석인지 아닌지 여부 저장
-
+    HashMap<String, Boolean> coupleMap;     // 커플석인지 아닌지 여부 저장
 
     public Screen(int row, int col, String screenNum/*, ArrayList IDs*/) {
         // 변수 초기화
@@ -94,6 +94,14 @@ public class Screen {
 
     public void setTotalSeats(int totalSeats) {
         this.totalSeats = totalSeats;
+    }
+
+    public HashMap<String, Boolean> getCoupleMap() {
+        return coupleMap;
+    }
+
+    public void setCoupleMap(HashMap<String, Boolean> coupleMap) {
+        this.coupleMap = coupleMap;
     }
 
 
