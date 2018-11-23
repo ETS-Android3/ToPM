@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.knk.topm.CustomAdapters.MovieListAdapter;
@@ -21,10 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class MovieManageActivity extends AppCompatActivity implements MovieListAdapter.MovieDeleteBtnClickListener {
 
@@ -34,6 +32,8 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
     private String title;                           // 영화이름 저장하는 변수
     private String director;                        // 감독이름 저장하는 변수
     private String runningTime;                     // 런닝타임 저장하는 변수
+    private RadioGroup rateGroup;                   // 상영등급 라디오 버튼 그룹
+    private int rate;                               // 상영등급 저장하는 변수
 
     public ArrayList<Movie> movieData;              // 현재 등록된 영화인스턴스를 저장하는 객체배열
     private ListView movieManageList;               // 현재 등록된 영화리스트를 보여주는 리스트뷰
@@ -44,7 +44,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
     private DatabaseReference rootReference;        // rootReference
     private static String MOVIE_REF = "movie";      // 레퍼런스할 이름 - 여기서는 영화 등록이므로 movie를 root로 참조해 그 아래에 데이터 추가.
     private static String BOOKING_REF = "bookingInfo"; // 레퍼런스할 이름 - 여기서는 영화 삭제검사이므로  bookingInfo를 root로 참조해 그 아래에 데이터 검색.
-    private static String SCH_REF = "schedule"; // 레퍼런스할 이름 - 여기서는 영화 삭제검사이므로  bookingInfo를 root로 참조해 그 아래에 데이터 검색.
+    private static String SCH_REF = "schedule";     // 레퍼런스할 이름 - 여기서는 영화 삭제검사이므로  bookingInfo를 root로 참조해 그 아래에 데이터 검색.
     public boolean bookingExist = false;            // 해당 영화에 예약이 존재하는지 검사하는 변수
     public String movieTitle;                       // bookingInfo 레퍼런스에서 가져올 예매내역의 영화이름
 
@@ -122,6 +122,36 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         editTitle = findViewById(R.id.movie_name);
         editDir = findViewById(R.id.movie_director);
         editRun = findViewById(R.id.movie_runningtime);
+        // 상영등급 라디오 그룹 초기화 및 리스너 달기
+        rateGroup = findViewById(R.id.rateGroup);
+        rateGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    // 전체 관람가
+                    case R.id.RBall:{
+                        rate = -1;
+                        break;
+                    }
+                    // 12세 이상
+                    case R.id.RB12:{
+                        rate = 12;
+                        break;
+                    }
+                    // 15세 이상
+                    case R.id.RB15: {
+                        rate = 15;
+                        break;
+                    }
+                    // 19세 이상
+                    case R.id.RB19:{
+                        rate = 19;
+                        break;
+                    }
+                }
+            }
+        });
+
     }
 
     // 영화 추가 버튼 누를시 클릭이벤트 함수
@@ -146,11 +176,11 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
             // 런닝타임 int형으로 변경
             int runTime = Integer.parseInt(runningTime);
             if(runTime>0){
-                Movie movie = new Movie(runTime, title, director, 0); // 객체 생성 후
+                Movie movie = new Movie(runTime, title, director, rate); // 객체 생성 후
                 // movie/'영화이름'을 키로 해서 데이터베이스에 추가
                 rootReference.child(movie.getTitle()).setValue(movie);
                 // adapter.notifyDataSetChanged();   //메인화면으로 이동하므로 따로 리스트뷰 갱신하지 않음
-
+                Toast.makeText(this,"영화 추가 완료", Toast.LENGTH_SHORT).show();
                 // 다시 관리자 메인으로 이동
                 this.finish();
             }
@@ -215,6 +245,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         });
 
     }
+
 }
 
 

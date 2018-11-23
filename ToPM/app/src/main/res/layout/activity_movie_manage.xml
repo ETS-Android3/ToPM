@@ -24,7 +24,55 @@
         android:layout_height="200dp"
         android:orientation="vertical"
         android:padding="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:text="상영 등급:  "
+                android:gravity="center"/>
 
+            <RadioGroup
+                android:id="@+id/rateGroup"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/RBall"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="전체"
+                    android:textStyle="bold"
+                    android:checked="true"/>
+                <RadioButton
+                    android:id="@+id/RB12"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="12세"
+                    android:textStyle="bold"/>
+                <RadioButton
+                    android:id="@+id/RB15"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="15세"
+                    android:textStyle="bold"/>
+                <RadioButton
+                    android:id="@+id/RB19"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="청불"
+                    android:textStyle="bold"/>
+            </RadioGroup>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -69,6 +117,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="2"
