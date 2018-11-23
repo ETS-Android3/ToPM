@@ -1,18 +1,17 @@
 package com.example.knk.topm.Object;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Date;
 
 public class User implements Serializable {
 
-    public String name;                             // 이름
-    public String pw;                               // 비밀번호
-    public String id;                               // ID
-    public String birth;                            // 생년월일
-    public boolean admin;                           // 관리자 여부
-    public ArrayList<String> bookedSchedules;       // 예매한 내역, 예매내역 key를 저장한다.
+    public String name;
+    public String pw;
+    public String id;
+    public Date birth;
+    public boolean admin;
 
-    public User(String id, String pw, String name, String birth, boolean admin){
+    public User(String id, String pw, String name, Date birth, boolean admin){
         this.id=id;
         this.pw=pw;
         this.name = name;
@@ -56,11 +55,11 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getBirth() {
+    public Date getBirth() {
         return birth;
     }
 
-    public void setBirth(String birth) {
+    public void setBirth(Date birth) {
         this.birth = birth;
     }
 
