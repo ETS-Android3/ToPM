@@ -1,16 +1,17 @@
 package com.example.knk.topm.Object;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class User implements Serializable {
 
     public String name;
     public String pw;
     public String id;
-    public String birth;
+    public Date birth;
     public boolean admin;
 
-    public User(String id, String pw, String name, String birth, boolean admin){
+    public User(String id, String pw, String name, Date birth, boolean admin){
         this.id=id;
         this.pw=pw;
         this.name = name;
@@ -44,11 +45,11 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getBirth() {
+    public Date getBirth() {
         return birth;
     }
 
-    public void setBirth(String birth) {
+    public void setBirth(Date birth) {
         this.birth = birth;
     }
 

@@ -44,7 +44,7 @@ public class JoinActivity extends AppCompatActivity {
     private RadioGroup join_type;                   //일반사용자 혹은 관리자 둘중 하나의 선택을 받는 라디오버튼 그룹
     private boolean isAdmin;                        //일반사용자 혹은 관리자 둘중 하나의 선택을 저장하는 변수 : true - admin, false - normal user
     private EditText birthEditText;                 //생일을 입력받는 에딧텍스트 : DatePickerDialog로부터 입력 받은 값 보여주는 곳
-    private String birthOutput;                     //User객체에 넣을 생일정보 포맷(yyMMdd)에 맞게 저장하느 변수
+    private Date birthOutput;                       //User객체에 넣을 생일정보 포맷(yyMMdd)에 맞게 저장하느 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class JoinActivity extends AppCompatActivity {
         //생일 보여주는 에딧텍스트 초기화
         birthEditText = findViewById(R.id.birth_join);
         //초기화
-        birthOutput = "";
+        birthOutput = null;
     }
 
     //아이디가 중복체크됐는지 여부에 따라 각종 버튼, 에딧텍스트 상태 바꾸는 함수
@@ -183,7 +183,7 @@ public class JoinActivity extends AppCompatActivity {
             input_name = ((EditText)findViewById(R.id.name_join)).getText().toString();
 
             // 입력이 누락된 경우
-            if(input_pw.length() <= 0 || input_name.length() <= 0 || birthOutput.length() <= 0) {
+            if(input_pw.length() <= 0 || input_name.length() <= 0 || birthOutput == null) {
                 try {
                     throw new InputException();
                 } catch (InputException e) {
@@ -215,13 +215,9 @@ public class JoinActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(JoinActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                //입력 받은 데이터를 Date 객체에 저장
-                Date birthData = new Date(year,month,dayOfMonth);
-                //파이어베이스에 저장하는 포맷은 yyMMdd
-                SimpleDateFormat birthFormat = new SimpleDateFormat("yyMMdd");
-                //포맷대로 생일데이터를 저장
-                birthOutput = birthFormat.format(birthData);
-                //Toast.makeText(JoinActivity.this,birthOutput,Toast.LENGTH_SHORT).show();
+                //입력 받은 데이터를 Date 객체에 저장 - User의 멤버변수 birth에 저장될 값
+                birthOutput = new Date(year,month,dayOfMonth);
+                // Toast.makeText(JoinActivity.this,birthOutput.toString(),Toast.LENGTH_SHORT).show();
 
                 //month는 출력 상으로 -1돼서 나오므로 +1 처리
                 month = month+1;
