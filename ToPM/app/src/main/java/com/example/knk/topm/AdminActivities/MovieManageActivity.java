@@ -22,10 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 public class MovieManageActivity extends AppCompatActivity implements MovieListAdapter.MovieDeleteBtnClickListener {
 
@@ -47,7 +44,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
     private DatabaseReference rootReference;        // rootReference
     private static String MOVIE_REF = "movie";      // 레퍼런스할 이름 - 여기서는 영화 등록이므로 movie를 root로 참조해 그 아래에 데이터 추가.
     private static String BOOKING_REF = "bookingInfo"; // 레퍼런스할 이름 - 여기서는 영화 삭제검사이므로  bookingInfo를 root로 참조해 그 아래에 데이터 검색.
-    private static String SCH_REF = "schedule"; // 레퍼런스할 이름 - 여기서는 영화 삭제검사이므로  bookingInfo를 root로 참조해 그 아래에 데이터 검색.
+    private static String SCH_REF = "schedule";     // 레퍼런스할 이름 - 여기서는 영화 삭제검사이므로  bookingInfo를 root로 참조해 그 아래에 데이터 검색.
     public boolean bookingExist = false;            // 해당 영화에 예약이 존재하는지 검사하는 변수
     public String movieTitle;                       // bookingInfo 레퍼런스에서 가져올 예매내역의 영화이름
 
@@ -183,7 +180,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
                 // movie/'영화이름'을 키로 해서 데이터베이스에 추가
                 rootReference.child(movie.getTitle()).setValue(movie);
                 // adapter.notifyDataSetChanged();   //메인화면으로 이동하므로 따로 리스트뷰 갱신하지 않음
-
+                Toast.makeText(this,"영화 추가 완료", Toast.LENGTH_SHORT).show();
                 // 다시 관리자 메인으로 이동
                 this.finish();
             }
@@ -248,6 +245,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         });
 
     }
+
 }
 
 
