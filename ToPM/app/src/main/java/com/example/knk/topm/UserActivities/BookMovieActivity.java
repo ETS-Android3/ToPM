@@ -313,8 +313,6 @@ public class BookMovieActivity extends AppCompatActivity {
         String bookingInfoKey = user.getId() + " " + scheduleKey;        // 예매 정보 키 : 유저 아이디 + 스케줄 키
 
         bookingInfoReference.child(bookingInfoKey).setValue(bookingInfo);
-        user.bookedSchedules.add(bookingInfoKey);                        // 사용자의 예매 목록에 이번 예매의 키를 추가한다.
-        userReference.child(user.getId()).setValue(user);                // 데이터베이스에 유저 정보 갱신
 
         // 현재 액티비티 종료 후
         finish();
