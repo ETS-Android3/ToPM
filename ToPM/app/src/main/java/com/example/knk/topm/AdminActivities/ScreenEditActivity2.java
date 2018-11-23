@@ -102,7 +102,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         for (int k = 0; k < size; k++) {
             seats[k].setTag(k);
             final int index = Integer.parseInt(screenNum) * 1000 + (k + 1); // 실제 DB에 저장되어있는 버튼 ID값
-
+            final int nextIndex = k+1;
             seats[k].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -133,15 +133,24 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                             }
                             break;
                         case MODE_COUPLE:   // 커플석 수정 모드
-                            if(couple.get(String.valueOf(index)).equals(MyButton.SPECIAL)) {
+                            if(couple.get(String.valueOf(index)).equals(MyButton.COUPLE)) {
                                 // 현재 커플석인 자리라면
-                                couple.put(String.valueOf(index), MyButton.UNSPECIAL); // 우등석이 아닌 상태로 바꾸고
+                                couple.put(String.valueOf(index), MyButton.UNCOUPLE); // 커플석이 아닌 상태로 바꾸고
                                 v.setBackgroundResource(R.drawable.movie_seat_ok); // 이미지 바꾸어줌
                             }
-                            else if(couple.get(String.valueOf(index)).equals(MyButton.UNSPECIAL)) {
+                            else if(couple.get(String.valueOf(index)).equals(MyButton.UNCOUPLE)) {
                                 // 현재 커플석이 아닌 자리라면
-                                couple.put(String.valueOf(index), MyButton.SPECIAL);   // 우등석 상태로 바꾸어주고
-                                v.setBackgroundResource(R.drawable.movie_seat_couple_ok); // 이미지 바꾸어줌
+                                if(index%row == 0) {
+                                    // 가장 오른쪽 끝 자리를 클릭했다면요..
+                                    Toast.makeText(ScreenEditActivity2.this, "커플석으로 지정할 수 없습니다!!", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    // 그게 아니라면 클릭한 자리의 오른쪽이 커플석으로 지정됩니다
+                                    couple.put(String.valueOf(index), MyButton.COUPLE);   // 커플석이 상태로 바꾸어주고
+                                    couple.put(String.valueOf(index + 1), MyButton.COUPLE);   // 커플석이 상태로 바꾸어주고
+                                    v.setBackgroundResource(R.drawable.movie_seat_couple_ok); // 이미지 바꾸어줌
+                                    seats[nextIndex].setBackgroundResource(R.drawable.movie_seat_couple_ok); // 옆자리도
+                                }
                             }
                             break;
                     }
@@ -235,7 +244,7 @@ public class ScreenEditActivity2 extends AppCompatActivity {
         Screen newScreen = new Screen(row, col, screenNum/*, IDs*/);     // 객체 생성
         newScreen.setAbledMap(abled);                                     // 해쉬 맵 갱신
         newScreen.setSpecialMap(special);                                // 해쉬 맵 갱신
-        newScreen.setSpecialMap(couple);                                // 해쉬 맵 갱신
+        newScreen.setCoupleMap(couple);                                // 해쉬 맵 갱신
 
         screenReference.child(screenKey).setValue(newScreen);        // 저장
     }

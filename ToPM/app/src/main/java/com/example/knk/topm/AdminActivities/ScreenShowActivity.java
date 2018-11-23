@@ -83,7 +83,6 @@ public class ScreenShowActivity extends AppCompatActivity {
                         break;
                     }
                 }
-
             }
 
             @Override
