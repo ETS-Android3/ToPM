@@ -101,12 +101,16 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
         for (int k = 0; k < size; k++) {
             seats[k].setTag(k);
+            // index - n000 = k + 1
             final int index = Integer.parseInt(screenNum) * 1000 + (k + 1); // 실제 DB에 저장되어있는 버튼 ID값
-            final int nextIndex = k+1;
+            final int copyK = k;
+            final int nextIndex = k + 1;
             seats[k].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // 좌석 버튼 클릭 이벤트
+                    String test = "k: "+ copyK +", index: " + index + ", nextIndex "+ nextIndex;
+                    Toast.makeText(ScreenEditActivity2.this, test, Toast.LENGTH_SHORT).show();
                     switch(mode) {
                         case MODE_NORMAL:   // 좌석 수정 모드
                             if(abled.get(String.valueOf(index)).equals(MyButton.ABLED)) {
@@ -140,9 +144,20 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                             }
                             else if(couple.get(String.valueOf(index)).equals(MyButton.UNCOUPLE)) {
                                 // 현재 커플석이 아닌 자리라면
-                                if(index%row == 0) {
-                                    // 가장 오른쪽 끝 자리를 클릭했다면요..
-                                    Toast.makeText(ScreenEditActivity2.this, "커플석으로 지정할 수 없습니다!!", Toast.LENGTH_SHORT).show();
+
+                                // 오른쪽 자리가 커플석 지정이 불가능한 경우
+                                if(copyK + 1 == size) {
+                                    // 2. 클릭한 자리가 오른쪽 맨 뒤 좌석임
+                                    Toast.makeText(ScreenEditActivity2.this, "오른쪽 맨 뒤 좌석입니다.", Toast.LENGTH_SHORT).show();
+                                }
+
+                                else if(abled.get(String.valueOf(index + 1)).equals(MyButton.UNABLED)) {
+                                    // 1. 옆 자리가 좌석이 아님
+                                    Toast.makeText(ScreenEditActivity2.this, "옆자리가 좌석이 아닙니다.", Toast.LENGTH_SHORT).show();
+                                }
+                                else if(nextIndex % row == 0) {
+                                    // 3. 해당 열의 가장 오른쪽 좌석임
+                                    Toast.makeText(ScreenEditActivity2.this, "가장 오른쪽 좌석입니다.", Toast.LENGTH_LONG).show();
                                 }
                                 else {
                                     // 그게 아니라면 클릭한 자리의 오른쪽이 커플석으로 지정됩니다
