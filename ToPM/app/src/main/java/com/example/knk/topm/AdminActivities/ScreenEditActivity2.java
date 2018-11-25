@@ -165,6 +165,13 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                                     couple.put(String.valueOf(index + 1), MyButton.COUPLE);   // 커플석이 상태로 바꾸어주고
                                     v.setBackgroundResource(R.drawable.movie_seat_couple_ok); // 이미지 바꾸어줌
                                     seats[nextIndex].setBackgroundResource(R.drawable.movie_seat_couple_ok); // 옆자리도
+
+                                    // ★ 어떤 좌석끼리 세트인지 알아내느냐.. ★
+                                    // 1) 세트인 두 좌석의 ID를 더해서 해쉬맵의 Key로 사용합니다. 예) 3021+3022 = 6043
+                                    // 2) Key를 2로 나눈 몫과, 그 몫에 1을 더한 값으로 세트인 두 좌석의 ID임을 알 수 있습니다.
+                                    // 예) 6043 / 2 = 3021 이므로 3021과 3021+1=3022 가 세트입니다.
+                                    String coupleKey = String.valueOf(index + index + 1);
+                                    couple.put(coupleKey, MyButton.COUPLE);
                                 }
                             }
                             break;
