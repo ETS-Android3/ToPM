@@ -124,6 +124,7 @@ public class MovieManageActivity extends AppCompatActivity implements MovieListA
         editRun = findViewById(R.id.movie_runningtime);
         // 상영등급 라디오 그룹 초기화 및 리스너 달기
         rateGroup = findViewById(R.id.rateGroup);
+        rate = -1;
         rateGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

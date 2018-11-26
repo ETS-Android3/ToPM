@@ -5,14 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.MovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.knk.topm.BackPressedHandler;
 import com.example.knk.topm.CustomAdapters.NormalScheduleListAdapter;
+import com.example.knk.topm.Object.Movie;
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.Object.User;
 import com.example.knk.topm.R;
@@ -21,6 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,12 +52,16 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
     public String strDate;
 
     // 데이터베이스 관련
-    private FirebaseDatabase firebaseDatabase;          //firebaseDatabase
-    private DatabaseReference rootReference;            //rootReference
-    final private String SCHEDULE_REF = "schedule";     // 레퍼런스할 이름 - 여기서는 영화이므로 schedule를 root로 참조
+    private FirebaseDatabase firebaseDatabase;          // firebaseDatabase
+    private DatabaseReference rootReference;            // rootReference
+    private DatabaseReference movieReference;           // movieReference
+    final private String SCHEDULE_REF = "schedule";     // 스케쥴을 레퍼런스할 노드 이름
+    final private String MOVIE_REF = "movie";           // 영화를 레퍼런스할 노드 이름
 
     // 상수
     final int FUTURE_DATE = 4;                          // 미래 날짜
+    // 올해 저장 - 나이제한 대비
+    final int THIS_YEAR = Calendar.getInstance().get(Calendar.YEAR);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +96,7 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         // 데이터베이스 초기화
         firebaseDatabase = FirebaseDatabase.getInstance();
         rootReference = firebaseDatabase.getReference(SCHEDULE_REF);
+        movieReference = firebaseDatabase.getReference(MOVIE_REF);
 
         // 데이터베이스에서 스케쥴 정보 받아오기
         getScheduleFromDB();
@@ -227,16 +236,43 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         // 여기 해야됩닏당
 
         // 방법 1)
-        String key = keyData[dateCount].get(position); // 클릭한 위치의 위치의 키를 받아오자
-        String date = dateCalculator(dateCount);
+        final String key = keyData[dateCount].get(position); // 클릭한 위치의 위치의 키를 받아오자
+        final String date = dateCalculator(dateCount);
+
+        MovieSchedule ms = (MovieSchedule) parent.getItemAtPosition(position);
+        final String selectedMovie = ms.getMovieTitle();
+        final int user_age = THIS_YEAR - user.getBirth().getYear()-2000;
+
+        movieReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data : dataSnapshot.getChildren()){
+                    Movie movie = data.getValue(Movie.class);
+                    if(movie.getTitle().equals(selectedMovie)){
+                        int rate = movie.getRating();
+                        Toast.makeText(getApplicationContext(),rate+"",Toast.LENGTH_SHORT).show();
+                        if(user_age>rate || rate==-1){
+                            // 다음 액티비티로 정보를 전송한다.
+                            Intent intent = new Intent(getApplicationContext(), BookMovieActivity.class);
+                            intent.putExtra("user", user);  // 현재 로그인 유저
+                            intent.putExtra("key", key);    // 데이터베이스 접근 키
+                            intent.putExtra("date", date);
+                            startActivity(intent);
+                            return;
+                        }
+                    }
+                }
+                Toast.makeText(getApplicationContext(),"영화의 나이제한 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
-        // 다음 액티비티로 정보를 전송한다.
-        Intent intent = new Intent(this, BookMovieActivity.class);
-        intent.putExtra("user", user);  // 현재 로그인 유저
-        intent.putExtra("key", key);    // 데이터베이스 접근 키
-        intent.putExtra("date", date);
-        startActivity(intent);
+
     }
 
 }
