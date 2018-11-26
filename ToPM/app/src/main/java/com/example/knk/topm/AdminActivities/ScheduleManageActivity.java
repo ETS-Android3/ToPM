@@ -360,10 +360,12 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    isAddable = true;
                     for(DataSnapshot data : dataSnapshot.getChildren()){
                         MovieSchedule ms=data.getValue(MovieSchedule.class);
                         String temp = ms.getScreenNum()+ms.getScreeningDate();
-                        // Toast.makeText(getApplicationContext(),data.getKey(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),data.getKey(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),scheduleKey,Toast.LENGTH_SHORT).show();
                         if(temp.equals(scheduleKey)){
                             isAddable=false;
                             break;
