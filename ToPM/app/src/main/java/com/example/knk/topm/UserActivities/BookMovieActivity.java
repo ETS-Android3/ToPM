@@ -178,7 +178,7 @@ public class BookMovieActivity extends AppCompatActivity {
                                 // 현재 선택한 자리가 아닌 경우
                                 // 선택한다
 
-                                if(couple.get(String.valueOf(index).equals(MyButton.COUPLE))) {
+                                if(couple.get(String.valueOf(index)).equals(MyButton.COUPLE)) {
                                     // 클릭한 자리가 커플석인 경우..
                                     // 왼쪽 자리랑 세트인지 오른쪽 자리랑 세트인지 판별해야 한다.
                                     int leftSet = index + index - 1;    // 클릭한 자리와 왼쪽 자리의 ID 합
