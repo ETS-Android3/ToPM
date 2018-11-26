@@ -139,8 +139,33 @@ public class ScreenEditActivity2 extends AppCompatActivity {
                         case MODE_COUPLE:   // 커플석 수정 모드
                             if(couple.get(String.valueOf(index)).equals(MyButton.COUPLE)) {
                                 // 현재 커플석인 자리라면
-                                couple.put(String.valueOf(index), MyButton.UNCOUPLE); // 커플석이 아닌 상태로 바꾸고
-                                v.setBackgroundResource(R.drawable.movie_seat_ok); // 이미지 바꾸어줌
+
+                                // 왼쪽 자리랑 세트인지 오른쪽 자리랑 세트인지 판별해야 한다.
+                                int leftSet = index + index - 1;    // 클릭한 자리와 왼쪽 자리의 ID 합
+                                int rightSet = index + index + 1;   // 클릭한 자리와 오른쪽 자리의 ID 합
+
+                                if(couple.get(String.valueOf(leftSet)) != null && couple.get(String.valueOf(index - 1)) != null
+                                        && couple.get(String.valueOf(index - 1)).equals(MyButton.COUPLE)) {
+                                    // 왼쪽 자리와 세트
+                                    couple.put(String.valueOf(index), MyButton.UNCOUPLE);
+                                    couple.put(String.valueOf(index - 1), MyButton.UNCOUPLE);     // 비커플으로 상태 변경
+                                    v.setBackgroundResource(R.drawable.movie_seat_ok);
+                                    seats[copyK - 1].setBackgroundResource(R.drawable.movie_seat_ok); // 좌석 이미지 변경
+                                    couple.remove(String.valueOf(leftSet));     // leftSet도 지워줌
+                                }
+                                else if(couple.get(String.valueOf(rightSet)) != null && couple.get(String.valueOf(index + 1)) != null
+                                        && couple.get(String.valueOf(index + 1)).equals(MyButton.COUPLE)) {
+                                    // 오른쪽 자리와 세트
+                                    couple.put(String.valueOf(index), MyButton.UNCOUPLE);
+                                    couple.put(String.valueOf(index + 1), MyButton.UNCOUPLE);     // 비선택으로 상태 변경
+                                    v.setBackgroundResource(R.drawable.movie_seat_ok);
+                                    seats[copyK + 1].setBackgroundResource(R.drawable.movie_seat_ok); // 좌석 이미지 변경
+                                    couple.remove(String.valueOf(rightSet));    // rightSet도 지워줌
+                                }
+                                else {
+                                    // 아무것도 아니라면..? 그럴 리가 없다.
+                                    Toast.makeText(getApplicationContext(), "알 수 없는 오류입니다.", Toast.LENGTH_SHORT).show();
+                                }
                             }
                             else if(couple.get(String.valueOf(index)).equals(MyButton.UNCOUPLE)) {
                                 // 현재 커플석이 아닌 자리라면
