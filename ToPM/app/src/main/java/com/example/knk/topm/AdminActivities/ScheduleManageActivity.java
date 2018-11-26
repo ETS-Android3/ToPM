@@ -93,6 +93,9 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private int showDay;                    // 상영 일
     public int dateCount;                   // 설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
     private boolean isAddable;              // 데이터베이스에 겹치지 않는 키(Key2 : key2란 스케쥴 노드 아래 key1노드 아래 key2를 말하며 실질적 값은 "상영관번호+상영시간객체"이다)가 들어가도록 미리 방지하는 변수
+    private int runningTime;
+    private boolean flag;
+    private Date screeningDate;
 
     // 6. 삭제를 위한 변수
     private boolean bookingExist;           // 삭제하려는 스케쥴이 예매내역에 있는지 확인
@@ -324,7 +327,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
         if(inputCheck(args)) {
             // 검사 통과
             // 데이터 베이스에 업로드
-            Date screeningDate = new Date(showYear, showMonth, showDay);    // Date로 변환
+            screeningDate = new Date(showYear, showMonth, showDay);    // Date로 변환
             screeningDate.setHours(startHour);                              // 시간
             screeningDate.setMinutes(startMin);                             // 분도 넣어줍니다.
 
@@ -333,7 +336,8 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             strDate = String.valueOf(showYear) + "년 " + strDate;
             //Toast.makeText(this, strDate, Toast.LENGTH_SHORT).show();
             // 객체 생성후
-            final MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum), screeningDate/*, startHour, startMin*/);
+            final MovieSchedule movieSchedule = new MovieSchedule(selectedMovie.getTitle(), String.valueOf(screenNum),
+                    screeningDate/*, startHour, startMin*/, selectedMovie.getRunningTime());
             HashMap<String, Boolean> booked = new HashMap<>(); // 예약 현황 초기화해서 스케줄 객체에 넣어줄 것
 
             Screen screen = screenData.get(screenNum - 1); // 선택한 스크린이요.
@@ -348,31 +352,68 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             }
 
             movieSchedule.setBookedMap(booked);
+
             /*
             1. 스케쥴데이터베이스 구조
             schedule/(key1)yyyy년 MM월 dd일/(key2)상영관번호+상영시간객체/스케쥴객체
             key는 특히 유일해야함!!!!! 특히 key2는 유일하게 입력받도록 확인하는 함수 필요
             상영관번호가 같으면서 + 상영시간객체까지 동일할 수 없음 따라서 스케쥴 추가할때 확인 필요!!!
             */
+
             // 데이터베이스 순서 : schedule/yyyy년 MM월 ddd일/상영관번호+상영시간객체/상영스케쥴객체
             // scheduleKey = 상영관번호+상영시간객체
-            final String scheduleKey = movieSchedule.getScreenNum()+movieSchedule.getScreeningDate();
+            final String scheduleKey = movieSchedule.getScreenNum()+movieSchedule.getScreeningDate();   // 이번에 추가하려는 영화스케쥴 인스턴스로부터 키 정보 가져옴.
+            final String addScreenNum = movieSchedule.getScreenNum();                                   // 이번에 추가하려는 영화스케쥴 인스턴스로부터 상영관 번호정보 가져옴.
+
+            // 런닝타임을 -1로 설정해둠. 만약 이 함수를 호출한 후에도 런닝타임이 -1로 유지된다면
+            // 해당 영화는 DB에 없는 것이 됨.
+            // runningTime = -1;
+
+            // 런닝타임 정보를 더해 끝나는 시간과 분 계산, 24시 후의 경우에 관해서는 계산되지 않았음.
+            // 25시, 26시 ...일때는 날짜가 넘어가지만 그대로 25시 26시로 간주.
+            final int endMin = movieSchedule.getEndMin();
+            final int endHour = movieSchedule.getEndHour();
+
+            //Toast.makeText(getApplicationContext(),startHour+" "+startMin,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(),endHour+" "+endMin,Toast.LENGTH_SHORT).show();
+
+            // DB의 스케쥴 노드 아래, 추가하려는 날짜 노드 아래에서 검사함
             scheduleReference.child(strDate).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // 최종적으로 해당 스케쥴을 추가할 수 있는지를 판단하는 변수
                     isAddable = true;
+
+                    // 같은 상영관에서 상영하는 영화스케쥴을 모은 객체ArrayList
+                    ArrayList<MovieSchedule> sameScreenMovies = new ArrayList<>();
+
+                    // for문으로 해당 날짜의 모든 스케쥴을 검사함.
                     for(DataSnapshot data : dataSnapshot.getChildren()){
                         MovieSchedule ms=data.getValue(MovieSchedule.class);
-                        String temp = ms.getScreenNum()+ms.getScreeningDate();
-                        //Toast.makeText(getApplicationContext(),data.getKey(),Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(getApplicationContext(),scheduleKey,Toast.LENGTH_SHORT).show();
-                        if(temp.equals(scheduleKey)){
-                            isAddable=false;
-                            break;
-                        }else{
-                            isAddable=true;
+                        // 영화의 상영관 번호가 추가하려는 스케쥴의 상영관 번호와 같다면 객체ArrayList에 추가
+                        if(ms.getScreenNum().equals(addScreenNum))
+                            sameScreenMovies.add(ms);
+                    }
+
+                    for(int i=0;i<sameScreenMovies.size();i++){
+                        isAddable = true;
+                        MovieSchedule ms = sameScreenMovies.get(i);
+                        Date cmpDate = ms.getScreeningDate();
+                        int cmpStartHour = cmpDate.getHours();
+                        int cmpStartMin = cmpDate.getMinutes();
+                        int cmpEndMin = ms.getEndMin();
+                        int cmpEndHour = ms.getEndHour();
+
+                        //Toast.makeText(getApplicationContext(), sameScreenMovies.get(i).getMovieTitle()+" "
+                         //       +cmpStartHour+"시 "+cmpStartMin+"분 ~ "+cmpEndHour+"시 "+cmpEndMin+"분 까지",Toast.LENGTH_SHORT).show();
+                        if(startHour<cmpEndHour || ((startHour==cmpEndHour)&&(startMin<=cmpEndMin))){
+                            if(endHour>cmpStartHour || ((endHour==cmpStartHour)&&(endMin>=cmpStartMin))) {
+                                isAddable = false;
+                                break;
+                            }
                         }
                     }
+
                     if(isAddable){
                         // 데이터베이스에 해당 순서대로 스케쥴객체 삽입.
                         scheduleReference.child(strDate).child(scheduleKey).setValue(movieSchedule);
@@ -387,6 +428,34 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
 
                 }
             });
+//            // DB의 movie노드 아래에서 추가하려는 영화의 런닝타임 정보를 가져옴
+//            movieReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    for(DataSnapshot data : dataSnapshot.getChildren()){
+//                        Movie tmp = data.getValue(Movie.class);
+//                        // DB의 모든 영화를 검사하면서 타이틀이 같다면 런닝타임 정보를 가져옴.
+//                        if(tmp.getTitle().equals(movieSchedule.getMovieTitle())) {
+//                            runningTime = tmp.getRunningTime();
+//                            //Toast.makeText(getApplicationContext(),runningTime+"",Toast.LENGTH_SHORT).show();
+//                            break;
+//                        }
+//                        // 만약 DB에 해당 영화의 정보다 없다면 runningTime은 -1에서 변동되지 않을 것임.
+//                    }
+//                    if(runningTime == -1){
+//                        // 영화 타이틀을 관리자가 선택할 때에는 디비에서 받아온 정보롤 영화제목 선택 스피너를 구성하므로 사실상 들어올 수 없는 분기.
+//                        Toast.makeText(getApplicationContext(), "추가하려는 영화가 DB에 없습니다!", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                    // 추가하려는 영화의 시작시간과 런닝타임 정보로 차지하는 시간 정보 계산
+//                    else{
+//                                            }
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
 
         }
         else {
