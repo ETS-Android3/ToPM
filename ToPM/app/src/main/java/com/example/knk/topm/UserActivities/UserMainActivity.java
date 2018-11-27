@@ -1,5 +1,7 @@
 package com.example.knk.topm.UserActivities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.knk.topm.BackPressedHandler;
 import com.example.knk.topm.CustomAdapters.NormalScheduleListAdapter;
+import com.example.knk.topm.JoinActivity;
 import com.example.knk.topm.Object.Movie;
 import com.example.knk.topm.Object.MovieSchedule;
 import com.example.knk.topm.Object.User;
@@ -57,6 +60,8 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
     private DatabaseReference movieReference;           // movieReference
     final private String SCHEDULE_REF = "schedule";     // 스케쥴을 레퍼런스할 노드 이름
     final private String MOVIE_REF = "movie";           // 영화를 레퍼런스할 노드 이름
+    private boolean isEnoughAge;
+    private int movieRate;
 
     // 상수
     final int FUTURE_DATE = 4;                          // 미래 날짜
@@ -242,27 +247,42 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         MovieSchedule ms = (MovieSchedule) parent.getItemAtPosition(position);
         final String selectedMovie = ms.getMovieTitle();
         final int user_age = THIS_YEAR - user.getBirth().getYear();
-        Toast.makeText(getApplicationContext(),user_age+"",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(),user_age+"",Toast.LENGTH_SHORT).show();
 
+        isEnoughAge = false;
         movieReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data : dataSnapshot.getChildren()){
                     Movie movie = data.getValue(Movie.class);
+                    if(isEnoughAge)
+                        break;
                     if(movie.getTitle().equals(selectedMovie)){
-                        int rate = movie.getRating();
-                        Toast.makeText(getApplicationContext(),rate+"",Toast.LENGTH_SHORT).show();
-                        if(user_age>rate || rate==-1){
-                            // 다음 액티비티로 정보를 전송한다.
-                            Intent intent = new Intent(getApplicationContext(), BookMovieActivity.class);
-                            intent.putExtra("user", user);  // 현재 로그인 유저
-                            intent.putExtra("key", key);    // 데이터베이스 접근 키
-                            intent.putExtra("date", date);
-                            startActivity(intent);
-                            return;
+                        movieRate = movie.getRating();
+                        // Toast.makeText(getApplicationContext(),rate+"",Toast.LENGTH_SHORT).show();
+                        if(user_age>movieRate || movieRate==-1){
+                            isEnoughAge = true;
                         }
                     }
                 }
+                if(isEnoughAge){
+                    // 다음 액티비티로 정보를 전송한다.
+                    Intent intent = new Intent(getApplicationContext(), BookMovieActivity.class);
+                    intent.putExtra("user", user);  // 현재 로그인 유저
+                    intent.putExtra("key", key);    // 데이터베이스 접근 키
+                    intent.putExtra("date", date);
+                    startActivity(intent);
+                }else{
+                    AlertDialog.Builder alertBuilder = new AlertDialog.Builder(UserMainActivity.this);  //context는 직접 명시해야 함.
+                    alertBuilder.setTitle("예매 불가!");
+                    alertBuilder.setMessage("고객님의 나이는 만 "+user_age+"세로, 해당 영화의 상영등급 만 "+movieRate+"세 미만 제한 대상입니다.");
+                    alertBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
+                }
+
             }
 
             @Override
