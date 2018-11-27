@@ -241,7 +241,8 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
 
         MovieSchedule ms = (MovieSchedule) parent.getItemAtPosition(position);
         final String selectedMovie = ms.getMovieTitle();
-        final int user_age = THIS_YEAR - user.getBirth().getYear()-2000;
+        final int user_age = THIS_YEAR - user.getBirth().getYear();
+        Toast.makeText(getApplicationContext(),user_age+"",Toast.LENGTH_SHORT).show();
 
         movieReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -262,7 +263,6 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
                         }
                     }
                 }
-                Toast.makeText(getApplicationContext(),"영화의 나이제한 정보를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
