@@ -202,5 +202,6 @@ public class ScreenShowActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ScreenEditActivity1.class);
         intent.putExtra("SCREENID1", screenNum);    // 상영관 번호 보내줌
         startActivity(intent);                            // 액티비티 전환
+        finish();
     }
 }
