@@ -1,10 +1,15 @@
 package com.example.knk.topm.UserActivities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.knk.topm.CustomAdapters.BookingListAdapter;
 import com.example.knk.topm.Object.BookingInfo;
@@ -53,6 +58,42 @@ public class MyBookingListActivity extends AppCompatActivity {
         myBookingList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
+        // 아이템 클릭 리스너
+        myBookingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                final BookingInfo bookingInfo = bookingData.get(position);  // 클릭한 예매 정보
+                final String key = user.getId() + " " + bookingInfo.getScheduleKey();   // DB 접근에 필요한 BookingInfo Key
+                // 예매를 취소할 것인지 묻는 Dialog 띄우기
+                AlertDialog.Builder alertDlg = new AlertDialog.Builder(view.getContext());
+                alertDlg.setTitle("예매를 취소하시겠습니까?");
+                alertDlg.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick( DialogInterface dialog, int which ) {
+                        // 예매 취소
+                        bookingData.remove(bookingInfo);     // 현재 리스트에서 삭제
+                        adapter.notifyDataSetChanged();
+                        
+                        bookingInfoReference.child(key).setValue(null); // DB 에서도 삭제
+
+                        Toast.makeText(MyBookingListActivity.this, "예매가 취소되었습니다.", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();   // 다이얼로그 종료
+                    }
+                });
+                alertDlg.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 취소하지 않음
+                        dialog.dismiss();   // 다이얼로그 종료
+                    }
+                });
+
+                alertDlg.setMessage(bookingInfo.getTitle()+" 예매를 취소하시겠습니까?");
+                alertDlg.show();
+            }
+        });
 
         // 이전 액티비티에서 전송한 내용 수신
         Intent intent = getIntent();
