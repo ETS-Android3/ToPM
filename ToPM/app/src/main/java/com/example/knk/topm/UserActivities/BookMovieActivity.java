@@ -1,8 +1,10 @@
 package com.example.knk.topm.UserActivities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -68,6 +70,8 @@ public class BookMovieActivity extends AppCompatActivity {
     // 올해 저장 - 나이제한 대비
     final int THIS_YEAR = Calendar.getInstance().get(Calendar.YEAR);
 
+    ArrayList CheckIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +89,8 @@ public class BookMovieActivity extends AppCompatActivity {
         personnelCheck = false;
         bookedSeats = new ArrayList<>();
         tempBooked = new HashMap<>();
+
+        CheckIndex= new ArrayList();
 
         // 이전 액티비티에서 전송한 정보 수신
         Intent intent = getIntent();
@@ -178,46 +184,63 @@ public class BookMovieActivity extends AppCompatActivity {
                                 // 현재 선택한 자리가 아닌 경우
                                 // 선택한다
 
+
+
                                 if(couple.get(String.valueOf(index)).equals(MyButton.COUPLE)) {
                                     // 클릭한 자리가 커플석인 경우..
                                     // 왼쪽 자리랑 세트인지 오른쪽 자리랑 세트인지 판별해야 한다.
                                     int leftSet = index + index - 1;    // 클릭한 자리와 왼쪽 자리의 ID 합
                                     int rightSet = index + index + 1;   // 클릭한 자리와 오른쪽 자리의 ID 합
-
-                                    if(couple.get(String.valueOf(leftSet)) != null && couple.get(String.valueOf(index - 1)) != null
-                                           && couple.get(String.valueOf(index - 1)).equals(MyButton.COUPLE)) {
+                                    if (couple.get(String.valueOf(leftSet)) != null && couple.get(String.valueOf(index - 1)) != null
+                                            && couple.get(String.valueOf(index - 1)).equals(MyButton.COUPLE)&&personnel-personnelCount>=2) {
+                                        //예외처리추가함 :인원이 1명만 남으면 커플석 예약못하게했습니다 . ->&&personnel-personnelCount>2
                                         // 왼쪽 자리와 세트
                                         tempBooked.put(String.valueOf(index), MyButton.BOOKED);
                                         tempBooked.put(String.valueOf(index - 1), MyButton.BOOKED);     // 선택으로 상태 변경
+
+                                        CheckIndex.add(index);
+                                        CheckIndex.add(index-1);
+
                                         v.setBackgroundResource(R.drawable.movie_seat_couple_selected);
                                         seats[copyK - 1].setBackgroundResource(R.drawable.movie_seat_couple_selected); // 좌석 이미지 변경
                                         personnelCount += 2;    // 인원 2명 증가
                                         bookedSeats.add(String.valueOf(index));
                                         bookedSeats.add(String.valueOf(index - 1));  // 예매 목록에 추가
-                                    }
-                                    else if(couple.get(String.valueOf(rightSet)) != null && couple.get(String.valueOf(index + 1)) != null
-                                            && couple.get(String.valueOf(index + 1)).equals(MyButton.COUPLE)) {
+                                    } else if (couple.get(String.valueOf(rightSet)) != null && couple.get(String.valueOf(index + 1)) != null
+                                            && couple.get(String.valueOf(index + 1)).equals(MyButton.COUPLE)&&personnel-personnelCount>=2) {
+                                        //예외처리추가함 :인원이 1명만 남으면 커플석 예약못하게했습니다 .
                                         // 오른쪽 자리와 세트
                                         tempBooked.put(String.valueOf(index), MyButton.BOOKED);
                                         tempBooked.put(String.valueOf(index + 1), MyButton.BOOKED);     // 선택으로 상태 변경
+
+                                        CheckIndex.add(index);
+                                        CheckIndex.add(index-1);
+
                                         v.setBackgroundResource(R.drawable.movie_seat_couple_selected);
                                         seats[copyK + 1].setBackgroundResource(R.drawable.movie_seat_couple_selected); // 좌석 이미지 변경
                                         personnelCount += 2;    // 인원 2명 증가
                                         bookedSeats.add(String.valueOf(index));
                                         bookedSeats.add(String.valueOf(index + 1));  // 예매 목록에 추가
-                                    }
-                                    else {
+                                    } else {
                                         // 아무것도 아니라면..? 그럴 리가 없다.
-                                        Toast.makeText(BookMovieActivity.this, "알 수 없는 오류입니다.", Toast.LENGTH_SHORT).show();
+                                       // Toast.makeText(BookMovieActivity.this, "알 수 없는 오류입니다./<2", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(BookMovieActivity.this, "남은 인원수 부족함. 커플석 예매할 수 없습니다.", Toast.LENGTH_SHORT).show();
                                     }
-
                                 }
+
                                 else {
                                     // 커플석이 아닌 경우
+                                   //if (Check_sit_avaliable(index)) {
+
                                     tempBooked.put(String.valueOf(index), MyButton.BOOKED); // 선택으로 상태 변경
                                     v.setBackgroundResource(R.drawable.movie_seat_select);  // 좌석 이미지 변경
+
+                                        CheckIndex.add(index);
+
+
                                     personnelCount++;                                       // 인원 수 증가
                                     bookedSeats.add(String.valueOf(index));                 // 예매 목록에 추가
+                                //}
                                 }
                             }
                             else if(tempBooked.get(String.valueOf(index)).equals(MyButton.BOOKED) && booked.get(String.valueOf(index)).equals(MyButton.UNBOOKED)){
@@ -240,6 +263,16 @@ public class BookMovieActivity extends AppCompatActivity {
                                         personnelCount -= 2;    // 인원 2명 감소
                                         bookedSeats.remove(String.valueOf(index));
                                         bookedSeats.remove(String.valueOf(index - 1));  // 예매 목록에 추가
+
+                                        for(int i =0;i<CheckIndex.size();i++){
+                                            if((int)CheckIndex.get(i)==index)
+                                            CheckIndex.remove(i);
+                                        }
+                                        for(int i =0;i<CheckIndex.size();i++){
+                                            if((int)CheckIndex.get(i)==index-1)
+                                                CheckIndex.remove(i);
+                                        }
+
                                     }
                                     else if(couple.get(String.valueOf(rightSet)) != null && couple.get(String.valueOf(index + 1)) != null
                                             && couple.get(String.valueOf(index + 1)).equals(MyButton.COUPLE)) {
@@ -251,9 +284,20 @@ public class BookMovieActivity extends AppCompatActivity {
                                         personnelCount -= 2;    // 인원 2명 감소
                                         bookedSeats.remove(String.valueOf(index));
                                         bookedSeats.remove(String.valueOf(index + 1));  // 예매 목록에 추가
+
+                                        for(int i =0;i<CheckIndex.size();i++){
+                                            if((int)CheckIndex.get(i)==index)
+                                                CheckIndex.remove(i);
+                                        }
+                                        for(int i =0;i<CheckIndex.size();i++){
+                                            if((int)CheckIndex.get(i)==index+1)
+                                                CheckIndex.remove(i);
+                                        }
+
                                     }
                                     else {
                                         // 아무것도 아니라면..? 그럴 리가 없다.
+                                        //인원수 1명만 남는경우 예매못하게 했으니 취소할리도 없다.여기 안바꿈.  아래취소기능도 안바꿈.
                                         Toast.makeText(BookMovieActivity.this, "알 수 없는 오류입니다.", Toast.LENGTH_SHORT).show();
                                     }
                                 }
@@ -263,6 +307,14 @@ public class BookMovieActivity extends AppCompatActivity {
                                     v.setBackgroundResource(R.drawable.movie_seat_ok);      // 좌석 이미지 변경
                                     personnelCount--;                                       // 인원 수 감소
                                     bookedSeats.remove(String.valueOf(index));              // 예매 목록에서 제거
+
+                                    for(int i =0;i<CheckIndex.size();i++){
+                                        if((int)CheckIndex.get(i)==index)
+                                            CheckIndex.remove(i);
+                                    }
+
+
+
                                 }
                             }
                         }
@@ -288,6 +340,9 @@ public class BookMovieActivity extends AppCompatActivity {
                                         personnelCount -= 2;    // 인원 2명 감소
                                         bookedSeats.remove(String.valueOf(index));
                                         bookedSeats.remove(String.valueOf(index - 1));  // 예매 목록에 추가
+
+                                        Remove_Array_list_index(index);
+                                        Remove_Array_list_index(index-1);
                                     }
                                     else if(couple.get(String.valueOf(rightSet)) != null && couple.get(String.valueOf(index + 1)) != null
                                             && couple.get(String.valueOf(index + 1)).equals(MyButton.COUPLE)) {
@@ -299,6 +354,8 @@ public class BookMovieActivity extends AppCompatActivity {
                                         personnelCount -= 2;    // 인원 2명 감소
                                         bookedSeats.remove(String.valueOf(index));
                                         bookedSeats.remove(String.valueOf(index + 1));  // 예매 목록에 추가
+                                        Remove_Array_list_index(index);
+                                        Remove_Array_list_index(index+1);
                                     }
                                     else {
                                         // 아무것도 아니라면..? 그럴 리가 없다.
@@ -311,6 +368,8 @@ public class BookMovieActivity extends AppCompatActivity {
                                     v.setBackgroundResource(R.drawable.movie_seat_ok);      // 좌석 이미지 변경
                                     personnelCount--;                                       // 인원 수 감소
                                     bookedSeats.remove(String.valueOf(index));              // 예매 목록에서 제거
+
+                                    Remove_Array_list_index(index);
                                 }
                             }
                             else {
@@ -450,15 +509,20 @@ public class BookMovieActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void completeBtnClicked(View view) {
-        if(personnelCount == personnel) {
-            // 입력 인원만큼 좌석을 선택한 경우
-            saveToDataBase();               // 데이터베이스에 저장합니다. ^^
-        }
-        else {
-            // 아닌 경우
-            Toast.makeText(this, "입력 인원만큼 좌석을 선택해주세요.", Toast.LENGTH_SHORT).show();
-        }
+        if(Check_Sit_ArrayList(CheckIndex)) {
+            if (personnelCount == personnel) {
+                // 입력 인원만큼 좌석을 선택한 경우
+                //saveToDataBase();               // 데이터베이스에 저장합니다. ^^
+                Toast.makeText(this, "csa = true", Toast.LENGTH_SHORT).show();
+            } else {
+                // 아닌 경우
+                Toast.makeText(this, "입력 인원만큼 좌석을 선택해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        }else
+            Toast.makeText(this, "csa = false", Toast.LENGTH_SHORT).show();
+
     }
 
     public boolean personnelInputComplete(View view) {
@@ -499,4 +563,88 @@ public class BookMovieActivity extends AppCompatActivity {
             }
         }
     }
+
+    //여기부터 차리선택할때  (빈빈빈&빈&빈) 이런식으로 선택할수없는 예외처리부분입니다.
+
+    public int Check_row(int id){
+        int buffer=id/1000;    // 몇관인지 계산함.
+        int x1=0;               //행 (row)정보
+        for(int cc =0;cc<id-buffer*1000;cc++){   //촤표 판단하기
+            if(cc%screen.getRow()==0)
+                x1++;
+        }
+
+        return x1;   //같은 행이면 x값이 같음
+    }
+    public void Remove_Array_list_index(int id){
+        for(int i =0;i<CheckIndex.size();i++){
+            if((int)CheckIndex.get(i)==id)
+                CheckIndex.remove(i);
+        }
+    }
+    public boolean Check_sit_avaliable(int id){
+//        int checklist=0;
+
+        if(Check_row(id)!=Check_row(id-1)||
+                abled.get(String.valueOf(id-1)).equals(MyButton.UNABLED)||
+                abled.get(String.valueOf(id+1)).equals(MyButton.UNABLED)||
+                Check_row(id)!=Check_row(id+1)||
+                couple.get(String.valueOf(id -1)).equals(MyButton.COUPLE)||
+                couple.get(String.valueOf(id + 1)).equals(MyButton.COUPLE)||
+                booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)||
+                booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)
+                ){
+            //왼쪽좌석은 unabled 혹은 벽이면 그좌석 어떤경우에도 선택가능
+            return true;
+        }
+
+        if(!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&
+                !booked.get(String.valueOf(id-2)).equals(MyButton.BOOKED)
+
+                ){
+            Toast.makeText(this, "error :0001", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)&&
+                !booked.get(String.valueOf(id+2)).equals(MyButton.BOOKED)
+
+                ){
+            Toast.makeText(this, "error ：0002", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+
+        Toast.makeText(this, "default else has been used", Toast.LENGTH_SHORT).show();
+        return true;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public boolean Check_Sit_ArrayList(ArrayList arr){
+        //arr排序后   从最左边开始检查每个作为可不可以被选择
+        if(arr.size()!=1) {
+            arr.sort(null);
+        }
+        arr.add(9998);
+        arr.add(9999);
+        for(int count=0;count<arr.size()-2;count++){
+            if(Check_sit_avaliable((int)arr.get(count))==false||
+                    arr.get(count)==arr.get(count+1)||
+                    arr.get(count)==arr.get(count+2)
+                    ){
+                Toast.makeText(this, "ID : "+count+"error", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+        }
+
+        for(int r=arr.size();r>1;r--){
+            arr.remove(r-1);
+        }
+        return true;
+
+    }
+
+
 }
+
+
