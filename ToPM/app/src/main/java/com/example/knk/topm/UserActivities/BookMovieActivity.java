@@ -71,6 +71,8 @@ public class BookMovieActivity extends AppCompatActivity {
     final int THIS_YEAR = Calendar.getInstance().get(Calendar.YEAR);
 
     ArrayList CheckIndex;
+   // ArrayList backup;
+    int Check_beside_sit=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,14 +266,8 @@ public class BookMovieActivity extends AppCompatActivity {
                                         bookedSeats.remove(String.valueOf(index));
                                         bookedSeats.remove(String.valueOf(index - 1));  // 예매 목록에 추가
 
-                                        for(int i =0;i<CheckIndex.size();i++){
-                                            if((int)CheckIndex.get(i)==index)
-                                            CheckIndex.remove(i);
-                                        }
-                                        for(int i =0;i<CheckIndex.size();i++){
-                                            if((int)CheckIndex.get(i)==index-1)
-                                                CheckIndex.remove(i);
-                                        }
+                                        Remove_Array_list_index(index);
+                                        Remove_Array_list_index(index-1);
 
                                     }
                                     else if(couple.get(String.valueOf(rightSet)) != null && couple.get(String.valueOf(index + 1)) != null
@@ -285,14 +281,8 @@ public class BookMovieActivity extends AppCompatActivity {
                                         bookedSeats.remove(String.valueOf(index));
                                         bookedSeats.remove(String.valueOf(index + 1));  // 예매 목록에 추가
 
-                                        for(int i =0;i<CheckIndex.size();i++){
-                                            if((int)CheckIndex.get(i)==index)
-                                                CheckIndex.remove(i);
-                                        }
-                                        for(int i =0;i<CheckIndex.size();i++){
-                                            if((int)CheckIndex.get(i)==index+1)
-                                                CheckIndex.remove(i);
-                                        }
+                                        Remove_Array_list_index(index);
+                                        Remove_Array_list_index(index+1);
 
                                     }
                                     else {
@@ -308,10 +298,7 @@ public class BookMovieActivity extends AppCompatActivity {
                                     personnelCount--;                                       // 인원 수 감소
                                     bookedSeats.remove(String.valueOf(index));              // 예매 목록에서 제거
 
-                                    for(int i =0;i<CheckIndex.size();i++){
-                                        if((int)CheckIndex.get(i)==index)
-                                            CheckIndex.remove(i);
-                                    }
+                                    Remove_Array_list_index(index);
 
 
 
@@ -509,19 +496,23 @@ public class BookMovieActivity extends AppCompatActivity {
     }
 
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void completeBtnClicked(View view) {
         if(Check_Sit_ArrayList(CheckIndex)) {
             if (personnelCount == personnel) {
                 // 입력 인원만큼 좌석을 선택한 경우
-                //saveToDataBase();               // 데이터베이스에 저장합니다. ^^
-                Toast.makeText(this, "csa = true", Toast.LENGTH_SHORT).show();
+                saveToDataBase();               // 데이터베이스에 저장합니다. ^^
+                //Toast.makeText(this, "csa = true", Toast.LENGTH_SHORT).show();
             } else {
                 // 아닌 경우
+
                 Toast.makeText(this, "입력 인원만큼 좌석을 선택해주세요.", Toast.LENGTH_SHORT).show();
             }
         }else
-            Toast.makeText(this, "csa = false", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Check_sit_avaliable==false", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "선택할 수 없습니다. 다시 선택해야 합니다", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -566,11 +557,11 @@ public class BookMovieActivity extends AppCompatActivity {
 
     //여기부터 차리선택할때  (빈빈빈&빈&빈) 이런식으로 선택할수없는 예외처리부분입니다.
 
-    public int Check_row(int id){
+    public int Check_row(int id){//같은 행인지 아닌지 판단하기
         int buffer=id/1000;    // 몇관인지 계산함.
         int x1=0;               //행 (row)정보
-        for(int cc =0;cc<id-buffer*1000;cc++){   //촤표 판단하기
-            if(cc%screen.getRow()==0)
+        for(int count =0;count<id-buffer*1000;count++){   //촤표 판단하기
+            if(count%screen.getRow()==0)
                 x1++;
         }
 
@@ -583,63 +574,143 @@ public class BookMovieActivity extends AppCompatActivity {
         }
     }
     public boolean Check_sit_avaliable(int id){
-//        int checklist=0;
 
-        if(Check_row(id)!=Check_row(id-1)||
-                abled.get(String.valueOf(id-1)).equals(MyButton.UNABLED)||
-                abled.get(String.valueOf(id+1)).equals(MyButton.UNABLED)||
-                Check_row(id)!=Check_row(id+1)||
-                couple.get(String.valueOf(id -1)).equals(MyButton.COUPLE)||
-                couple.get(String.valueOf(id + 1)).equals(MyButton.COUPLE)||
-                booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)||
-                booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)
-                ){
-            //왼쪽좌석은 unabled 혹은 벽이면 그좌석 어떤경우에도 선택가능
+        int First_Check=0;   // 1.연속된 자라 예매할떄 무조건 살수있음 (거절안함)
+        int buffid=id/1000;
+        for(int count=0;count<CheckIndex.size()-1;count++) {
+            if (((int) CheckIndex.get(count) + 1) == (int) CheckIndex.get(count + 1)) {
+                First_Check++;
+            }
+        }
+        if(First_Check>personnel-1) {
+            //Toast.makeText(this, "연속된자리 true", Toast.LENGTH_SHORT).show();
             return true;
         }
 
+        if(id==(buffid*1000+1)){  //2.인원 3명이하 && A1자리 선택하때 예외처리
+            if(!booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)&&personnel<3){
+
+                return false;
+            }else
+                return true;
+
+        }
+
+        if( couple.get(String.valueOf(id +2)).equals(MyButton.COUPLE)){  //3. 연속된 커플석 예매할떄 예외처리
+            return true;
+        }
+
+
+
+        //4. 여기부터 다양한 케이스에 대한 예외차리입니다. 설명못하겠습니다 ..
+        if((!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&
+                booked.get(String.valueOf(id-2)).equals(MyButton.BOOKED)&&
+                !abled.get(String.valueOf(id-2)).equals(MyButton.UNABLED)&&
+                Check_row(id)!=Check_row(id+1))
+                ){
+            //Toast.makeText(this, "error :0001", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //5.
+        if(!booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)&&
+                !booked.get(String.valueOf(id+2)).equals(MyButton.BOOKED)&&
+                !abled.get(String.valueOf(id-1)).equals(MyButton.UNABLED)&&
+                !abled.get(String.valueOf(id-2)).equals(MyButton.UNABLED)&&
+                Check_row(id)==Check_row(id+1)&&
+                Check_row(id)!=Check_row(id+2)
+
+                ){
+            //Toast.makeText(this, "error ：0002", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //6.
+        if(!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&
+                booked.get(String.valueOf(id-2)).equals(MyButton.BOOKED)&&
+                abled.get(String.valueOf(id+1)).equals(MyButton.UNABLED)&&
+                !abled.get(String.valueOf(id+2)).equals(MyButton.UNABLED)&&
+                Check_row(id)==Check_row(id+1)
+
+
+                ){
+            //Toast.makeText(this, "error ：0004", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if(
+                Check_row(id)!=Check_row(id-1)||
+                        abled.get(String.valueOf(id-1)).equals(MyButton.UNABLED)||
+                        abled.get(String.valueOf(id+1)).equals(MyButton.UNABLED)||
+                        Check_row(id)!=Check_row(id+1)||
+                        couple.get(String.valueOf(id -1)).equals(MyButton.COUPLE)||
+                        couple.get(String.valueOf(id + 1)).equals(MyButton.COUPLE)||
+                        booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)||
+                        booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)
+                ){
+            //왼쪽좌석은 unabled(경로석) 혹은 벽 혹은 옆자리 커플석인 경우 위 조건 만족하면 선택가능함
+            return true;
+        }
+
+
+        // 오른쪽 자리 예매 안하는 자리 3개 이상이면 석택가능
+        if(Check_row(id)==Check_row(id+1)&&Check_row(id)==Check_row(id+2)&&Check_row(id)==Check_row(id+3)){
+            if(!booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)&&
+                    !booked.get(String.valueOf(id+2)).equals(MyButton.BOOKED)&&
+                    !booked.get(String.valueOf(id+3)).equals(MyButton.BOOKED)){
+                return true;
+            }
+
+        }
+        // 왼쪽 자리 예매 안하는 자리 2개 이상이면 석택가능
         if(!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&
                 !booked.get(String.valueOf(id-2)).equals(MyButton.BOOKED)
 
                 ){
-            Toast.makeText(this, "error :0001", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-        if(!booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)&&
-                !booked.get(String.valueOf(id+2)).equals(MyButton.BOOKED)
-
-                ){
-            Toast.makeText(this, "error ：0002", Toast.LENGTH_SHORT).show();
-            return false;
+            return true;
         }
 
-
-        Toast.makeText(this, "default else has been used", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "없는 케이스입니다. true", Toast.LENGTH_SHORT).show();
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    public boolean Check_Sit_ArrayList(ArrayList arr){
-        //arr排序后   从最左边开始检查每个作为可不可以被选择
-        if(arr.size()!=1) {
+    @RequiresApi(api = Build.VERSION_CODES.N)    // arraylist sort기능 쓰려면 이줄 자동생선함
+    public boolean Check_Sit_ArrayList(ArrayList arr){  // arraylist 검사하는 함수
+
+        if(CheckIndex.size()>1)   // 밑에 있는 한자리씩 띌때 쓰는 예외처리 index
+            Check_beside_sit=0;
+
+        int buffid =(int)arr.get(0)/1000;  // 몇관인지 계산함
+        if( (int)arr.get(0)==(buffid*1000+1)&&personnel==1)  //1인이며 a1자리 선택할때 예외차리
+            return true;
+
+        if(arr.size()!=1) {    // 1인 아니면 arraylist sort함
             arr.sort(null);
         }
-        arr.add(9998);
+        arr.add(9998);   //탐색할때 +2 까지 하기 때문에 쓰레기값 2개 넣음 (NullPointer 방지)
         arr.add(9999);
         for(int count=0;count<arr.size()-2;count++){
-            if(Check_sit_avaliable((int)arr.get(count))==false||
-                    arr.get(count)==arr.get(count+1)||
-                    arr.get(count)==arr.get(count+2)
+            if(!Check_sit_avaliable((int)arr.get(count))
                     ){
-                Toast.makeText(this, "ID : "+count+"error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, count+"번 자리 선택불가함니다", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
+            if (((int) arr.get(count) + 2) == (int) arr.get(count + 1)) {
+                Check_beside_sit++; // 한 자리씩 띌떄 예외처리부분   010101
+            }
         }
 
-        for(int r=arr.size();r>1;r--){
+        if(Check_beside_sit>=1) {//한 자리씩 띌떄 false리탄   010101
+            //Toast.makeText(this, "error 0003", Toast.LENGTH_SHORT).show();
+            for(int r=arr.size();r>1;r--){   // 리턴하기전에 arrlist지워야함 (NullPointer)
+                arr.remove(r-1);
+            }
+            return false;
+        }
+
+        for(int r=arr.size();r>1;r--){//리턴하기전에 arrlist지워야함 (NullPointer)
             arr.remove(r-1);
         }
+        //Toast.makeText(this, "ID : "+"always true"+" error", Toast.LENGTH_SHORT).show();
         return true;
 
     }
