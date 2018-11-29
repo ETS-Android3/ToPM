@@ -78,7 +78,6 @@ public class ScreenEditActivity1 extends AppCompatActivity {
                 intent.putExtra("col", col);
                 intent.putExtra("SCREENID2",Screen_ID_buff);
                 startActivity(intent);
-                finish();
             }
             else {
                 try {

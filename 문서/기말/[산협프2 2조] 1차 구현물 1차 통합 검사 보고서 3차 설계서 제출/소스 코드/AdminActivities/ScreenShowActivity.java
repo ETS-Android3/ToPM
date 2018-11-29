@@ -26,7 +26,6 @@ public class ScreenShowActivity extends AppCompatActivity {
     String screenKey;       // "n관' DB에 접근할 때 사용
     HashMap<String, Boolean> abled;         // 좌석들의 좌석인지 아닌지 여부 저장
     HashMap<String, Boolean> special;       // 좌석들이 우등석인지 아닌지 여부 저장
-    HashMap<String, Boolean> couple;        // 좌석들이 커플석인지 아닌지 여부 저장
     int size;               // 상영관의 가로*세로 크기
     MyButton[] seats;       // 좌석들
 
@@ -78,11 +77,11 @@ public class ScreenShowActivity extends AppCompatActivity {
                         size = screen.getRow() * screen.getCol();
                         abled = screen.getAbledMap();
                         special = screen.getSpecialMap();
-                        couple = screen.getCoupleMap();
                         printSeats();       // 좌석 출력
                         break;
                     }
                 }
+
             }
 
             @Override
@@ -164,21 +163,7 @@ public class ScreenShowActivity extends AppCompatActivity {
             }
             else {
                 // 좌석인 곳이라면..
-                if(couple.get(String.valueOf(id)).equals(MyButton.COUPLE)) {
-                    // 커플석인 곳
-                    seats[i].setBackgroundResource(R.drawable.movie_seat_couple_ok);
-                }
-                else {
-                    // 커플석이 아닌 곳 중..
-                    if(special.get(String.valueOf(id)).equals(MyButton.SPECIAL)) {
-                        // 우등석인 곳
-                        seats[i].setBackgroundResource(R.drawable.movie_seat_special_ok);
-                    }
-                    else {
-                        // 우등석이 아닌 곳 == 일반 석
-                        seats[i].setBackgroundResource(R.drawable.movie_seat_ok);
-                    }
-                }
+                seats[i].setBackgroundResource(R.drawable.movie_seat_ok);
             }
 
             seats[i].setText("" + i);
@@ -202,6 +187,5 @@ public class ScreenShowActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ScreenEditActivity1.class);
         intent.putExtra("SCREENID1", screenNum);    // 상영관 번호 보내줌
         startActivity(intent);                            // 액티비티 전환
-        finish();
     }
 }

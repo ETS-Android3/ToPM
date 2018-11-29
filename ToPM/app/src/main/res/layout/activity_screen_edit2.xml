@@ -21,7 +21,7 @@
 
         <Button
             android:id="@+id/modeNormal"
-            android:text="일반석 지정"
+            android:text="비좌석 지정"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="setSeatsModes"/>
