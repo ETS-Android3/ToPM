@@ -74,6 +74,7 @@ public class BookMovieActivity extends AppCompatActivity {
    // ArrayList backup;
     int Check_beside_sit=0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -596,7 +597,46 @@ public class BookMovieActivity extends AppCompatActivity {
 
         }
 
+        int final_sit_ID = buffid* 1000 + (seats.length);
+        if(id==final_sit_ID){
+            if(!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&personnel<3){
+                return false;
+            }else
+                return true;
+        }
+
+
+        if(abled.get(String.valueOf(final_sit_ID)).equals(MyButton.UNABLED)){
+            if(id==final_sit_ID-1){
+                if(!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&personnel<3){
+                    return false;
+                }else
+                    return true;
+            }
+
+        }if (abled.get(String.valueOf(final_sit_ID-1)).equals(MyButton.UNABLED)) {
+            if(id==final_sit_ID-2){
+                if(!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&personnel<3){
+                    return false;
+                }else
+                    return true;
+            }
+        }if(abled.get(String.valueOf(final_sit_ID-2)).equals(MyButton.UNABLED)) {
+            if(id==final_sit_ID-3){
+                if(!booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)&&personnel<3){
+                    return false;
+                }else
+                    return true;
+            }
+        }
+
+
+
+
         if( couple.get(String.valueOf(id +2)).equals(MyButton.COUPLE)){  //3. 연속된 커플석 예매할떄 예외처리
+            return true;
+        }
+        if( couple.get(String.valueOf(id -2)).equals(MyButton.COUPLE)){  //3. 연속된 커플석 예매할떄 예외처리
             return true;
         }
 
@@ -646,7 +686,7 @@ public class BookMovieActivity extends AppCompatActivity {
                         booked.get(String.valueOf(id-1)).equals(MyButton.BOOKED)||
                         booked.get(String.valueOf(id+1)).equals(MyButton.BOOKED)
                 ){
-            //왼쪽좌석은 unabled(경로석) 혹은 벽 혹은 옆자리 커플석인 경우 위 조건 만족하면 선택가능함
+            //왼쪽좌석은 unabled(경로석) 혹은 벽쪽석 혹은 옆자리 커플석인 경우 위 false 조건 만족하지않으면 선택가능함
             return true;
         }
 
@@ -672,7 +712,7 @@ public class BookMovieActivity extends AppCompatActivity {
         return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)    // arraylist sort기능 쓰려면 이줄 자동생선함
+    @RequiresApi(api = Build.VERSION_CODES.N)    // arraylist sort기능 쓰려면 이줄 자동생성함
     public boolean Check_Sit_ArrayList(ArrayList arr){  // arraylist 검사하는 함수
 
         if(CheckIndex.size()>1)   // 밑에 있는 한자리씩 띌때 쓰는 예외처리 index
@@ -690,7 +730,8 @@ public class BookMovieActivity extends AppCompatActivity {
         for(int count=0;count<arr.size()-2;count++){
             if(!Check_sit_avaliable((int)arr.get(count))
                     ){
-                Toast.makeText(this, count+"번 자리 선택불가함니다", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this, count+1+"번 자리 선택불가함니다", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "선택불가함니다,다시 시도해보세요", Toast.LENGTH_SHORT).show();
                 return false;
             }
 
