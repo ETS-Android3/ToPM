@@ -46,9 +46,9 @@ public class ScreenEditActivity2 extends AppCompatActivity {
 
     /* 상수 */
     final private static String screen_ref = "screen";          // 상영관 레퍼런스로 가는 키
-    final static int MODE_NORMAL = 11;      // 좌석/비좌석 설정 모드 상수
-    final static int MODE_SPECIAL = 22;     // 우등석 설정 모드 상수
-    final static int MODE_COUPLE = 33;      // 커플석 설정 모드 상수
+    final static int MODE_NORMAL = 11;
+    final static int MODE_SPECIAL = 22;
+    final static int MODE_COUPLE = 33;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
