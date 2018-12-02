@@ -365,10 +365,6 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
             final String scheduleKey = movieSchedule.getScreenNum()+movieSchedule.getScreeningDate();   // 이번에 추가하려는 영화스케쥴 인스턴스로부터 키 정보 가져옴.
             final String addScreenNum = movieSchedule.getScreenNum();                                   // 이번에 추가하려는 영화스케쥴 인스턴스로부터 상영관 번호정보 가져옴.
 
-            // 런닝타임을 -1로 설정해둠. 만약 이 함수를 호출한 후에도 런닝타임이 -1로 유지된다면
-            // 해당 영화는 DB에 없는 것이 됨.
-            // runningTime = -1;
-
             // 런닝타임 정보를 더해 끝나는 시간과 분 계산, 24시 후의 경우에 관해서는 계산되지 않았음.
             // 25시, 26시 ...일때는 날짜가 넘어가지만 그대로 25시 26시로 간주.
             final int endMin = movieSchedule.getEndMin();
@@ -384,7 +380,7 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
                     // 최종적으로 해당 스케쥴을 추가할 수 있는지를 판단하는 변수
                     isAddable = true;
 
-                    // 같은 상영관에서 상영하는 영화스케쥴을 모은 객체ArrayList
+                    // 같은 날짜에 같은 상영관에서 상영하는 영화스케쥴을 모은 객체ArrayList
                     ArrayList<MovieSchedule> sameScreenMovies = new ArrayList<>();
 
                     // for문으로 해당 날짜의 모든 스케쥴을 검사함.
@@ -394,18 +390,20 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
                         if(ms.getScreenNum().equals(addScreenNum))
                             sameScreenMovies.add(ms);
                     }
-
+                    // sameScreenMovies를 차례로 검사하면서 지금 추가하려는 영화의 상영시간과 비교하여 겹치는지 검사함
+                    // 만약 겹친다면 바로 for문을 탈출해 추가할 수 없다고 알림.
                     for(int i=0;i<sameScreenMovies.size();i++){
                         isAddable = true;
                         MovieSchedule ms = sameScreenMovies.get(i);
-                        Date cmpDate = ms.getScreeningDate();
-                        int cmpStartHour = cmpDate.getHours();
-                        int cmpStartMin = cmpDate.getMinutes();
-                        int cmpEndMin = ms.getEndMin();
-                        int cmpEndHour = ms.getEndHour();
+                        Date cmpDate = ms.getScreeningDate();           // sameScreenMovies의 영화 시작시간, 끝시간을 계산함.
+                        int cmpStartHour = cmpDate.getHours();          // 시작 시각
+                        int cmpStartMin = cmpDate.getMinutes();         // 시작 분
+                        int cmpEndMin = ms.getEndMin();                 // 종료 시각
+                        int cmpEndHour = ms.getEndHour();               // 종료 분
 
                         //Toast.makeText(getApplicationContext(), sameScreenMovies.get(i).getMovieTitle()+" "
                          //       +cmpStartHour+"시 "+cmpStartMin+"분 ~ "+cmpEndHour+"시 "+cmpEndMin+"분 까지",Toast.LENGTH_SHORT).show();
+                        // 상영시간이 겹치는지 겹치지 않는지 검사함.
                         if(startHour<cmpEndHour || ((startHour==cmpEndHour)&&(startMin<=cmpEndMin))){
                             if(endHour>cmpStartHour || ((endHour==cmpStartHour)&&(endMin>=cmpStartMin))) {
                                 isAddable = false;

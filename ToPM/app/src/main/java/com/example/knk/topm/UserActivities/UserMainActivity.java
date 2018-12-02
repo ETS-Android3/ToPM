@@ -244,12 +244,16 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
         final String key = keyData[dateCount].get(position); // 클릭한 위치의 위치의 키를 받아오자
         final String date = dateCalculator(dateCount);
 
+        // 현재 클릭한 위치의 영화스케쥴 정보를 가져온다
         MovieSchedule ms = (MovieSchedule) parent.getItemAtPosition(position);
+        // 선택한 영화의 제목 정보 저장
         final String selectedMovie = ms.getMovieTitle();
+        // 전역변수로 선언해둔 THIS_YEAR과 사용자의 생년정보를 이용해 사용자의 나이를 계산한다.
         final int user_age = THIS_YEAR - user.getBirth().getYear();
-        //Toast.makeText(getApplicationContext(),user_age+"",Toast.LENGTH_SHORT).show();
 
+        // 사용자가 예매를 할 수 있는 나이인지 검사하는 변수
         isEnoughAge = false;
+        // 영화DB에 리스너를 달아 영화의 등급정보를 가져온다.
         movieReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -257,9 +261,12 @@ public class UserMainActivity extends AppCompatActivity implements AdapterView.O
                     Movie movie = data.getValue(Movie.class);
                     if(isEnoughAge)
                         break;
+                    // 선택한 영화의 제목과 같은 정보를 찾아 등급정보를 저장한다.
                     if(movie.getTitle().equals(selectedMovie)){
                         movieRate = movie.getRating();
                         // Toast.makeText(getApplicationContext(),rate+"",Toast.LENGTH_SHORT).show();
+                        // 일치하는 그 영화에 대해 사용자의 나이가 등급보다 많거나 전체상영가의 영화라면
+                        // isEnoughAge를 갱신한다.
                         if(user_age>movieRate || movieRate==-1){
                             isEnoughAge = true;
                         }
