@@ -54,7 +54,16 @@
         android:padding="10dp"
         android:textStyle="bold"
         android:textSize="20sp"/>
-
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SCREEN"
+        android:gravity="center"
+        android:textStyle="italic|bold"
+        android:textSize="18sp"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:background="#E4C9C2"/>
     <RelativeLayout
         android:id="@+id/totalLayout"
         android:layout_width="wrap_content"
