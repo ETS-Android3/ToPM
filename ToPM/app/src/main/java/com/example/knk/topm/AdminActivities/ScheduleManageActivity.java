@@ -93,14 +93,10 @@ public class ScheduleManageActivity extends AppCompatActivity implements Schedul
     private int showDay;                    // 상영 일
     public int dateCount;                   // 설정한 날짜라 현재날짜로부터 몇 일 뒤인지 저장하는 변수
     private boolean isAddable;              // 데이터베이스에 겹치지 않는 키(Key2 : key2란 스케쥴 노드 아래 key1노드 아래 key2를 말하며 실질적 값은 "상영관번호+상영시간객체"이다)가 들어가도록 미리 방지하는 변수
-    private int runningTime;
-    private boolean flag;
     private Date screeningDate;
 
     // 6. 삭제를 위한 변수
     private boolean bookingExist;           // 삭제하려는 스케쥴이 예매내역에 있는지 확인
-
-
     public ArrayList<Screen> screenData;
 
     /* 상수 */
